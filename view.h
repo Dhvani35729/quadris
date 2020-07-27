@@ -13,6 +13,7 @@ public:
     View(Controller *, Model *);
     virtual ~View();
     virtual void update(); // Observer Pattern: concrete update() method
+    void run();
 
 private:
     // Observer Pattern: to access Model accessors without having to downcast subject

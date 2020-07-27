@@ -8,10 +8,20 @@
 
 View::View(Controller *c, Model *m) : model_(m), controller_(c)
 {
+    std::cout << "View born" << std::endl;
 }
 
-View::~View() {}
+View::~View()
+{
+    std::cout << "View died" << std::endl;
+}
 
 void View::update()
 {
+    std::cout << "Updating view" << std::endl;
+}
+
+void View::run()
+{
+    std::cout << "Running application" << std::endl;
 }

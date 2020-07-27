@@ -8,6 +8,7 @@ class Model : public Subject
 {
 public:
     Model();
+    ~Model();
 
 private:
 };

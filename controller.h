@@ -8,6 +8,7 @@ class Controller
 {
 public:
     Controller(Model *);
+    ~Controller();
 
 private:
     Model *model_;
