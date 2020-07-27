@@ -10,11 +10,16 @@ public:
     Level();
     ~Level();
     virtual Block *nextBlock() const = 0;
+    int getLevelNum() const;
+
+protected:
+    int levelNum_;
 };
 
 class LevelZero : public Level
 {
 public:
+    LevelZero();
     Block *nextBlock() const override;
 };
 

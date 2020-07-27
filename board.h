@@ -21,12 +21,14 @@ public:
     bool moveCurrentBlock(Command);
     bool rotateCurrentBlock(Command);
     int dropCurrentBlock();
-    std::vector<std::vector<Cell *>> getBoard();
+    std::vector<std::vector<char>> getBoard();
     bool isOccupied(int, int);
     bool isLineFull(int);
     bool removeLine(int);
     void resetBoard();
     void showHint();
+    int getHeight() const;
+    int getWidth() const;
 
 private:
     int width_;

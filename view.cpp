@@ -28,6 +28,30 @@ void View::run()
     this->startGame();
 
     controller_->getCommand();
+
+    this->draw();
+}
+void View::draw()
+{
+    // Draw score
+    std::cout << "Level:     " << model_->getLevelNum() << std::endl;
+    std::cout << "Score:     " << model_->getScore().getScore() << std::endl;
+    std::cout << "Hi Score: " << model_->getScore().getHiScore() << std::endl;
+    std::cout << "-----------" << std::endl;
+    std::vector<std::vector<char>> board = model_->getBoard();
+    int height = model_->getBoardHeight();
+    int width = model_->getBoardWidth();
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            std::cout << board[i][j];
+        }
+        std::cout << std::endl;
+    }
+
+    std::cout << "-----------" << std::endl;
+    std::cout << "Next:      " << std::endl;
 }
 
 void View::startGame()

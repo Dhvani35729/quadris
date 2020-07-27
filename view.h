@@ -23,6 +23,7 @@ private:
     Controller *controller_;
 
     void startGame();
+    void draw();
 };
 
 #endif

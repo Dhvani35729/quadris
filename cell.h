@@ -8,6 +8,7 @@ public:
     Cell(int, int, char);
     ~Cell();
     void setSymbol(char c);
+    char getSymbol() const;
     bool isOccupied();
 
 private:

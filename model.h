@@ -6,6 +6,7 @@
 #include "level.h"
 #include "score.h"
 #include "board.h"
+#include "cell.h"
 
 #include <vector>
 
@@ -21,7 +22,11 @@ public:
     void playRound(Command);
     void resetGame(Command);
     void setLevel(Level *);
-    Score getScore();
+    int getBoardHeight() const;
+    int getBoardWidth() const;
+    int getLevelNum() const;
+    Score getScore() const;
+    std::vector<std::vector<char>> getBoard() const;
 
 private:
     Level *level_;

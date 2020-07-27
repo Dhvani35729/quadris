@@ -3,16 +3,15 @@
 
 Cell::Cell(int row, int col, char symbol)
 {
-    std::cout << "Cell born" << std::endl;
+    // std::cout << "Cell born" << std::endl;
     this->row_ = row;
     this->col_ = col;
     this->symbol_ = symbol;
     this->occupied_ = true;
 };
 
-Cell::~Cell()
-{
-    std::cout << "Cell died" << std::endl;
+Cell::~Cell(){
+    // std::cout << "Cell died" << std::endl;
 };
 
 void Cell::setSymbol(char c)
@@ -22,4 +21,9 @@ void Cell::setSymbol(char c)
 bool Cell::isOccupied()
 {
     return occupied_;
+};
+
+char Cell::getSymbol() const
+{
+    return this->symbol_;
 };
