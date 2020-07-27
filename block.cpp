@@ -11,6 +11,17 @@ Block::Block(BlockType t, std::pair<int, int> pos, int level)
     this->level_ = level;
     aliveFor_ = 0;
     std::cout << "Block born" << std::endl;
+
+    if (t == T_BLK)
+    {
+        this->mWidth_ = 3;
+        this->mHeight_ = 3;
+        matrix_.resize(this->mHeight_, std::vector<char>(this->mWidth_, ' '));
+        matrix_[0][0] = 'T';
+        matrix_[0][1] = 'T';
+        matrix_[0][2] = 'T';
+        matrix_[1][1] = 'T';
+    }
 };
 
 Block::~Block()
@@ -20,21 +31,22 @@ Block::~Block()
 
 std::vector<std::vector<char>> Block::getCells()
 {
-    std::vector<std::vector<char>> cells;
-    if (this->type_ == T_BLK)
-    {
-        cells.resize(3, std::vector<char>(3, ' '));
-        cells[0][0] = 'T';
-        cells[0][1] = 'T';
-        cells[0][2] = 'T';
-        cells[1][1] = 'T';
-    }
-    return cells;
+    return this->matrix_;
 };
 
-std::pair<int, int> Block::getBox()
+int Block::getBoxWidth()
 {
-    return coords_;
+    return this->mWidth_;
+};
+
+int Block::getBoxHeight()
+{
+    return this->mHeight_;
+};
+
+std::pair<int, int> Block::getPos()
+{
+    return this->coords_;
 };
 
 bool Block::moveBlock(Command)

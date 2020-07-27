@@ -24,15 +24,20 @@ public:
     Block(BlockType, std::pair<int, int>, int);
     virtual ~Block();
     std::vector<std::vector<char>> getCells();
-    std::pair<int, int> getBox();
+    std::pair<int, int> getPos();
     bool moveBlock(Command);
     bool rotateBlock(Command);
+    int getBoxWidth();
+    int getBoxHeight();
     void dropBlock();
 
 private:
     int level_;
     BlockType type_;
     int aliveFor_;
+    std::vector<std::vector<char>> matrix_;
+    int mWidth_;
+    int mHeight_;
     std::pair<int, int> coords_;
 };
 

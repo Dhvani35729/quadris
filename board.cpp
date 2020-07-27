@@ -45,21 +45,32 @@ Board::~Board()
 void Board::addBlock(Block *block)
 {
     std::cout << "Adding block to board" << std::endl;
+
     this->currBlock_ = block;
     this->blocks_.push_back(block);
+
     std::vector<std::vector<char>> cells = block->getCells();
-    std::pair<int, int> bottomLeftCorner = block->getBox();
+    int cellWidth = block->getBoxWidth();
+    int cellHeight = block->getBoxHeight();
+
+    std::pair<int, int> bottomLeftCorner = block->getPos();
+
+    // TODO: Need to check if CAN add block
 
     // TODO: SHOULD BE ITERATOR PATTERN
     // Set cells
     int bRow = bottomLeftCorner.first;
     int bCol = bottomLeftCorner.second;
-    int k = 2;
-    for (int i = bRow; i > bRow - 3; i--)
+
+    int k = cellHeight - 1;
+    for (int i = bRow; i > bRow - cellHeight; i--)
     {
-        for (int j = bCol; j < 3; j++)
+        for (int j = bCol; j < cellWidth; j++)
         {
-            this->board_[i][j]->setSymbol(cells[k][j]);
+            if (cells[k][j] != ' ')
+            {
+                this->board_[i][j]->setSymbol(cells[k][j]);
+            }
         }
         k--;
     }
