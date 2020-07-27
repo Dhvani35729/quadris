@@ -7,7 +7,14 @@ Cell::Cell(int row, int col, char symbol)
     this->row_ = row;
     this->col_ = col;
     this->symbol_ = symbol;
-    this->occupied_ = true;
+    if (symbol != ' ')
+    {
+        this->occupied_ = true;
+    }
+    else
+    {
+        this->occupied_ = false;
+    }
 };
 
 Cell::~Cell(){
@@ -17,6 +24,14 @@ Cell::~Cell(){
 void Cell::setSymbol(char c)
 {
     symbol_ = c;
+    if (c != ' ')
+    {
+        this->occupied_ = true;
+    }
+    else
+    {
+        this->occupied_ = false;
+    }
 };
 bool Cell::isOccupied()
 {

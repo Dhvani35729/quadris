@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
@@ -49,15 +50,18 @@ void Board::addBlock(Block *block)
     std::cout << "Adding block to board" << std::endl;
 
     this->currBlock_ = block;
+    // TODO: Need to check if CAN add block
     this->blocks_.push_back(block);
+    this->updateCells(block);
+};
 
+void Board::clearCells(Block *block)
+{
     std::vector<std::vector<char>> cells = block->getCells();
     int cellWidth = block->getBoxWidth();
     int cellHeight = block->getBoxHeight();
 
     std::pair<int, int> bottomLeftCorner = block->getPos();
-
-    // TODO: Need to check if CAN add block
 
     // TODO: SHOULD BE ITERATOR PATTERN?
     // Set cells
@@ -71,15 +75,43 @@ void Board::addBlock(Block *block)
         {
             if (cells[k][j] != ' ')
             {
-                this->board_[i][j]->setSymbol(cells[k][j]);
+                this->setCell(i, j, ' ');
             }
         }
         k--;
     }
-};
+}
 
-void Board::setCell(int, int, char){
+void Board::updateCells(Block *block)
+{
+    std::vector<std::vector<char>> cells = block->getCells();
+    int cellWidth = block->getBoxWidth();
+    int cellHeight = block->getBoxHeight();
 
+    std::pair<int, int> bottomLeftCorner = block->getPos();
+
+    // TODO: SHOULD BE ITERATOR PATTERN?
+    // Set cells
+    int bRow = bottomLeftCorner.first;
+    int bCol = bottomLeftCorner.second;
+
+    int k = cellHeight - 1;
+    for (int i = bRow; i > bRow - cellHeight; i--)
+    {
+        for (int j = bCol; j < cellWidth; j++)
+        {
+            if (cells[k][j] != ' ')
+            {
+                this->setCell(i, j, cells[k][j]);
+            }
+        }
+        k--;
+    }
+}
+
+void Board::setCell(int i, int j, char c)
+{
+    this->board_[i][j]->setSymbol(c);
 };
 
 bool Board::moveCurrentBlock(Command)
@@ -94,7 +126,53 @@ bool Board::rotateCurrentBlock(Command)
 
 int Board::dropCurrentBlock()
 {
-    return -1;
+    pair<int, int> curPos = this->currBlock_->getPos();
+    int newH;
+    for (newH = curPos.first + 1; newH < this->height_; newH++)
+    {
+        if (this->board_[newH][curPos.second]->isOccupied())
+        {
+            break;
+        }
+    }
+    this->clearCells(this->currBlock_);
+    this->currBlock_->dropBlock(newH);
+    pair<int, int> newPos = this->currBlock_->getPos();
+    this->updateCells(this->currBlock_);
+    // Update cells
+
+    // Check if last row full
+    bool rowFull = true;
+    int rowsCleared = 0;
+    do
+    {
+        for (int j = 0; j < this->width_; j++)
+        {
+            if (this->board_[this->height_ - 1][j]->getSymbol() != ' ')
+            {
+                rowFull = false;
+                break;
+            }
+        }
+        // Clear bottm row
+        if (rowFull)
+        {
+            rowsCleared += 1;
+            for (int i = this->height_ - 2; i >= 0; i--)
+            {
+                for (int j = 0; j < this->height_; j++)
+                {
+                    this->setCell(i + 1, j, this->board_[i][j]->getSymbol());
+                }
+            }
+            for (int j = 0; j < this->width_; j++)
+            {
+                this->setCell(0, j, ' ');
+            }
+        }
+    } while (rowFull);
+
+    return rowsCleared;
 };
 
 std::vector<std::vector<char>> Board::getBoard()
@@ -113,12 +191,12 @@ std::vector<std::vector<char>> Board::getBoard()
     return printBoard;
 };
 
-bool Board::isOccupied(int, int)
+bool Board::isOccupied(int i, int j)
 {
-    return true;
+    return this->board_[i][j]->isOccupied();
 };
 
-bool Board::isLineFull(int)
+bool Board::isLineFull(int h)
 {
     return true;
 };

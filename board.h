@@ -31,6 +31,8 @@ public:
     int getWidth() const;
 
 private:
+    void updateCells(Block *);
+    void clearCells(Block *);
     int width_;
     int height_;
     std::vector<std::vector<Cell *>> board_;

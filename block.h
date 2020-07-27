@@ -30,7 +30,7 @@ public:
     bool rotateBlock(Command);
     int getBoxWidth();
     int getBoxHeight();
-    void dropBlock();
+    void dropBlock(int);
 
 private:
     int level_;

@@ -37,6 +37,7 @@ public:
     ~Interpreter();
     std::vector<Command> getCommands();
     void addCommand(Command);
+    void resetCommand();
 
 private:
     std::vector<Command> commands_;

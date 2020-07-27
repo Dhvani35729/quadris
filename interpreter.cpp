@@ -25,11 +25,17 @@ void Interpreter::addCommand(Command c)
     this->commands_.push_back(c);
 }
 
+void Interpreter::resetCommand()
+{
+    this->commands_.clear();
+}
+
 std::istream &operator>>(std::istream &in, Interpreter &i)
 {
 
     std::string cmd;
     in >> cmd;
+    i.resetCommand();
 
     if (cmd == "left")
     {

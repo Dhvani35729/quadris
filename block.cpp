@@ -106,6 +106,7 @@ bool Block::rotateBlock(Command)
     return true;
 };
 
-void Block::dropBlock(){
-
+void Block::dropBlock(int h)
+{
+    this->coords_.first = h;
 };

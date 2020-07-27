@@ -38,8 +38,7 @@ void View::run()
     std::cout << "Running application" << std::endl;
     this->startGame();
 
-    // TODO: Should be while
-    if (!this->model_->checkGameOver())
+    while (!this->model_->checkGameOver())
     {
         controller_->getCommand();
     }
