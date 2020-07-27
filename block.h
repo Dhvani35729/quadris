@@ -6,7 +6,7 @@
 #include <vector>
 #include <utility>
 
-enum Type
+enum BlockType
 {
     I_BLK,
     J_BLK,
@@ -21,8 +21,8 @@ enum Type
 class Block
 {
 public:
-    Block(Type, std::pair<int, int>, int);
-    ~Block();
+    Block(BlockType, std::pair<int, int>, int);
+    virtual ~Block();
     std::vector<std::vector<char>> getCells();
     std::pair<int, int> getBox();
     bool moveBlock(Command);
@@ -31,7 +31,7 @@ public:
 
 private:
     int level_;
-    Type type_;
+    BlockType type_;
     int aliveFor_;
     std::pair<int, int> coords_;
 };

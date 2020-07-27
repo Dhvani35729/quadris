@@ -30,4 +30,6 @@ int Level::getLevelNum() const
 
 Block *LevelZero::nextBlock() const
 {
+    Block *newBlock = new Block(T_BLK, std::make_pair(5, 0), this->levelNum_);
+    return newBlock;
 }

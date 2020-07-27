@@ -1,5 +1,6 @@
 #include "model.h"
 #include "board.h"
+#include "block.h"
 
 #include <iostream>
 
@@ -27,6 +28,8 @@ bool Model::checkGameOver()
 void Model::startGame()
 {
     std::cout << "Starting game" << std::endl;
+    Block *newBlock = this->level_->nextBlock();
+    this->board_->addBlock(newBlock);
 };
 
 void Model::playRound(Command){

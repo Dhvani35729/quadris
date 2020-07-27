@@ -27,12 +27,15 @@ void View::run()
     std::cout << "Running application" << std::endl;
     this->startGame();
 
-    controller_->getCommand();
+    if (!this->model_->checkGameOver())
+    {
+        controller_->getCommand();
 
-    std::cout << "Drawing board \n"
-              << std::endl;
-    this->draw();
-    std::cout << std::endl;
+        std::cout << "Drawing board \n"
+                  << std::endl;
+        this->draw();
+        std::cout << std::endl;
+    }
 }
 void View::draw()
 {

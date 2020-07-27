@@ -35,10 +35,43 @@ Board::~Board()
             delete cell;
         }
     }
+    for (int i = 0; i < this->blocks_.size(); i++)
+    {
+        Block *block = this->blocks_[i];
+        delete block;
+    }
 };
 
-void Board::addBlock(Block *){
+void Board::addBlock(Block *block)
+{
+    std::cout << "Adding block to board" << std::endl;
+    this->currBlock_ = block;
+    this->blocks_.push_back(block);
+    std::vector<std::vector<char>> cells = block->getCells();
+    std::pair<int, int> bottomLeftCorner = block->getBox();
 
+    // for (int i = 0; i < 3; i++)
+    // {
+    //     for (int j = 0; j < 3; j++)
+    //     {
+    //         std::cout << cells[i][j];
+    //     }
+    //     std::cout << std::endl;
+    // }
+
+    // SHOULD BE ITERATOR PATTERN
+    // Set cells
+    int bRow = bottomLeftCorner.first;
+    int bCol = bottomLeftCorner.second;
+    int k = 2;
+    for (int i = bRow; i > bRow - 3; i--)
+    {
+        for (int j = bCol; j < 3; j++)
+        {
+            this->board_[i][j]->setSymbol(cells[k][j]);
+        }
+        k--;
+    }
 };
 
 void Board::setCell(int, int, char){
