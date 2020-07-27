@@ -30,10 +30,12 @@ void Model::startGame()
     std::cout << "Starting game" << std::endl;
     Block *newBlock = this->level_->nextBlock();
     this->board_->addBlock(newBlock);
+    notify();
 };
 
-void Model::playRound(Command){
-
+void Model::playRound(Command)
+{
+    notify();
 };
 
 void Model::resetGame(Command){

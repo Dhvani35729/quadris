@@ -35,6 +35,7 @@ void Controller::getCommand()
             keepAsking = false;
             std::cout
                 << "Controller: Received commands from Interpreter, length: " << commands.size() << std::endl;
+            model_->playRound(commands[0]);
         }
         else
         {
