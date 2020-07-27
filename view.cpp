@@ -19,6 +19,7 @@ View::~View()
 void View::update()
 {
     std::cout << "Updating view" << std::endl;
+    // Drawing
 }
 
 void View::run()

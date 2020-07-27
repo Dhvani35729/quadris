@@ -1,12 +1,13 @@
 #include "cell.h"
 #include <iostream>
 
-Cell::Cell(int row, int col)
+Cell::Cell(int row, int col, char symbol)
 {
+    std::cout << "Cell born" << std::endl;
     this->row_ = row;
     this->col_ = col;
-    this->occupied_ = false;
-    std::cout << "Cell born" << std::endl;
+    this->symbol_ = symbol;
+    this->occupied_ = true;
 };
 
 Cell::~Cell()

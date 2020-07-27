@@ -5,7 +5,7 @@
 class Cell
 {
 public:
-    Cell(int, int);
+    Cell(int, int, char);
     ~Cell();
     void setSymbol(char c);
     bool isOccupied();

@@ -11,6 +11,14 @@ Board::Board(int h, int w)
 {
     this->height_ = h;
     this->width_ = w;
+    for (int i = 0; i < h; i++)
+    {
+        for (int j = 0; j < w; j++)
+        {
+            Cell *newCell = new Cell(i, j, ' ');
+            this->board_[i][j] = newCell;
+        }
+    }
     std::cout << "Board born" << std::endl;
 };
 

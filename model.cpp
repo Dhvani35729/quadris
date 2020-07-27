@@ -1,15 +1,20 @@
 #include "model.h"
+#include "board.h"
 
 #include <iostream>
 
-Model::Model()
+Model::Model(int h, int w)
 {
     std::cout << "Model born" << std::endl;
+    this->board_ = new Board(h, w);
+    this->score_ = new Score();
 }
 
 Model::~Model()
 {
     std::cout << "Model died" << std::endl;
+    delete this->board_;
+    delete this->score_;
 }
 
 bool Model::checkGameOver()

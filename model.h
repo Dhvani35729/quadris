@@ -13,7 +13,7 @@
 class Model : public Subject
 {
 public:
-    Model();
+    Model(int, int);
     ~Model();
 
     bool checkGameOver();
