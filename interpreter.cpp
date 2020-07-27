@@ -43,6 +43,10 @@ std::istream &operator>>(std::istream &in, Interpreter &i)
     {
         i.addCommand(DOWN);
     }
+    else if (cmd == "drop")
+    {
+        i.addCommand(DROP);
+    }
 
     assert(!in.fail());
 

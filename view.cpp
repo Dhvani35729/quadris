@@ -6,6 +6,8 @@
 
 #include <iostream>
 
+using namespace std;
+
 View::View(Controller *c, Model *m) : model_(m), controller_(c)
 {
     std::cout << "View born" << std::endl;
@@ -49,6 +51,7 @@ void View::draw()
     std::cout << "Score:     " << model_->getScore() << std::endl;
     std::cout << "Hi Score: " << model_->getHiScore() << std::endl;
     std::cout << "-----------" << std::endl;
+    // TODO: Maybe use overloaded << operator
     std::vector<std::vector<char>> board = model_->getBoard();
     int height = model_->getBoardHeight();
     int width = model_->getBoardWidth();
@@ -63,6 +66,24 @@ void View::draw()
 
     std::cout << "-----------" << std::endl;
     std::cout << "Next:      " << std::endl;
+    std::vector<std::vector<char>> nextBlock = model_->getNextBlock();
+    for (int i = 0; i < nextBlock.size(); i++)
+    {
+        string row;
+        bool emptyRow = true;
+        for (int j = 0; j < nextBlock[i].size(); j++)
+        {
+            if (nextBlock[i][j] != ' ')
+            {
+                emptyRow = false;
+            }
+            row += nextBlock[i][j];
+        }
+        if (!emptyRow)
+        {
+            cout << row << endl;
+        }
+    }
 }
 
 void View::startGame()

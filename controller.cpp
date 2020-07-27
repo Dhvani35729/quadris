@@ -35,7 +35,13 @@ void Controller::getCommand()
             keepAsking = false;
             std::cout
                 << "Controller: Received commands from Interpreter, length: " << commands.size() << std::endl;
-            model_->playRound(commands[0]);
+            for (int i = 0; i < commands.size(); i++)
+            {
+                if (commands[i] == DROP)
+                {
+                    model_->dropBlock();
+                }
+            }
         }
         else
         {

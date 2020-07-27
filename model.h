@@ -5,6 +5,7 @@
 #include "controller.h"
 #include "level.h"
 #include "score.h"
+#include "block.h"
 #include "board.h"
 #include "cell.h"
 
@@ -19,20 +20,24 @@ public:
 
     bool checkGameOver();
     void startGame();
-    void playRound(Command);
-    void resetGame(Command);
+    void moveBlock(Command);
+    void rotateBlock(Command);
+    void dropBlock();
+    void resetGame();
     void setLevel(Level *);
     int getBoardHeight() const;
     int getBoardWidth() const;
     int getLevelNum() const;
     int getScore() const;
     int getHiScore() const;
+    std::vector<std::vector<char>> getNextBlock() const;
     std::vector<std::vector<char>> getBoard() const;
 
 private:
     Level *level_;
     Board *board_;
     Score *score_;
+    Block *nextBlock_;
 };
 
 #endif

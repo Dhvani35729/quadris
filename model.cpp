@@ -28,17 +28,35 @@ bool Model::checkGameOver()
 void Model::startGame()
 {
     std::cout << "Starting game" << std::endl;
-    Block *newBlock = this->level_->nextBlock();
-    this->board_->addBlock(newBlock);
+    if (nullptr == this->nextBlock_)
+    {
+        Block *newBlock = this->level_->nextBlock();
+        this->board_->addBlock(newBlock);
+    }
+    else
+    {
+        this->board_->addBlock(this->nextBlock_);
+    }
+    this->nextBlock_ = this->level_->nextBlock();
+
     notify();
 };
 
-void Model::playRound(Command)
+void Model::moveBlock(Command){
+
+};
+void Model::rotateBlock(Command){
+
+};
+void Model::dropBlock()
 {
+    this->board_->dropCurrentBlock();
+    this->board_->addBlock(this->nextBlock_);
+    this->nextBlock_ = this->level_->nextBlock();
     notify();
 };
 
-void Model::resetGame(Command){
+void Model::resetGame(){
 
 };
 
@@ -71,4 +89,9 @@ int Model::getBoardHeight() const
 int Model::getBoardWidth() const
 {
     return this->board_->getWidth();
+};
+
+std::vector<std::vector<char>> Model::getNextBlock() const
+{
+    return this->nextBlock_->getCells();
 };
