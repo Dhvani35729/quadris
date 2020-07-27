@@ -21,6 +21,8 @@ private:
 
     // Strategy Pattern member (plus signal handlers)
     Controller *controller_;
+
+    void startGame();
 };
 
 #endif

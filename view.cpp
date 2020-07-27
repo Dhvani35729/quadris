@@ -24,5 +24,13 @@ void View::update()
 void View::run()
 {
     std::cout << "Running application" << std::endl;
+    this->startGame();
+
     controller_->getCommand();
+}
+
+void View::startGame()
+{
+    std::cout << "Starting game" << std::endl;
+    model_->startGame();
 }
