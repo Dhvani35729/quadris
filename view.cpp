@@ -24,4 +24,5 @@ void View::update()
 void View::run()
 {
     std::cout << "Running application" << std::endl;
+    controller_->getCommand();
 }
