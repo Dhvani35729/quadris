@@ -1,6 +1,10 @@
 #include "level.h"
 
 #include <iostream>
+#include <fstream>
+#include <iostream>
+
+using namespace std;
 
 Level::Level()
 {
@@ -13,9 +17,27 @@ Level::~Level()
     std::cout << "Level died" << std::endl;
 }
 
-LevelZero::LevelZero()
+LevelZero::LevelZero(std::string f)
 {
+    std::cout << "LevelZero born" << std::endl;
+    this->fileName_ = f;
     this->levelNum_ = 0;
+
+    ifstream in(fileName_);
+
+    string sequence(
+        (std::istreambuf_iterator<char>(in)),
+        std::istreambuf_iterator<char>());
+
+    for (char &c : sequence)
+    {
+        if (c != ' ')
+        {
+            this->blockSequence_.push_back(c);
+        }
+    }
+
+    this->curIndex = 0;
 }
 
 LevelZero::~LevelZero()
@@ -28,8 +50,53 @@ int Level::getLevelNum() const
     return this->levelNum_;
 }
 
-Block *LevelZero::nextBlock() const
+Block *LevelZero::nextBlock()
 {
-    Block *newBlock = new Block(T_BLK, std::make_pair(5, 0), this->levelNum_);
-    return newBlock;
+    char nextBlock = this->blockSequence_[this->curIndex];
+    BlockType type;
+    if (nextBlock == 'I')
+    {
+        type = I_BLK;
+    }
+    else if (nextBlock == 'J')
+    {
+        type = J_BLK;
+    }
+    else if (nextBlock == 'L')
+    {
+        type = L_BLK;
+    }
+    else if (nextBlock == 'O')
+    {
+        type = O_BLK;
+    }
+    else if (nextBlock == 'S')
+    {
+        type = S_BLK;
+    }
+    else if (nextBlock == 'Z')
+    {
+        type = Z_BLK;
+    }
+    else if (nextBlock == 'T')
+    {
+        type = T_BLK;
+    }
+    else
+    {
+        type = BAD_BLK;
+    }
+
+    if (type != BAD_BLK)
+    {
+        Block *newBlock = new Block(type, std::make_pair(5, 0), this->levelNum_);
+        this->curIndex += 1;
+
+        if (this->curIndex == this->blockSequence_.size())
+        {
+            this->curIndex = 0;
+        }
+        return newBlock;
+    }
+    return nullptr;
 }

@@ -14,7 +14,8 @@ enum BlockType
     O_BLK,
     S_BLK,
     Z_BLK,
-    T_BLK
+    T_BLK,
+    BAD_BLK,
 };
 
 // Block

@@ -9,7 +9,7 @@ Model::Model(int h, int w)
     std::cout << "Model born" << std::endl;
     this->board_ = new Board(h, w);
     this->score_ = new Score();
-    this->level_ = new LevelZero();
+    this->level_ = new LevelZero("sequence.txt");
 }
 
 Model::~Model()

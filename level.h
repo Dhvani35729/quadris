@@ -3,13 +3,15 @@
 
 #include "block.h"
 
+#include <string>
+
 // Level
 class Level
 {
 public:
     Level();
     virtual ~Level();
-    virtual Block *nextBlock() const = 0;
+    virtual Block *nextBlock() = 0;
     int getLevelNum() const;
 
 protected:
@@ -19,9 +21,14 @@ protected:
 class LevelZero : public Level
 {
 public:
-    LevelZero();
+    LevelZero(std::string);
     ~LevelZero();
-    Block *nextBlock() const override;
+    Block *nextBlock() override;
+
+private:
+    std::string fileName_;
+    std::vector<char> blockSequence_;
+    int curIndex;
 };
 
 #endif

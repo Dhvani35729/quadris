@@ -7,6 +7,8 @@
 #include <vector>
 #include <iostream>
 
+using namespace std;
+
 Board::Board(int h, int w)
 {
     std::cout << "Board born" << std::endl;
@@ -57,7 +59,7 @@ void Board::addBlock(Block *block)
 
     // TODO: Need to check if CAN add block
 
-    // TODO: SHOULD BE ITERATOR PATTERN
+    // TODO: SHOULD BE ITERATOR PATTERN?
     // Set cells
     int bRow = bottomLeftCorner.first;
     int bCol = bottomLeftCorner.second;
