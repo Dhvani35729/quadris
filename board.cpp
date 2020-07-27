@@ -119,8 +119,9 @@ bool Board::moveCurrentBlock(Command)
     return true;
 };
 
-bool Board::rotateCurrentBlock(Command)
+bool Board::rotateCurrentBlock(Command c)
 {
+    this->currBlock_->rotateBlock(c);
     return true;
 };
 

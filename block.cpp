@@ -21,6 +21,7 @@ Block::Block(BlockType t, std::pair<int, int> pos, int level)
     if (t == I_BLK)
     {
         this->mWidth_ = 4;
+        this->mHeight_ = 4;
         this->matrix_.clear();
         this->matrix_.resize(this->mHeight_, std::vector<char>(this->mWidth_, ' '));
         matrix_[1][0] = 'I';
@@ -101,9 +102,53 @@ bool Block::moveBlock(Command)
 {
     return true;
 };
-bool Block::rotateBlock(Command)
+
+void print(std::vector<std::vector<char>> &mat)
 {
-    return true;
+    for (int i = 0; i < mat.size(); i++)
+    {
+        for (int j = 0; j < mat[i].size(); j++)
+        {
+            cout << mat[i][j];
+        }
+        cout << endl;
+    }
+}
+
+bool Block::rotateBlock(Command c)
+{
+    std::vector<std::vector<char>> mat = this->matrix_;
+    cout << "Initial" << endl;
+    print(mat);
+    int N = this->mWidth_;
+
+    // Consider all squares one by one
+    for (int x = 0; x < N / 2; x++)
+    {
+        // Consider elements in group
+        // of 4 in current square
+        for (int y = x; y < N - x - 1; y++)
+        {
+            // Store current cell in
+            // temp variable
+            int temp = mat[x][y];
+
+            // Move values from right to top
+            mat[x][y] = mat[y][N - 1 - x];
+
+            // Move values from bottom to right
+            mat[y][N - 1 - x] = mat[N - 1 - x][N - 1 - y];
+
+            // Move values from left to bottom
+            mat[N - 1 - x][N - 1 - y] = mat[N - 1 - y][x];
+
+            // Assign temp to left
+            mat[N - 1 - y][x] = temp;
+        }
+    }
+
+    cout << "Rotate" << endl;
+    print(mat);
 };
 
 void Block::dropBlock(int h)

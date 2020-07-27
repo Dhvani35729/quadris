@@ -45,9 +45,11 @@ void Model::startGame()
 void Model::moveBlock(Command){
 
 };
-void Model::rotateBlock(Command){
-
+void Model::rotateBlock(Command c)
+{
+    this->board_->rotateCurrentBlock(c);
 };
+
 void Model::dropBlock()
 {
     this->board_->dropCurrentBlock();

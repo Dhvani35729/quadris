@@ -41,6 +41,10 @@ void Controller::getCommand()
                 {
                     model_->dropBlock();
                 }
+                else if (commands[i] == CLOCKWISE)
+                {
+                    model_->rotateBlock(CLOCKWISE);
+                }
             }
         }
         else
