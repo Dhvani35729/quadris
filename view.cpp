@@ -17,6 +17,7 @@ View::View(Controller *c, Model *m) : model_(m), controller_(c)
 View::~View()
 {
     std::cout << "View died" << std::endl;
+    model_->unsubscribe(this);
 }
 
 void View::update()
