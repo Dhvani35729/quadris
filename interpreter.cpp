@@ -31,15 +31,15 @@ std::istream &operator>>(std::istream &in, Interpreter &i)
     std::string cmd;
     in >> cmd;
 
-    if (cmd == "LEFT")
+    if (cmd == "left")
     {
         i.addCommand(LEFT);
     }
-    else if (cmd == "RIGHT")
+    else if (cmd == "right")
     {
         i.addCommand(RIGHT);
     }
-    else if (cmd == "DOWN")
+    else if (cmd == "down")
     {
         i.addCommand(DOWN);
     }
