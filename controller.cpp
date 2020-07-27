@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <istream>
 
 Controller::Controller(Model *m) : model_(m)
 {
@@ -21,7 +22,23 @@ Controller::~Controller()
 void Controller::getCommand()
 {
     std::cout << "Controller: Getting command from user" << std::endl;
-    std::string command;
-    std::vector<Command> commands = inter_->processCommand(command);
-    std::cout << "Controller: Received commands from Interpreter, length: " << commands.size() << std::endl;
+    std::cout << std::endl;
+    bool keepAsking = true;
+    do
+    {
+        std::cout << ">";
+        std::cin >> *inter_;
+        std::vector<Command> commands = inter_->getCommands();
+
+        if (!commands.empty())
+        {
+            keepAsking = false;
+            std::cout
+                << "Controller: Received commands from Interpreter, length: " << commands.size() << std::endl;
+        }
+        else
+        {
+            keepAsking = true;
+        }
+    } while (keepAsking);
 }

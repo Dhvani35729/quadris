@@ -26,6 +26,7 @@ enum Command
     Z,
     O,
     T,
+    BAD_COMMAND
 };
 
 // Controller
@@ -34,9 +35,13 @@ class Interpreter
 public:
     Interpreter();
     ~Interpreter();
-    std::vector<Command> processCommand(std::string);
+    std::vector<Command> getCommands();
+    void addCommand(Command);
 
 private:
+    std::vector<Command> commands_;
 };
+
+std::istream &operator>>(std::istream &, Interpreter &);
 
 #endif

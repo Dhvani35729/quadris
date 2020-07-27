@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <cassert>
 
 Interpreter::Interpreter()
 {
@@ -14,9 +15,36 @@ Interpreter::~Interpreter()
     std::cout << "Interpreter died" << std::endl;
 }
 
-std::vector<Command> Interpreter::processCommand(std::string rawCommand)
+std::vector<Command> Interpreter::getCommands()
 {
-    std::vector<Command> commands;
-    std::cout << "Processing raw command" << std::endl;
-    return commands;
+    return this->commands_;
+}
+
+void Interpreter::addCommand(Command c)
+{
+    this->commands_.push_back(c);
+}
+
+std::istream &operator>>(std::istream &in, Interpreter &i)
+{
+
+    std::string cmd;
+    in >> cmd;
+
+    if (cmd == "LEFT")
+    {
+        i.addCommand(LEFT);
+    }
+    else if (cmd == "RIGHT")
+    {
+        i.addCommand(RIGHT);
+    }
+    else if (cmd == "DOWN")
+    {
+        i.addCommand(DOWN);
+    }
+
+    assert(!in.fail());
+
+    return in;
 }

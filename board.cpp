@@ -50,16 +50,7 @@ void Board::addBlock(Block *block)
     std::vector<std::vector<char>> cells = block->getCells();
     std::pair<int, int> bottomLeftCorner = block->getBox();
 
-    // for (int i = 0; i < 3; i++)
-    // {
-    //     for (int j = 0; j < 3; j++)
-    //     {
-    //         std::cout << cells[i][j];
-    //     }
-    //     std::cout << std::endl;
-    // }
-
-    // SHOULD BE ITERATOR PATTERN
+    // TODO: SHOULD BE ITERATOR PATTERN
     // Set cells
     int bRow = bottomLeftCorner.first;
     int bCol = bottomLeftCorner.second;
