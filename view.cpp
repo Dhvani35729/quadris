@@ -29,14 +29,17 @@ void View::run()
 
     controller_->getCommand();
 
+    std::cout << "Drawing board \n"
+              << std::endl;
     this->draw();
+    std::cout << std::endl;
 }
 void View::draw()
 {
     // Draw score
     std::cout << "Level:     " << model_->getLevelNum() << std::endl;
-    std::cout << "Score:     " << model_->getScore().getScore() << std::endl;
-    std::cout << "Hi Score: " << model_->getScore().getHiScore() << std::endl;
+    std::cout << "Score:     " << model_->getScore() << std::endl;
+    std::cout << "Hi Score: " << model_->getHiScore() << std::endl;
     std::cout << "-----------" << std::endl;
     std::vector<std::vector<char>> board = model_->getBoard();
     int height = model_->getBoardHeight();
@@ -56,6 +59,5 @@ void View::draw()
 
 void View::startGame()
 {
-    std::cout << "Starting game" << std::endl;
     model_->startGame();
 }

@@ -8,7 +8,7 @@ class Level
 {
 public:
     Level();
-    ~Level();
+    virtual ~Level();
     virtual Block *nextBlock() const = 0;
     int getLevelNum() const;
 
@@ -20,6 +20,7 @@ class LevelZero : public Level
 {
 public:
     LevelZero();
+    ~LevelZero();
     Block *nextBlock() const override;
 };
 

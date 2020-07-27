@@ -25,7 +25,8 @@ public:
     int getBoardHeight() const;
     int getBoardWidth() const;
     int getLevelNum() const;
-    Score getScore() const;
+    int getScore() const;
+    int getHiScore() const;
     std::vector<std::vector<char>> getBoard() const;
 
 private:

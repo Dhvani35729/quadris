@@ -18,6 +18,11 @@ LevelZero::LevelZero()
     this->levelNum_ = 0;
 }
 
+LevelZero::~LevelZero()
+{
+    std::cout << "LevelZero died" << std::endl;
+}
+
 int Level::getLevelNum() const
 {
     return this->levelNum_;

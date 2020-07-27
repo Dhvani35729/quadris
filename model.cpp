@@ -41,9 +41,13 @@ void Model::setLevel(Level *){
 
 };
 
-Score Model::getScore() const
+int Model::getScore() const
 {
-    return *score_;
+    return this->score_->getScore();
+};
+int Model::getHiScore() const
+{
+    return this->score_->getHiScore();
 };
 
 int Model::getLevelNum() const
