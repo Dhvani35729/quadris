@@ -16,7 +16,7 @@ class Board
 public:
     Board(int, int);
     ~Board();
-    void addBlock(Block *);
+    bool addBlock(Block *);
     void setCell(int, int, char);
     bool moveCurrentBlock(Command);
     bool rotateCurrentBlock(Command);

@@ -38,6 +38,7 @@ private:
     Board *board_;
     Score *score_;
     Block *nextBlock_;
+    bool gameOver_;
 };
 
 #endif

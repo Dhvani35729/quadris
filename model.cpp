@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+using namespace std;
+
 Model::Model(int h, int w)
 {
     std::cout << "Model born" << std::endl;
@@ -22,7 +24,7 @@ Model::~Model()
 
 bool Model::checkGameOver()
 {
-    return this->board_->isOccupied(0, 0);
+    return this->board_->isOccupied(0, 0) || this->gameOver_;
 };
 
 void Model::startGame()
@@ -53,9 +55,27 @@ void Model::rotateBlock(Command c)
 
 void Model::dropBlock()
 {
-    this->board_->dropCurrentBlock();
-    this->board_->addBlock(this->nextBlock_);
-    this->nextBlock_ = this->level_->nextBlock();
+    int blocksDropped = this->board_->dropCurrentBlock();
+    // Could not drop block
+    if (blocksDropped == -1)
+    {
+        // Do nothing
+        cout << "Do nothing" << endl;
+    }
+    // Dropped block
+    else
+    {
+        bool addedBlock = this->board_->addBlock(this->nextBlock_);
+        if (addedBlock)
+        {
+            this->nextBlock_ = this->level_->nextBlock();
+        }
+        else
+        {
+            // Game over
+            this->gameOver_ = true;
+        }
+    }
     notify();
 };
 
