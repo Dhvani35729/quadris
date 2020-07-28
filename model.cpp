@@ -24,7 +24,7 @@ Model::~Model()
 
 bool Model::checkGameOver()
 {
-    return this->board_->isOccupied(0, 0) || this->gameOver_;
+    return this->gameOver_;
 };
 
 void Model::startGame()

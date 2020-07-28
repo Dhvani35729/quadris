@@ -122,14 +122,16 @@ bool Board::moveCurrentBlock(Command c)
     // Clear old cells so we dont recheck it
     this->clearCells(this->currBlock_);
 
-    pair<int, int> newPos = this->currBlock_->moveBlock(c);
+    Block newBlock = this->currBlock_->moveBlock(c);
 
-    bool canMove = this->canPlace(newPos, this->currBlock_->getCells());
+    bool canMove = this->canPlace(newBlock.getPos(), newBlock.getCells());
     if (canMove)
     {
+
         this->clearCells(this->currBlock_);
 
-        this->currBlock_->setPos(newPos);
+        this->currBlock_->setMatrix(newBlock.getCells());
+        this->currBlock_->setPos(newBlock.getPos());
 
         this->updateCells(this->currBlock_);
 
@@ -230,71 +232,81 @@ bool Board::rotateCurrentBlock(Command c)
 int Board::dropCurrentBlock()
 {
     cout << "Dropping block: " << endl;
+
+    bool moved = false;
+    do
+    {
+        moved = this->moveCurrentBlock(DOWN);
+    } while (moved);
+
     // Get what we need
-    pair<int, int> curPos = this->currBlock_->getPos();
-    vector<vector<char>> cells = this->currBlock_->getCells();
-    cout << "Curr: " << curPos.first << ":" << curPos.second << endl;
-    int blockHeight = this->currBlock_->getBlockHeight();
-    cout << "Block H: " << blockHeight << endl;
-    int boxWidth = this->currBlock_->getBoxWidth();
+    // pair<int, int> curPos = this->currBlock_->getPos();
+    // vector<vector<char>> cells = this->currBlock_->getCells();
+    // cout << "Curr: " << curPos.first << ":" << curPos.second << endl;
+    // int blockHeight = this->currBlock_->getBlockHeight();
+    // cout << "Block H: " << blockHeight << endl;
+    // int boxWidth = this->currBlock_->getBoxWidth();
 
-    // Figure out the new height
-    int newH;
-    for (newH = curPos.first + blockHeight; newH <= this->height_ - blockHeight; newH++)
-    {
-        cout << "Checking height: " << newH << endl;
-        bool occupied = false;
-        for (int j = curPos.second; j < curPos.second + boxWidth; j++)
-        {
-            cout << "Checked: " << newH << ":" << j << endl;
-            if (cells[this->currBlock_->getBlockHeight() - 1][j - curPos.second] != ' ')
-            {
-                cout << "Not empty" << endl;
-                if (this->board_[newH][j]->isOccupied())
-                {
-                    occupied = true;
-                    break;
-                }
-            }
-        }
-        if (occupied)
-        {
-            break;
-        }
-    }
-    newH--;
-    cout << "New height before: " << newH << endl;
-    if (!this->blocks_.empty())
-    {
-        newH -= blockHeight - 1;
-    }
-    cout << "New height: " << newH << endl;
+    // // Figure out the new height
+    // int newH;
+    // for (newH = curPos.first + blockHeight; newH <= this->height_ - blockHeight; newH++)
+    // {
+    //     cout << "Checking height: " << newH << endl;
+    //     bool occupied = false;
+    //     for (int j = curPos.second; j < curPos.second + boxWidth; j++)
+    //     {
+    //         cout << "Checked: " << newH << ":" << j << endl;
+    //         if (cells[this->currBlock_->getBlockHeight() - 1][j - curPos.second] != ' ')
+    //         {
+    //             cout << "Not empty" << endl;
+    //             if (this->board_[newH][j]->isOccupied())
+    //             {
+    //                 occupied = true;
+    //                 break;
+    //             }
+    //         }
+    //     }
+    //     if (occupied)
+    //     {
+    //         break;
+    //     }
+    // }
+    // newH--;
 
-    // Potential new pos
-    pair<int, int> newPos = make_pair(newH, curPos.second);
-    cout << "New: " << newPos.first << ":" << newPos.second << endl;
+    // cout << "New height before: " << newH << endl;
+    // if (this->blocks_.size() > 1)
+    // {
+    //     newH -= blockHeight - 1;
+    // }
+    // cout << "New height: " << newH << endl;
 
-    // Need to check if the new spot conficts
+    // // Potential new pos
+    // pair<int, int> newPos = make_pair(newH, curPos.second);
+    // cout << "New: " << newPos.first << ":" << newPos.second << endl;
 
-    // Clear old cells so we dont recheck it
-    this->clearCells(this->currBlock_);
+    // // Need to check if the new spot conficts
 
-    bool canPlaceBlk = this->canPlace(newPos, this->currBlock_->getCells());
+    // // Clear old cells so we dont recheck it
+    // this->clearCells(this->currBlock_);
 
-    if (canPlaceBlk)
-    {
-        this->clearCells(this->currBlock_);
+    // bool canPlaceBlk = this->canPlace(newPos, this->currBlock_->getCells());
 
-        this->currBlock_->dropBlock(newH);
+    // if (canPlaceBlk)
+    // {
+    //     this->clearCells(this->currBlock_);
 
-        this->updateCells(this->currBlock_);
-    }
-    else
-    {
-        // Did not drop block
-        this->updateCells(this->currBlock_);
-        return -1;
-    }
+    //     this->currBlock_->setPos(newPos);
+
+    //     this->updateCells(this->currBlock_);
+    // }
+    // else
+    // {
+    //     // Did not drop block
+    //     this->updateCells(this->currBlock_);
+    //     return -1;
+    // }
+
+    // LAST ROW LOGIC
 
     // Check if last row full
     bool rowFull = true;

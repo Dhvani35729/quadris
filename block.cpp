@@ -111,22 +111,24 @@ std::pair<int, int> Block::getPos()
     return this->coords_;
 };
 
-std::pair<int, int> Block::moveBlock(Command c)
+Block Block::moveBlock(Command c)
 {
-    std::pair<int, int> curCords = this->coords_;
+    // Copy current block
+    Block movedBlock{*this};
+
     if (c == LEFT)
     {
-        curCords.second -= 1;
+        movedBlock.coords_.second -= 1;
     }
     else if (c == RIGHT)
     {
-        curCords.second += 1;
+        movedBlock.coords_.second += 1;
     }
     else if (c == DOWN)
     {
-        curCords.first += 1;
+        movedBlock.coords_.first += 1;
     }
-    return curCords;
+    return movedBlock;
 };
 
 void print(std::vector<std::vector<char>> &mat)
@@ -323,11 +325,11 @@ Block Block::rotateBlock(Command c)
 
     // Prev top left corner
     pair<int, int> prevTCorner = rotatedBlock.getPos();
-    cout << "Old T Corner: " << prevTCorner.first << ":" << prevTCorner.second << endl;
+    // cout << "Old T Corner: " << prevTCorner.first << ":" << prevTCorner.second << endl;
     // Prev bottom left corner
     pair<int, int> prevBCorner = make_pair(prevTCorner.first + rotatedBlock.getBlockHeight() - 1, prevTCorner.second);
-    cout << "Old B Corner: " << prevBCorner.first << ":" << prevBCorner.second << endl;
-    cout << "Old height: " << rotatedBlock.getBlockHeight() << endl;
+    // cout << "Old B Corner: " << prevBCorner.first << ":" << prevBCorner.second << endl;
+    // cout << "Old height: " << rotatedBlock.getBlockHeight() << endl;
 
     if (c == COUNTERCLOCKWISE)
     {
@@ -348,24 +350,18 @@ Block Block::rotateBlock(Command c)
     }
 
     // New bottom left corner
-    cout
-        << "New height: " << rotatedBlock.getBlockHeight() << endl;
+    // cout << "New height: " << rotatedBlock.getBlockHeight() << endl;
     pair<int, int> newBCorner = make_pair(prevTCorner.first + rotatedBlock.getBlockHeight() - 1, prevTCorner.second);
-    cout << "New B Corner: " << newBCorner.first << ":" << newBCorner.second << endl;
+    // cout << "New B Corner: " << newBCorner.first << ":" << newBCorner.second << endl;
 
     // New top left corner
     int diff = newBCorner.first - prevBCorner.first;
     pair<int, int> newTCorner = make_pair(prevTCorner.first - diff, prevTCorner.second);
-    cout << "New T Corner: " << newTCorner.first << ":" << newTCorner.second << endl;
+    // cout << "New T Corner: " << newTCorner.first << ":" << newTCorner.second << endl;
 
     rotatedBlock.setPos(newTCorner);
 
     return rotatedBlock;
-};
-
-void Block::dropBlock(int h)
-{
-    this->coords_.first = h;
 };
 
 int Block::getBlockHeight()

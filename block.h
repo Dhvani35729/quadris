@@ -26,13 +26,15 @@ public:
     virtual ~Block();
     std::vector<std::vector<char>> getCells();
     std::pair<int, int> getPos();
-    std::pair<int, int> moveBlock(Command);
+    Block moveBlock(Command);
     Block rotateBlock(Command);
+
     int getBoxWidth();
     int getBoxHeight();
+
     int getBlockHeight();
     int getBlockWidth();
-    void dropBlock(int);
+
     void setMatrix(std::vector<std::vector<char>>);
     void setPos(std::pair<int, int>);
 
