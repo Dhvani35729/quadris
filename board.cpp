@@ -207,14 +207,15 @@ bool Board::rotateCurrentBlock(Command c)
     // Clear old cells so we dont recheck it
     this->clearCells(this->currBlock_);
 
-    std::vector<std::vector<char>> newMatrix = this->currBlock_->rotateBlock(c);
+    Block newBlock = this->currBlock_->rotateBlock(c);
 
-    bool canRotate = this->canPlace(this->currBlock_->getPos(), newMatrix);
+    bool canRotate = this->canPlace(newBlock.getPos(), newBlock.getCells());
     if (canRotate)
     {
         this->clearCells(this->currBlock_);
 
-        this->currBlock_->setMatrix(newMatrix);
+        this->currBlock_->setMatrix(newBlock.getCells());
+        this->currBlock_->setPos(newBlock.getPos());
 
         this->updateCells(this->currBlock_);
 

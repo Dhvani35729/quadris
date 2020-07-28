@@ -209,13 +209,14 @@ void removeCol(int w, std::vector<std::vector<char>> &mat)
     }
 };
 
-void removeWhitespace(std::vector<std::vector<char>> &mat)
+void Block::removeWhitespace()
 {
+    std::vector<std::vector<char>> &mat = this->matrix_;
     // Remove empty horizontal rows by moving up
 
     int row = 0;
     // cout << "Remove line?: " << row << endl;
-    print(mat);
+    // print(mat);
     while (isRowEmpty(row, mat))
     {
         removeRow(row, mat);
@@ -228,9 +229,33 @@ void removeWhitespace(std::vector<std::vector<char>> &mat)
     }
 }
 
-std::vector<std::vector<char>> Block::rotateClockwise()
+void Block::calcBlockSize()
 {
-    std::vector<std::vector<char>> mat = this->matrix_;
+    this->blockHeight_ = this->matrix_.size();
+
+    for (int i = this->matrix_.size() - 1; i >= 0; i--)
+    {
+        if (!isRowEmpty(i, this->matrix_))
+        {
+            this->blockHeight_ = i + 1;
+            break;
+        }
+    }
+
+    this->blockWidth_ = 0;
+    for (int j = this->matrix_[0].size() - 1; j >= 0; j--)
+    {
+        if (!isColEmpty(j, this->matrix_))
+        {
+            this->blockWidth_ = j + 1;
+            break;
+        }
+    }
+}
+
+void Block::rotateClockwise()
+{
+    std::vector<std::vector<char>> &mat = this->matrix_;
     int N = this->mWidth_;
 
     // Consider all squares one by one
@@ -257,40 +282,11 @@ std::vector<std::vector<char>> Block::rotateClockwise()
             mat[y][N - 1 - x] = temp;
         }
     }
-
-    removeWhitespace(mat);
-
-    // Shift all elements to the left
-    return mat;
 };
 
-void Block::calcBlockSize()
+void Block::rotateCounterclockwise()
 {
-    this->blockHeight_ = 0;
-    this->blockWidth_ = 0;
-
-    for (int i = 0; i < this->matrix_.size(); i++)
-    {
-        for (int j = 0; j < this->matrix_[i].size(); j++)
-        {
-            if (this->matrix_[i][j] != ' ')
-            {
-                if (i + 1 > this->blockHeight_)
-                {
-                    this->blockHeight_ += 1;
-                }
-                if (j + 1 > this->blockWidth_)
-                {
-                    this->blockHeight_ += 1;
-                }
-            }
-        }
-    }
-}
-
-std::vector<std::vector<char>> Block::rotateCounterclockwise()
-{
-    std::vector<std::vector<char>> mat = this->matrix_;
+    std::vector<std::vector<char>> &mat = this->matrix_;
     int N = this->mWidth_;
 
     // Consider all squares one by one
@@ -317,25 +313,54 @@ std::vector<std::vector<char>> Block::rotateCounterclockwise()
             mat[N - 1 - y][x] = temp;
         }
     }
-    return mat;
 };
 
 // Only supports rotations on square matrix
-std::vector<std::vector<char>> Block::rotateBlock(Command c)
+Block Block::rotateBlock(Command c)
 {
+    // Copy current block
+    Block rotatedBlock{*this};
+
+    // Prev top left corner
+    pair<int, int> prevTCorner = rotatedBlock.getPos();
+    cout << "Old T Corner: " << prevTCorner.first << ":" << prevTCorner.second << endl;
+    // Prev bottom left corner
+    pair<int, int> prevBCorner = make_pair(prevTCorner.first + rotatedBlock.getBlockHeight() - 1, prevTCorner.second);
+    cout << "Old B Corner: " << prevBCorner.first << ":" << prevBCorner.second << endl;
+    cout << "Old height: " << rotatedBlock.getBlockHeight() << endl;
+
     if (c == COUNTERCLOCKWISE)
     {
-        return this->rotateCounterclockwise();
+
+        rotatedBlock.rotateCounterclockwise();
+        rotatedBlock.removeWhitespace();
+        rotatedBlock.calcBlockSize();
     }
     else if (c == CLOCKWISE)
     {
-        return this->rotateClockwise();
+        rotatedBlock.rotateClockwise();
+        rotatedBlock.removeWhitespace();
+        rotatedBlock.calcBlockSize();
     }
     else
     {
-        std::vector<std::vector<char>> error;
-        return error;
+        //  Assert should not be here
     }
+
+    // New bottom left corner
+    cout
+        << "New height: " << rotatedBlock.getBlockHeight() << endl;
+    pair<int, int> newBCorner = make_pair(prevTCorner.first + rotatedBlock.getBlockHeight() - 1, prevTCorner.second);
+    cout << "New B Corner: " << newBCorner.first << ":" << newBCorner.second << endl;
+
+    // New top left corner
+    int diff = newBCorner.first - prevBCorner.first;
+    pair<int, int> newTCorner = make_pair(prevTCorner.first - diff, prevTCorner.second);
+    cout << "New T Corner: " << newTCorner.first << ":" << newTCorner.second << endl;
+
+    rotatedBlock.setPos(newTCorner);
+
+    return rotatedBlock;
 };
 
 void Block::dropBlock(int h)

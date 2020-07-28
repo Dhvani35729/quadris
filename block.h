@@ -27,7 +27,7 @@ public:
     std::vector<std::vector<char>> getCells();
     std::pair<int, int> getPos();
     std::pair<int, int> moveBlock(Command);
-    std::vector<std::vector<char>> rotateBlock(Command);
+    Block rotateBlock(Command);
     int getBoxWidth();
     int getBoxHeight();
     int getBlockHeight();
@@ -37,9 +37,10 @@ public:
     void setPos(std::pair<int, int>);
 
 private:
-    std::vector<std::vector<char>> rotateClockwise();
-    std::vector<std::vector<char>> rotateCounterclockwise();
+    void rotateClockwise();
+    void rotateCounterclockwise();
     void calcBlockSize();
+    void removeWhitespace();
 
     int level_;
     BlockType type_;
