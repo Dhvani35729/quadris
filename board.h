@@ -24,7 +24,7 @@ public:
     std::vector<std::vector<char>> getBoard();
     bool isOccupied(int, int);
     bool isLineFull(int);
-    bool removeLine(int);
+    void removeLine(int);
     void resetBoard();
     void showHint();
     int getHeight() const;

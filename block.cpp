@@ -154,6 +154,30 @@ std::vector<std::vector<char>> Block::rotateClockwise()
     return mat;
 };
 
+void Block::calcBlockHeight()
+{
+    bool emptyRow = true;
+    this->blockHeight_ = this->matrix_.size();
+
+    for (int i = 0; i < this->matrix_.size(); i++)
+    {
+        emptyRow = true;
+        for (int j = 0; j < this->matrix_[i].size(); j++)
+        {
+            if (this->matrix_[i][j] != ' ')
+            {
+                emptyRow = false;
+            }
+        }
+        if (emptyRow)
+        {
+            this->blockHeight_ = i + 1;
+            break;
+        }
+    }
+    cout << "New height: " << this->blockHeight_ << endl;
+}
+
 std::vector<std::vector<char>> Block::rotateCounterclockwise()
 {
     std::vector<std::vector<char>> mat = this->matrix_;
@@ -197,6 +221,11 @@ std::vector<std::vector<char>> Block::rotateBlock(Command c)
     {
         return this->rotateClockwise();
     }
+    else
+    {
+        std::vector<std::vector<char>> error;
+        return error;
+    }
 };
 
 void Block::dropBlock(int h)
@@ -208,3 +237,9 @@ int Block::getBlockHeight()
 {
     return this->blockHeight_;
 };
+
+void Block::setMatrix(std::vector<std::vector<char>> m)
+{
+    this->matrix_ = m;
+    this->calcBlockHeight();
+}

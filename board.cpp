@@ -146,9 +146,30 @@ bool Board::canPlace(std::pair<int, int> newPos, std::vector<std::vector<char>> 
 
 bool Board::rotateCurrentBlock(Command c)
 {
+
+    // TODO: Check if in bounds
+    cout << "Rotating block" << endl;
+
+    // Clear old cells so we dont recheck it
+    this->clearCells(this->currBlock_);
+
     std::vector<std::vector<char>> newMatrix = this->currBlock_->rotateBlock(c);
-    // this->canPlace(this->currBlock_->getCells(), newMatrix);
-    return true;
+
+    bool canRotate = this->canPlace(this->currBlock_->getPos(), newMatrix);
+    if (canRotate)
+    {
+        this->clearCells(this->currBlock_);
+
+        this->currBlock_->setMatrix(newMatrix);
+
+        this->updateCells(this->currBlock_);
+
+        return true;
+    }
+
+    this->updateCells(this->currBlock_);
+
+    return false;
 };
 
 int Board::dropCurrentBlock()
@@ -156,9 +177,9 @@ int Board::dropCurrentBlock()
     cout << "Dropping block: " << endl;
     // Get what we need
     pair<int, int> curPos = this->currBlock_->getPos();
-    // cout << "Curr: " << curPos.first << ":" << curPos.second << endl;
+    cout << "Curr: " << curPos.first << ":" << curPos.second << endl;
     int blockHeight = this->currBlock_->getBlockHeight();
-    // cout << "Block H: " << blockHeight << endl;
+    cout << "Block H: " << blockHeight << endl;
     int boxWidth = this->currBlock_->getBoxWidth();
 
     // Figure out the new height
@@ -168,7 +189,7 @@ int Board::dropCurrentBlock()
         bool occupied = false;
         for (int j = 0; j < boxWidth; j++)
         {
-            // cout << "Checked: " << newH << ":" << j << endl;
+            cout << "Checked: " << newH << ":" << j << endl;
             if (this->board_[newH][j]->isOccupied())
             {
                 occupied = true;
@@ -181,16 +202,16 @@ int Board::dropCurrentBlock()
         }
     }
     newH--;
-    // cout << "New height before: " << newH << endl;
-    if (newH != this->height_ - 1)
+    cout << "New height before: " << newH << endl;
+    if (newH != this->height_ - blockHeight)
     {
         newH -= blockHeight - 1;
     }
-    // cout << "New height: " << newH << endl;
+    cout << "New height: " << newH << endl;
 
     // Potential new pos
     pair<int, int> newPos = make_pair(newH, curPos.second);
-    // cout << "New: " << newPos.first << ":" << newPos.second << endl;
+    cout << "New: " << newPos.first << ":" << newPos.second << endl;
 
     // Need to check if the new spot conficts
 
@@ -267,7 +288,7 @@ bool Board::isLineFull(int h)
     return true;
 };
 
-bool Board::removeLine(int h)
+void Board::removeLine(int h)
 {
     // Move everything down by 1
     for (int i = h - 1; i >= 0; i--)

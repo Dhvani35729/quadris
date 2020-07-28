@@ -32,10 +32,12 @@ public:
     int getBoxHeight();
     int getBlockHeight();
     void dropBlock(int);
+    void setMatrix(std::vector<std::vector<char>>);
 
 private:
     std::vector<std::vector<char>> rotateClockwise();
     std::vector<std::vector<char>> rotateCounterclockwise();
+    void calcBlockHeight();
 
     int level_;
     BlockType type_;
