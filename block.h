@@ -26,18 +26,20 @@ public:
     virtual ~Block();
     std::vector<std::vector<char>> getCells();
     std::pair<int, int> getPos();
-    bool moveBlock(Command);
+    std::pair<int, int> moveBlock(Command);
     std::vector<std::vector<char>> rotateBlock(Command);
     int getBoxWidth();
     int getBoxHeight();
     int getBlockHeight();
+    int getBlockWidth();
     void dropBlock(int);
     void setMatrix(std::vector<std::vector<char>>);
+    void setPos(std::pair<int, int>);
 
 private:
     std::vector<std::vector<char>> rotateClockwise();
     std::vector<std::vector<char>> rotateCounterclockwise();
-    void calcBlockHeight();
+    void calcBlockSize();
 
     int level_;
     BlockType type_;
@@ -46,6 +48,7 @@ private:
     int mWidth_;
     int mHeight_;
     int blockHeight_;
+    int blockWidth_;
     // top left
     std::pair<int, int> coords_;
 };

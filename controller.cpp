@@ -41,13 +41,13 @@ void Controller::getCommand()
                 {
                     model_->dropBlock();
                 }
-                else if (commands[i] == CLOCKWISE)
+                else if (commands[i] == CLOCKWISE || commands[i] == COUNTERCLOCKWISE)
                 {
-                    model_->rotateBlock(CLOCKWISE);
+                    model_->rotateBlock(commands[i]);
                 }
-                else if (commands[i] == COUNTERCLOCKWISE)
+                else if (commands[i] == LEFT || commands[i] == RIGHT || commands[i] == DOWN)
                 {
-                    model_->rotateBlock(COUNTERCLOCKWISE);
+                    model_->moveBlock(commands[i]);
                 }
             }
         }

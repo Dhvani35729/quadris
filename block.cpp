@@ -105,9 +105,22 @@ std::pair<int, int> Block::getPos()
     return this->coords_;
 };
 
-bool Block::moveBlock(Command)
+std::pair<int, int> Block::moveBlock(Command c)
 {
-    return true;
+    std::pair<int, int> curCords = this->coords_;
+    if (c == LEFT)
+    {
+        curCords.second -= 1;
+    }
+    else if (c == RIGHT)
+    {
+        curCords.second += 1;
+    }
+    else if (c == DOWN)
+    {
+        curCords.first += 1;
+    }
+    return curCords;
 };
 
 void print(std::vector<std::vector<char>> &mat)
@@ -151,31 +164,33 @@ std::vector<std::vector<char>> Block::rotateClockwise()
             mat[y][N - 1 - x] = temp;
         }
     }
+
+    // Shift all elements to the left
     return mat;
 };
 
-void Block::calcBlockHeight()
+void Block::calcBlockSize()
 {
-    bool emptyRow = true;
-    this->blockHeight_ = this->matrix_.size();
+    this->blockHeight_ = 0;
+    this->blockWidth_ = 0;
 
     for (int i = 0; i < this->matrix_.size(); i++)
     {
-        emptyRow = true;
         for (int j = 0; j < this->matrix_[i].size(); j++)
         {
             if (this->matrix_[i][j] != ' ')
             {
-                emptyRow = false;
+                if (i + 1 > this->blockHeight_)
+                {
+                    this->blockHeight_ += 1;
+                }
+                if (j + 1 > this->blockWidth_)
+                {
+                    this->blockHeight_ += 1;
+                }
             }
         }
-        if (emptyRow)
-        {
-            this->blockHeight_ = i + 1;
-            break;
-        }
     }
-    cout << "New height: " << this->blockHeight_ << endl;
 }
 
 std::vector<std::vector<char>> Block::rotateCounterclockwise()
@@ -238,8 +253,18 @@ int Block::getBlockHeight()
     return this->blockHeight_;
 };
 
+int Block::getBlockWidth()
+{
+    return this->blockWidth_;
+};
+
 void Block::setMatrix(std::vector<std::vector<char>> m)
 {
     this->matrix_ = m;
-    this->calcBlockHeight();
+    this->calcBlockSize();
+}
+
+void Block::setPos(std::pair<int, int> m)
+{
+    this->coords_ = m;
 }

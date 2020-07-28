@@ -115,13 +115,67 @@ void Board::setCell(int i, int j, char c)
     this->board_[i][j]->setSymbol(c);
 };
 
-bool Board::moveCurrentBlock(Command)
+bool Board::moveCurrentBlock(Command c)
 {
-    return true;
+    cout << "Moving block" << endl;
+
+    // Clear old cells so we dont recheck it
+    this->clearCells(this->currBlock_);
+
+    pair<int, int> newPos = this->currBlock_->moveBlock(c);
+
+    bool canMove = this->canPlace(newPos, this->currBlock_->getCells());
+    if (canMove)
+    {
+        this->clearCells(this->currBlock_);
+
+        this->currBlock_->setPos(newPos);
+
+        this->updateCells(this->currBlock_);
+
+        return true;
+    }
+
+    this->updateCells(this->currBlock_);
+
+    return false;
 };
 
 bool Board::canPlace(std::pair<int, int> newPos, std::vector<std::vector<char>> newMatrix)
 {
+    cout << "Checking in place: " << newPos.first << ":" << newPos.second << endl;
+    int blockHeight = 0;
+    int blockWidth = 0;
+
+    for (int i = 0; i < newMatrix.size(); i++)
+    {
+        for (int j = 0; j < newMatrix[i].size(); j++)
+        {
+            if (newMatrix[i][j] != ' ')
+            {
+                if (i + 1 > blockHeight)
+                {
+                    blockHeight += 1;
+                }
+                if (j + 1 > blockWidth)
+                {
+                    blockWidth += 1;
+                }
+            }
+        }
+    }
+
+    // cout << "BH: " << blockHeight << endl;
+    // cout << "BW: " << blockWidth << endl;
+    bool rowOutBounds = newPos.first < 0 || newPos.first >= this->height_ || newPos.first + blockHeight > this->height_;
+    bool colOutBounds = newPos.second < 0 || newPos.second >= this->width_ || newPos.second + blockWidth > this->width_;
+
+    if (rowOutBounds || colOutBounds)
+    {
+        return false;
+    }
+
+    // cout << "In bounds" << endl;
 
     int bRow = newPos.first;
     int bCol = newPos.second;
@@ -177,6 +231,7 @@ int Board::dropCurrentBlock()
     cout << "Dropping block: " << endl;
     // Get what we need
     pair<int, int> curPos = this->currBlock_->getPos();
+    vector<vector<char>> cells = this->currBlock_->getCells();
     cout << "Curr: " << curPos.first << ":" << curPos.second << endl;
     int blockHeight = this->currBlock_->getBlockHeight();
     cout << "Block H: " << blockHeight << endl;
@@ -187,13 +242,16 @@ int Board::dropCurrentBlock()
     for (newH = curPos.first + blockHeight; newH <= this->height_ - blockHeight; newH++)
     {
         bool occupied = false;
-        for (int j = 0; j < boxWidth; j++)
+        for (int j = curPos.second; j < boxWidth; j++)
         {
-            cout << "Checked: " << newH << ":" << j << endl;
-            if (this->board_[newH][j]->isOccupied())
+            if (cells[this->currBlock_->getBlockHeight() - 1][j - curPos.second] != ' ')
             {
-                occupied = true;
-                break;
+                cout << "Checked: " << newH << ":" << j << endl;
+                if (this->board_[newH][j]->isOccupied())
+                {
+                    occupied = true;
+                    break;
+                }
             }
         }
         if (occupied)
@@ -203,7 +261,7 @@ int Board::dropCurrentBlock()
     }
     newH--;
     cout << "New height before: " << newH << endl;
-    if (newH != this->height_ - blockHeight)
+    if (!this->blocks_.empty())
     {
         newH -= blockHeight - 1;
     }
@@ -220,8 +278,6 @@ int Board::dropCurrentBlock()
 
     bool canPlaceBlk = this->canPlace(newPos, this->currBlock_->getCells());
 
-    this->updateCells(this->currBlock_);
-
     if (canPlaceBlk)
     {
         this->clearCells(this->currBlock_);
@@ -233,6 +289,7 @@ int Board::dropCurrentBlock()
     else
     {
         // Did not drop block
+        this->updateCells(this->currBlock_);
         return -1;
     }
 

@@ -44,9 +44,12 @@ void Model::startGame()
     notify();
 };
 
-void Model::moveBlock(Command){
-
+void Model::moveBlock(Command c)
+{
+    this->board_->moveCurrentBlock(c);
+    notify();
 };
+
 void Model::rotateBlock(Command c)
 {
     this->board_->rotateCurrentBlock(c);
