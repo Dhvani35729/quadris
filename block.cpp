@@ -141,6 +141,93 @@ void print(std::vector<std::vector<char>> &mat)
     }
 }
 
+bool isRowEmpty(int h, std::vector<std::vector<char>> &mat)
+{
+    for (int j = 0; j < mat[h].size(); j++)
+    {
+        if (mat[h][j] != ' ')
+        {
+            return false;
+        }
+    }
+    return true;
+};
+
+bool isColEmpty(int w, std::vector<std::vector<char>> &mat)
+{
+    for (int i = 0; i < mat.size(); i++)
+    {
+        if (mat[i][w] != ' ')
+        {
+            return false;
+        }
+    }
+    return true;
+};
+
+void removeRow(int h, std::vector<std::vector<char>> &mat)
+{
+    // Move everything up by 1
+    // cout << "Before" << endl;
+    // print(mat);
+    for (int i = h; i < mat.size() - 1; i++)
+    {
+        for (int j = 0; j < mat[i].size(); j++)
+        {
+            mat[i][j] = mat[i + 1][j];
+        }
+    }
+    // cout << "After" << endl;
+    // print(mat);
+
+    // Clear bottom row
+    for (int j = 0; j < mat[mat.size() - 1].size(); j++)
+    {
+        mat[mat.size() - 1][j] = ' ';
+    }
+};
+
+void removeCol(int w, std::vector<std::vector<char>> &mat)
+{
+    // Move everything left by 1
+    // cout << "Before" << endl;
+    // print(mat);
+    for (int j = w; j < mat[w].size() - 1; j++)
+    {
+        for (int i = 0; i < mat.size(); i++)
+        {
+            mat[i][j] = mat[i][j + 1];
+        }
+    }
+    // cout << "After" << endl;
+    // print(mat);
+
+    // Clear right col
+    for (int i = 0; i < mat.size(); i++)
+    {
+        mat[i][mat[w].size() - 1] = ' ';
+    }
+};
+
+void removeWhitespace(std::vector<std::vector<char>> &mat)
+{
+    // Remove empty horizontal rows by moving up
+
+    int row = 0;
+    // cout << "Remove line?: " << row << endl;
+    print(mat);
+    while (isRowEmpty(row, mat))
+    {
+        removeRow(row, mat);
+    }
+
+    int col = 0;
+    while (isColEmpty(col, mat))
+    {
+        removeCol(col, mat);
+    }
+}
+
 std::vector<std::vector<char>> Block::rotateClockwise()
 {
     std::vector<std::vector<char>> mat = this->matrix_;
@@ -170,6 +257,8 @@ std::vector<std::vector<char>> Block::rotateClockwise()
             mat[y][N - 1 - x] = temp;
         }
     }
+
+    removeWhitespace(mat);
 
     // Shift all elements to the left
     return mat;
