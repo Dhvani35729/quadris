@@ -241,12 +241,14 @@ int Board::dropCurrentBlock()
     int newH;
     for (newH = curPos.first + blockHeight; newH <= this->height_ - blockHeight; newH++)
     {
+        cout << "Checking height: " << newH << endl;
         bool occupied = false;
-        for (int j = curPos.second; j < boxWidth; j++)
+        for (int j = curPos.second; j < curPos.second + boxWidth; j++)
         {
+            cout << "Checked: " << newH << ":" << j << endl;
             if (cells[this->currBlock_->getBlockHeight() - 1][j - curPos.second] != ' ')
             {
-                cout << "Checked: " << newH << ":" << j << endl;
+                cout << "Not empty" << endl;
                 if (this->board_[newH][j]->isOccupied())
                 {
                     occupied = true;
