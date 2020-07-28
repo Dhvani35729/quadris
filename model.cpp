@@ -48,6 +48,7 @@ void Model::moveBlock(Command){
 void Model::rotateBlock(Command c)
 {
     this->board_->rotateCurrentBlock(c);
+    notify();
 };
 
 void Model::dropBlock()

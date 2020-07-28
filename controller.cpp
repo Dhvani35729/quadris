@@ -45,6 +45,10 @@ void Controller::getCommand()
                 {
                     model_->rotateBlock(CLOCKWISE);
                 }
+                else if (commands[i] == COUNTERCLOCKWISE)
+                {
+                    model_->rotateBlock(COUNTERCLOCKWISE);
+                }
             }
         }
         else

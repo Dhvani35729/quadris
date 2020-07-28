@@ -57,6 +57,10 @@ std::istream &operator>>(std::istream &in, Interpreter &i)
     {
         i.addCommand(CLOCKWISE);
     }
+    else if (cmd == "counterclockwise")
+    {
+        i.addCommand(COUNTERCLOCKWISE);
+    }
 
     assert(!in.fail());
 

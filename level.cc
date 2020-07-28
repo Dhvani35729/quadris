@@ -89,7 +89,7 @@ Block *LevelZero::nextBlock()
 
     if (type != BAD_BLK)
     {
-        Block *newBlock = new Block(type, std::make_pair(5, 0), this->levelNum_);
+        Block *newBlock = new Block(type, std::make_pair(3, 0), this->levelNum_);
         this->curIndex += 1;
 
         if (this->curIndex == this->blockSequence_.size())

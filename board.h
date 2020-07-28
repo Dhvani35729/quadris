@@ -33,6 +33,8 @@ public:
 private:
     void updateCells(Block *);
     void clearCells(Block *);
+    bool canPlace(std::pair<int, int> newPos, std::vector<std::vector<char>> newMatrix);
+
     int width_;
     int height_;
     std::vector<std::vector<Cell *>> board_;
