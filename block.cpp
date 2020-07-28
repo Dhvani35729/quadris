@@ -29,6 +29,7 @@ Block::Block(BlockType t, std::pair<int, int> pos, int level)
         matrix_[0][2] = 'I';
         matrix_[0][3] = 'I';
         this->blockHeight_ = 1;
+        this->blockWidth_ = 4;
     }
     else if (t == J_BLK)
     {
@@ -37,6 +38,7 @@ Block::Block(BlockType t, std::pair<int, int> pos, int level)
         matrix_[1][1] = 'J';
         matrix_[1][2] = 'J';
         this->blockHeight_ = 2;
+        this->blockWidth_ = 3;
     }
     else if (t == L_BLK)
     {
@@ -45,6 +47,7 @@ Block::Block(BlockType t, std::pair<int, int> pos, int level)
         matrix_[1][1] = 'L';
         matrix_[1][2] = 'L';
         this->blockHeight_ = 2;
+        this->blockWidth_ = 3;
     }
     else if (t == O_BLK)
     {
@@ -61,6 +64,7 @@ Block::Block(BlockType t, std::pair<int, int> pos, int level)
         matrix_[1][0] = 'S';
         matrix_[1][1] = 'S';
         this->blockHeight_ = 2;
+        this->blockWidth_ = 3;
     }
     else if (t == Z_BLK)
     {
@@ -69,6 +73,7 @@ Block::Block(BlockType t, std::pair<int, int> pos, int level)
         matrix_[1][1] = 'Z';
         matrix_[1][2] = 'Z';
         this->blockHeight_ = 2;
+        this->blockWidth_ = 3;
     }
     else if (t == T_BLK)
     {
@@ -77,6 +82,7 @@ Block::Block(BlockType t, std::pair<int, int> pos, int level)
         matrix_[0][2] = 'T';
         matrix_[1][1] = 'T';
         this->blockHeight_ = 2;
+        this->blockWidth_ = 3;
     }
 };
 
