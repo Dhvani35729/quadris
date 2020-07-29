@@ -113,6 +113,11 @@ Block *LevelZero::nextBlock()
     return nullptr;
 }
 
+Block *LevelOne::nextBlock()
+{
+    return;
+}
+
 Block *LevelTwo::nextBlock()
 {
     int blkInd = rand() % BAD_BLK;
