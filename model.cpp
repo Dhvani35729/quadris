@@ -22,6 +22,7 @@ Model::~Model()
     delete this->board_;
     delete this->score_;
     delete this->level_;
+    delete this->nextBlock_;
 }
 
 bool Model::checkGameOver()
@@ -98,8 +99,15 @@ void Model::dropBlock()
     notify();
 };
 
-void Model::resetGame(){
+void Model::resetGame()
+{
+    this->board_->resetBoard();
+    this->score_->resetScore();
 
+    delete nextBlock_;
+    this->nextBlock_ = nullptr;
+
+    this->startGame();
 };
 
 void Model::setLevel(Level *){

@@ -41,17 +41,24 @@ Board::~Board()
             delete cell;
         }
     }
+    this->clearBlocks();
+};
+
+void Board::clearBlocks()
+{
     for (int i = 0; i < this->activeBlocks_.size(); i++)
     {
         Block *block = this->activeBlocks_[i];
         delete block;
     }
+    this->activeBlocks_.clear();
     for (int i = 0; i < this->clearedBlocks_.size(); i++)
     {
         Block *block = this->clearedBlocks_[i];
         delete block;
     }
-};
+    this->clearedBlocks_.clear();
+}
 
 bool Board::addBlock(Block *block)
 {
@@ -339,7 +346,20 @@ vector<Block> Board::removeLine(int h)
     return clearedBlocks;
 };
 
-void Board::resetBoard(){};
+void Board::resetBoard()
+{
+    for (int i = 0; i < this->height_; i++)
+    {
+        for (int j = 0; j < this->width_; j++)
+        {
+            this->board_[i][j]->setSymbol(' ');
+        }
+    }
+
+    this->clearBlocks();
+
+    this->currBlock_ = nullptr;
+};
 
 void Board::showHint(){};
 

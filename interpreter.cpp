@@ -61,6 +61,10 @@ std::istream &operator>>(std::istream &in, Interpreter &i)
     {
         i.addCommand(COUNTERCLOCKWISE);
     }
+    else if (cmd == "restart")
+    {
+        i.addCommand(RESTART);
+    }
     else
     {
         i.addCommand(BAD_COMMAND);
