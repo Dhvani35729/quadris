@@ -61,6 +61,14 @@ std::istream &operator>>(std::istream &in, Interpreter &i)
     {
         i.addCommand(COUNTERCLOCKWISE);
     }
+    else if (cmd == "random") //Relevant only during levels 3 and 4, this command restores randomness in these levels.
+    {
+        i.addCommand(RANDOM);
+    }
+        else if (cmd == "norandom file") //Relevant only during levels 3 and 4, this command restores randomness in these levels.
+    {
+        i.addCommand(NO_RANDOM_FILE);
+    }
     else
     {
         i.addCommand(BAD_COMMAND);

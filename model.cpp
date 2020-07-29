@@ -101,6 +101,12 @@ void Model::dropBlock()
     notify();
 };
 
+void Model::toggleRandom(Command c){
+    if (this->getLevelNum() == 3 || this->getLevelNum() == 4){
+        //TODO: toggle randomness attribute (create this) exclusive to levels 3 and 4?
+    }
+};
+
 void Model::resetGame(){
 
 };

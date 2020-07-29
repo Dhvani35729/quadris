@@ -25,6 +25,7 @@ public:
     void moveBlock(Command);
     void rotateBlock(Command);
     void dropBlock();
+    void toggleRandom(Command);
 
     void resetGame();
 

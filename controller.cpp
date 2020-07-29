@@ -48,6 +48,10 @@ void Controller::getCommand()
                 {
                     model_->moveBlock(commands[i]);
                 }
+                else if(commands[i] == RANDOM || commands[i] == NO_RANDOM_FILE)
+                {
+                    model_->toggleRandom(commands[i]);
+                }
                 else if (commands[i] == BAD_COMMAND)
                 {
                     std::cout << "Invalid command!" << std::endl;
