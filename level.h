@@ -31,4 +31,14 @@ private:
     int curIndex;
 };
 
+class LevelTwo : public Level
+{
+public:
+    LevelTwo();
+    ~LevelTwo();
+    Block *nextBlock() override;
+
+private:
+};
+
 #endif

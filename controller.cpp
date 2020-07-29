@@ -52,6 +52,52 @@ void Controller::getCommand()
                 {
                     model_->toggleRandom(commands[i]);
                 }
+                else if (commands[i] == RESTART)
+                {
+                    model_->resetGame();
+                }
+                else if (commands[i] == LEVEL_UP)
+                {
+                    model_->levelUp();
+                }
+                else if (commands[i] == LEVEL_DOWN)
+                {
+                    model_->levelDown();
+                }
+                else if (commands[i] == I || commands[i] == J || commands[i] == L || commands[i] == S || commands[i] == Z || commands[i] == O || commands[i] == T)
+                {
+                    BlockType blkType;
+                    // TODO: Should be a map or something better
+                    if (commands[i] == I)
+                    {
+                        blkType = I_BLK;
+                    }
+                    else if (commands[i] == J)
+                    {
+                        blkType = J_BLK;
+                    }
+                    else if (commands[i] == L)
+                    {
+                        blkType = L_BLK;
+                    }
+                    else if (commands[i] == S)
+                    {
+                        blkType = S_BLK;
+                    }
+                    else if (commands[i] == Z)
+                    {
+                        blkType = Z_BLK;
+                    }
+                    else if (commands[i] == O)
+                    {
+                        blkType = O_BLK;
+                    }
+                    else if (commands[i] == T)
+                    {
+                        blkType = T_BLK;
+                    }
+                    model_->changeCurrentBlock(blkType);
+                }
                 else if (commands[i] == BAD_COMMAND)
                 {
                     std::cout << "Invalid command!" << std::endl;

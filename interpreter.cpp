@@ -61,6 +61,7 @@ std::istream &operator>>(std::istream &in, Interpreter &i)
     {
         i.addCommand(COUNTERCLOCKWISE);
     }
+<<<<<<< HEAD
     else if (cmd == "random") //Relevant only during levels 3 and 4, this command restores randomness in these levels.
     {
         i.addCommand(RANDOM);
@@ -68,6 +69,47 @@ std::istream &operator>>(std::istream &in, Interpreter &i)
         else if (cmd == "norandom file") //Relevant only during levels 3 and 4, this command restores randomness in these levels.
     {
         i.addCommand(NO_RANDOM_FILE);
+=======
+    else if (cmd == "levelup")
+    {
+        i.addCommand(LEVEL_UP);
+    }
+    else if (cmd == "leveldown")
+    {
+        i.addCommand(LEVEL_DOWN);
+    }
+    else if (cmd == "restart")
+    {
+        i.addCommand(RESTART);
+    }
+    else if (cmd == "I")
+    {
+        i.addCommand(I);
+    }
+    else if (cmd == "J")
+    {
+        i.addCommand(J);
+    }
+    else if (cmd == "L")
+    {
+        i.addCommand(L);
+    }
+    else if (cmd == "S")
+    {
+        i.addCommand(S);
+    }
+    else if (cmd == "Z")
+    {
+        i.addCommand(Z);
+    }
+    else if (cmd == "O")
+    {
+        i.addCommand(O);
+    }
+    else if (cmd == "T")
+    {
+        i.addCommand(T);
+>>>>>>> 0f35f53a5f1b63e45317c505ae4397124f752101
     }
     else
     {

@@ -39,11 +39,8 @@ public:
 
     int getLevelGen() const;
 
-    bool getScoreCounted() const;
-
     void setMatrix(std::vector<std::vector<char>>);
     void setPos(std::pair<int, int>);
-    void setScoreCounted(bool);
 
 private:
     void rotateClockwise();
@@ -62,7 +59,6 @@ private:
     // top left corner
     std::pair<int, int> coords_;
     int level_;
-    bool scoredCounted_;
 };
 
 std::ostream &operator<<(std::ostream &sout, const Block &b);

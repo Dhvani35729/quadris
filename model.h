@@ -29,7 +29,9 @@ public:
 
     void resetGame();
 
-    void setLevel(Level *);
+    void levelUp();
+    void levelDown();
+    void changeCurrentBlock(BlockType);
 
     int getBoardHeight() const;
     int getBoardWidth() const;

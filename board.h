@@ -21,7 +21,12 @@ public:
 
     bool moveCurrentBlock(Command);
     bool rotateCurrentBlock(Command);
-    int dropCurrentBlock();
+
+    // Returns the number of rows dropped
+    // and a list of blocks cleared
+    std::pair<int, std::vector<Block>> dropCurrentBlock();
+
+    bool changeCurrentBlock(BlockType);
 
     std::vector<std::vector<char>> getBoard();
     std::vector<Block *> getClearedBlocks();
@@ -39,7 +44,9 @@ private:
 
     bool isOccupied(int, int);
     bool isLineFull(int);
-    void removeLine(int);
+    void clearBlocks();
+
+    std::vector<Block> removeLine(int h);
 
     int width_;
     int height_;

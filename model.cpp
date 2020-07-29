@@ -12,6 +12,7 @@ Model::Model(int h, int w)
     this->board_ = new Board(h, w);
     this->score_ = new Score();
     this->level_ = new LevelZero("sequence.txt");
+    // this->level_ = new LevelTwo();
     this->nextBlock_ = nullptr;
     this->gameOver_ = false;
 }
@@ -22,6 +23,7 @@ Model::~Model()
     delete this->board_;
     delete this->score_;
     delete this->level_;
+    delete this->nextBlock_;
 }
 
 bool Model::checkGameOver()
@@ -55,34 +57,34 @@ void Model::rotateBlock(Command c)
 
 void Model::dropBlock()
 {
-    int linesDropped = this->board_->dropCurrentBlock();
+    std::pair<int, std::vector<Block>> metaData = this->board_->dropCurrentBlock();
+    int linesDropped = metaData.first;
+    vector<Block> clearedBlocks = metaData.second;
 
     // Could not drop block
     if (linesDropped >= 0)
     {
         // Dropped block
 
-        // Update score
-        int addScore = (this->level_->getLevelNum() + linesDropped);
-        addScore *= addScore;
-        // cout << "Add score: " << addScore << endl;
-
-        int bonusPoints = 0;
-        std::vector<Block *> cBlocks = this->board_->getClearedBlocks();
-        for (int i = 0; i < cBlocks.size(); i++)
+        if (linesDropped > 0)
         {
-            Block *cBlk = cBlocks[i];
-            if (!cBlk->getScoreCounted())
+            // Update score
+            int addScore = (this->level_->getLevelNum() + linesDropped);
+            addScore *= addScore;
+            // cout << "Add score: " << addScore << endl;
+
+            int bonusPoints = 0;
+            for (int i = 0; i < clearedBlocks.size(); i++)
             {
-                bonusPoints += (cBlk->getLevelGen() + 1) * (cBlk->getLevelGen() + 1);
-                cBlk->setScoreCounted(true);
+                int blkLevel = clearedBlocks[i].getLevelGen();
+                bonusPoints += (blkLevel + 1) * (blkLevel + 1);
             }
+            // cout << "Add bonus: " << bonusPoints << endl;
+
+            addScore += bonusPoints;
+
+            this->score_->addScore(addScore);
         }
-        // cout << "Add bonus: " << bonusPoints << endl;
-
-        addScore += bonusPoints;
-
-        this->score_->addScore(addScore);
 
         // Add new block
         bool addedBlock = this->board_->addBlock(this->nextBlock_);
@@ -107,12 +109,40 @@ void Model::toggleRandom(Command c){
     }
 };
 
-void Model::resetGame(){
+void Model::resetGame()
+{
+    this->board_->resetBoard();
+    this->score_->resetScore();
 
+    delete nextBlock_;
+    this->nextBlock_ = nullptr;
+
+    this->startGame();
 };
 
-void Model::setLevel(Level *){
+void Model::levelUp()
+{
+    // Set back to 1
+    int newLevelNum = this->level_->getLevelNum() + 2;
+    if (newLevelNum == 2)
+    {
+        Level *oldLevel = this->level_;
+        LevelTwo *newLevel = new LevelTwo();
+        this->level_ = newLevel;
+        delete oldLevel;
+    }
+    notify();
+};
 
+void Model::levelDown()
+{
+    notify();
+};
+
+void Model::changeCurrentBlock(BlockType newType)
+{
+    this->board_->changeCurrentBlock(newType);
+    notify();
 };
 
 int Model::getScore() const

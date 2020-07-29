@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <iostream>
+#include <cstdlib>
 
 using namespace std;
 
@@ -15,6 +16,12 @@ Level::Level()
 Level::~Level()
 {
     std::cout << "Level died" << std::endl;
+}
+
+LevelTwo::LevelTwo()
+{
+    std::cout << "LevelTwo born" << std::endl;
+    this->levelNum_ = 2;
 }
 
 LevelZero::LevelZero(std::string f)
@@ -43,6 +50,11 @@ LevelZero::LevelZero(std::string f)
 LevelZero::~LevelZero()
 {
     std::cout << "LevelZero died" << std::endl;
+}
+
+LevelTwo::~LevelTwo()
+{
+    std::cout << "LevelTwo died" << std::endl;
 }
 
 int Level::getLevelNum() const
@@ -99,4 +111,15 @@ Block *LevelZero::nextBlock()
         return newBlock;
     }
     return nullptr;
+}
+
+Block *LevelTwo::nextBlock()
+{
+    int blkInd = rand() % BAD_BLK;
+    cout << "Random block: " << blkInd << endl;
+    BlockType type = (BlockType)blkInd;
+
+    Block *newBlock = new Block(type, std::make_pair(3, 0), this->levelNum_);
+
+    return newBlock;
 }

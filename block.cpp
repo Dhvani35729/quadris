@@ -11,8 +11,7 @@ Block::Block(BlockType t, std::pair<int, int> pos, int level)
     this->type_ = t;
     this->coords_ = pos;
     this->level_ = level;
-    this->scoredCounted_ = false;
-    std::cout << "Block born" << std::endl;
+    // std::cout << "Block born" << std::endl;
 
     this->mWidth_ = 3;
     this->mHeight_ = 3;
@@ -87,9 +86,8 @@ Block::Block(BlockType t, std::pair<int, int> pos, int level)
     }
 };
 
-Block::~Block()
-{
-    std::cout << "Block died" << std::endl;
+Block::~Block(){
+    // std::cout << "Block died" << std::endl;
 };
 
 Block Block::moveBlock(Command c)
@@ -359,11 +357,6 @@ void Block::setPos(std::pair<int, int> m)
     this->coords_ = m;
 }
 
-void Block::setScoreCounted(bool b)
-{
-    this->scoredCounted_ = b;
-}
-
 int Block::getBlockHeight() const
 {
     return this->blockHeight_;
@@ -377,11 +370,6 @@ int Block::getBlockWidth() const
 int Block::getLevelGen() const
 {
     return this->level_;
-};
-
-bool Block::getScoreCounted() const
-{
-    return this->scoredCounted_;
 };
 
 std::vector<std::vector<char>> Block::getCells() const
