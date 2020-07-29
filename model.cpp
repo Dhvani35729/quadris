@@ -55,7 +55,9 @@ void Model::rotateBlock(Command c)
 
 void Model::dropBlock()
 {
-    int linesDropped = this->board_->dropCurrentBlock();
+    std::pair<int, std::vector<Block>> metaData = this->board_->dropCurrentBlock();
+    int linesDropped = metaData.first;
+    vector<Block> clearedBlocks = metaData.second;
 
     // Could not drop block
     if (linesDropped >= 0)
@@ -68,15 +70,10 @@ void Model::dropBlock()
         // cout << "Add score: " << addScore << endl;
 
         int bonusPoints = 0;
-        std::vector<Block *> cBlocks = this->board_->getClearedBlocks();
-        for (int i = 0; i < cBlocks.size(); i++)
+        for (int i = 0; i < clearedBlocks.size(); i++)
         {
-            Block *cBlk = cBlocks[i];
-            if (!cBlk->getScoreCounted())
-            {
-                bonusPoints += (cBlk->getLevelGen() + 1) * (cBlk->getLevelGen() + 1);
-                cBlk->setScoreCounted(true);
-            }
+            int blkLevel = clearedBlocks[i].getLevelGen();
+            bonusPoints += (blkLevel + 1) * (blkLevel + 1);
         }
         // cout << "Add bonus: " << bonusPoints << endl;
 
