@@ -256,7 +256,7 @@ std::pair<int, std::vector<Block>> Board::dropCurrentBlock()
         // Check last row full
         rowFull = this->isLineFull(h);
 
-        // Clear bottm row
+        // Clear bottom row
         if (rowFull)
         {
             // cout << "Removing h: " << h << endl;

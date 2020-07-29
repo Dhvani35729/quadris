@@ -11,7 +11,8 @@ Model::Model(int h, int w)
     std::cout << "Model born" << std::endl;
     this->board_ = new Board(h, w);
     this->score_ = new Score();
-    this->level_ = new LevelZero("sequence.txt");
+    // this->level_ = new LevelZero("sequence.txt");
+    this->level_ = new LevelTwo();
     this->nextBlock_ = nullptr;
     this->gameOver_ = false;
 }
@@ -65,22 +66,25 @@ void Model::dropBlock()
     {
         // Dropped block
 
-        // Update score
-        int addScore = (this->level_->getLevelNum() + linesDropped);
-        addScore *= addScore;
-        // cout << "Add score: " << addScore << endl;
-
-        int bonusPoints = 0;
-        for (int i = 0; i < clearedBlocks.size(); i++)
+        if (linesDropped > 0)
         {
-            int blkLevel = clearedBlocks[i].getLevelGen();
-            bonusPoints += (blkLevel + 1) * (blkLevel + 1);
+            // Update score
+            int addScore = (this->level_->getLevelNum() + linesDropped);
+            addScore *= addScore;
+            // cout << "Add score: " << addScore << endl;
+
+            int bonusPoints = 0;
+            for (int i = 0; i < clearedBlocks.size(); i++)
+            {
+                int blkLevel = clearedBlocks[i].getLevelGen();
+                bonusPoints += (blkLevel + 1) * (blkLevel + 1);
+            }
+            // cout << "Add bonus: " << bonusPoints << endl;
+
+            addScore += bonusPoints;
+
+            this->score_->addScore(addScore);
         }
-        // cout << "Add bonus: " << bonusPoints << endl;
-
-        addScore += bonusPoints;
-
-        this->score_->addScore(addScore);
 
         // Add new block
         bool addedBlock = this->board_->addBlock(this->nextBlock_);
