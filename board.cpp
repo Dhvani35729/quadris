@@ -147,7 +147,7 @@ bool Board::canPlace(Block &newBlock)
 {
     std::pair<int, int> newPos = newBlock.getPos();
     std::vector<std::vector<char>> newMatrix = newBlock.getCells();
-    cout << "Checking in place: " << newPos.first << ":" << newPos.second << endl;
+    // cout << "Checking in place: " << newPos.first << ":" << newPos.second << endl;
 
     // cout << "BH: " << newBlock.getBlockHeight() << endl;
     // cout << "BW: " << newBlock.getBlockWidth() << endl;

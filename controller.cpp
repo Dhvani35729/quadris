@@ -21,8 +21,8 @@ Controller::~Controller()
 
 void Controller::getCommand()
 {
-    std::cout << "Controller: Getting command from user" << std::endl;
-    std::cout << std::endl;
+    // std::cout << "Controller: Getting command from user" << std::endl;
+    // std::cout << std::endl;
     bool keepAsking = true;
     do
     {
@@ -33,8 +33,7 @@ void Controller::getCommand()
         if (!commands.empty())
         {
             keepAsking = false;
-            std::cout
-                << "Controller: Received commands from Interpreter, length: " << commands.size() << std::endl;
+            // std::cout << "Controller: Received commands from Interpreter, length: " << commands.size() << std::endl;
             for (int i = 0; i < commands.size(); i++)
             {
                 if (commands[i] == DROP)
@@ -48,6 +47,10 @@ void Controller::getCommand()
                 else if (commands[i] == LEFT || commands[i] == RIGHT || commands[i] == DOWN)
                 {
                     model_->moveBlock(commands[i]);
+                }
+                else if (commands[i] == BAD_COMMAND)
+                {
+                    std::cout << "Invalid command!" << std::endl;
                 }
             }
         }

@@ -61,6 +61,10 @@ std::istream &operator>>(std::istream &in, Interpreter &i)
     {
         i.addCommand(COUNTERCLOCKWISE);
     }
+    else
+    {
+        i.addCommand(BAD_COMMAND);
+    }
 
     assert(!in.fail());
 

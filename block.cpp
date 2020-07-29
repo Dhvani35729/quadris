@@ -254,8 +254,8 @@ void Block::calcBlockSize()
             break;
         }
     }
-    cout << "New B:" << this->blockWidth_ << endl;
-    cout << "New H:" << this->blockHeight_ << endl;
+    // cout << "New B:" << this->blockWidth_ << endl;
+    // cout << "New H:" << this->blockHeight_ << endl;
 }
 
 void Block::rotateClockwise()
