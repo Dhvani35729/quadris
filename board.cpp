@@ -50,7 +50,7 @@ bool Board::addBlock(Block *block)
     std::cout << "Adding block to board" << std::endl;
 
     // Check if there's space
-    bool canPlaceBlk = this->canPlace(block->getPos(), block->getCells());
+    bool canPlaceBlk = this->canPlace(*block);
 
     if (canPlaceBlk)
     {
@@ -124,7 +124,7 @@ bool Board::moveCurrentBlock(Command c)
 
     Block newBlock = this->currBlock_->moveBlock(c);
 
-    bool canMove = this->canPlace(newBlock.getPos(), newBlock.getCells());
+    bool canMove = this->canPlace(newBlock);
     if (canMove)
     {
 
@@ -143,34 +143,16 @@ bool Board::moveCurrentBlock(Command c)
     return false;
 };
 
-bool Board::canPlace(std::pair<int, int> newPos, std::vector<std::vector<char>> newMatrix)
+bool Board::canPlace(Block &newBlock)
 {
+    std::pair<int, int> newPos = newBlock.getPos();
+    std::vector<std::vector<char>> newMatrix = newBlock.getCells();
     cout << "Checking in place: " << newPos.first << ":" << newPos.second << endl;
-    int blockHeight = 0;
-    int blockWidth = 0;
 
-    for (int i = 0; i < newMatrix.size(); i++)
-    {
-        for (int j = 0; j < newMatrix[i].size(); j++)
-        {
-            if (newMatrix[i][j] != ' ')
-            {
-                if (i + 1 > blockHeight)
-                {
-                    blockHeight += 1;
-                }
-                if (j + 1 > blockWidth)
-                {
-                    blockWidth += 1;
-                }
-            }
-        }
-    }
-
-    // cout << "BH: " << blockHeight << endl;
-    // cout << "BW: " << blockWidth << endl;
-    bool rowOutBounds = newPos.first < 0 || newPos.first >= this->height_ || newPos.first + blockHeight > this->height_;
-    bool colOutBounds = newPos.second < 0 || newPos.second >= this->width_ || newPos.second + blockWidth > this->width_;
+    cout << "BH: " << newBlock.getBlockHeight() << endl;
+    cout << "BW: " << newBlock.getBlockWidth() << endl;
+    bool rowOutBounds = newPos.first < 0 || newPos.first >= this->height_ || newPos.first + newBlock.getBlockHeight() > this->height_;
+    bool colOutBounds = newPos.second < 0 || newPos.second >= this->width_ || newPos.second + newBlock.getBlockWidth() > this->width_;
 
     if (rowOutBounds || colOutBounds)
     {
@@ -196,7 +178,7 @@ bool Board::canPlace(std::pair<int, int> newPos, std::vector<std::vector<char>> 
             }
         }
     }
-
+    // cout << "Place? " << canPlace << endl;
     return canPlace;
 }
 
@@ -211,7 +193,7 @@ bool Board::rotateCurrentBlock(Command c)
 
     Block newBlock = this->currBlock_->rotateBlock(c);
 
-    bool canRotate = this->canPlace(newBlock.getPos(), newBlock.getCells());
+    bool canRotate = this->canPlace(newBlock);
     if (canRotate)
     {
         this->clearCells(this->currBlock_);
@@ -239,21 +221,26 @@ int Board::dropCurrentBlock()
         moved = this->moveCurrentBlock(DOWN);
     } while (moved);
 
-    // Check if last row full
+    // Check if any row full
     bool rowFull = true;
     int rowsCleared = 0;
+    int h = this->height_ - 1;
     do
     {
         // Check last row full
-        rowFull = this->isLineFull(this->height_ - 1);
+        rowFull = this->isLineFull(h);
 
         // Clear bottm row
         if (rowFull)
         {
             rowsCleared += 1;
-            this->removeLine(this->height_ - 1);
+            this->removeLine(h);
         }
-    } while (rowFull);
+        else
+        {
+            h--;
+        }
+    } while (rowFull || h >= 0);
 
     return rowsCleared;
 };

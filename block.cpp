@@ -56,6 +56,7 @@ Block::Block(BlockType t, std::pair<int, int> pos, int level)
         matrix_[1][0] = 'O';
         matrix_[1][1] = 'O';
         this->blockHeight_ = 2;
+        this->blockWidth_ = 2;
     }
     else if (t == S_BLK)
     {
@@ -253,6 +254,8 @@ void Block::calcBlockSize()
             break;
         }
     }
+    cout << "New B:" << this->blockWidth_ << endl;
+    cout << "New H:" << this->blockHeight_ << endl;
 }
 
 void Block::rotateClockwise()
