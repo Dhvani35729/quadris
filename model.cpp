@@ -71,6 +71,23 @@ void Model::dropBlock()
         // Update score
         int addScore = (this->level_->getLevelNum() + linesDropped);
         addScore *= addScore;
+        // cout << "Add score: " << addScore << endl;
+
+        int bonusPoints = 0;
+        std::vector<Block *> cBlocks = this->board_->getClearedBlocks();
+        for (int i = 0; i < cBlocks.size(); i++)
+        {
+            Block *cBlk = cBlocks[i];
+            if (!cBlk->getScoreCounted())
+            {
+                bonusPoints += (cBlk->getLevelGen() + 1) * (cBlk->getLevelGen() + 1);
+                cBlk->setScoreCounted(true);
+            }
+        }
+        // cout << "Add bonus: " << bonusPoints << endl;
+
+        addScore += bonusPoints;
+
         this->score_->addScore(addScore);
 
         // Add new block

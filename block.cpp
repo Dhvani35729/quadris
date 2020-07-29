@@ -11,7 +11,7 @@ Block::Block(BlockType t, std::pair<int, int> pos, int level)
     this->type_ = t;
     this->coords_ = pos;
     this->level_ = level;
-    aliveFor_ = 0;
+    this->scoredCounted_ = false;
     std::cout << "Block born" << std::endl;
 
     this->mWidth_ = 3;
@@ -387,3 +387,18 @@ void Block::setPos(std::pair<int, int> m)
 {
     this->coords_ = m;
 }
+
+void Block::setScoreCounted(bool b)
+{
+    this->scoredCounted_ = b;
+}
+
+int Block::getLevelGen()
+{
+    return this->level_;
+};
+
+bool Block::getScoreCounted()
+{
+    return this->scoredCounted_;
+};

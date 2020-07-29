@@ -35,8 +35,12 @@ public:
     int getBlockHeight();
     int getBlockWidth();
 
+    int getLevelGen();
+    bool getScoreCounted();
+
     void setMatrix(std::vector<std::vector<char>>);
     void setPos(std::pair<int, int>);
+    void setScoreCounted(bool);
 
 private:
     void rotateClockwise();
@@ -46,7 +50,8 @@ private:
 
     int level_;
     BlockType type_;
-    int aliveFor_;
+    bool scoredCounted_;
+
     std::vector<std::vector<char>> matrix_;
     int mWidth_;
     int mHeight_;

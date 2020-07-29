@@ -233,8 +233,28 @@ int Board::dropCurrentBlock()
         // Clear bottm row
         if (rowFull)
         {
+            // cout << "Removing h: " << h << endl;
             rowsCleared += 1;
             this->removeLine(h);
+
+            // Need to check which blocks were placed at this
+            // h. These blocks are now completely celeared
+            for (int i = 0; i < this->blocks_.size(); i++)
+            {
+                Block *placedBlock = this->blocks_[i];
+                pair<int, int> curPos = placedBlock->getPos();
+                // cout << "Block first: " << curPos.first << endl;
+                if (curPos.first == h)
+                {
+                    curPos.first += 1;
+                    placedBlock->setPos(curPos);
+                    // Block completely cleared
+                    if (curPos.first == this->height_)
+                    {
+                        clearedBlocks_.push_back(placedBlock);
+                    }
+                }
+            }
         }
         else
         {
@@ -306,4 +326,9 @@ int Board::getHeight() const
 int Board::getWidth() const
 {
     return this->width_;
+};
+
+std::vector<Block *> Board::getClearedBlocks()
+{
+    return this->clearedBlocks_;
 };

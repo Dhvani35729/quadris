@@ -22,6 +22,7 @@ public:
     bool rotateCurrentBlock(Command);
     int dropCurrentBlock();
     std::vector<std::vector<char>> getBoard();
+    std::vector<Block *> getClearedBlocks();
     bool isOccupied(int, int);
     bool isLineFull(int);
     void removeLine(int);
@@ -39,6 +40,7 @@ private:
     int height_;
     std::vector<std::vector<Cell *>> board_;
     std::vector<Block *> blocks_;
+    std::vector<Block *> clearedBlocks_;
     Block *currBlock_;
 };
 
