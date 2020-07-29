@@ -58,9 +58,9 @@ void Model::rotateBlock(Command c)
 
 void Model::dropBlock()
 {
-    int blocksDropped = this->board_->dropCurrentBlock();
+    int linesDropped = this->board_->dropCurrentBlock();
     // Could not drop block
-    if (blocksDropped == -1)
+    if (linesDropped == -1)
     {
         // Do nothing
         cout << "Do nothing" << endl;
@@ -68,6 +68,12 @@ void Model::dropBlock()
     // Dropped block
     else
     {
+        // Update score
+        int addScore = (this->level_->getLevelNum() + linesDropped);
+        addScore *= addScore;
+        this->score_->addScore(addScore);
+
+        // Add new block
         bool addedBlock = this->board_->addBlock(this->nextBlock_);
         if (addedBlock)
         {

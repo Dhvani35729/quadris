@@ -24,8 +24,9 @@ int Score::getHiScore()
     return hiScore_;
 };
 
-void Score::setScore(int newScore)
+void Score::addScore(int addScore)
 {
+    int newScore = currScore_ + addScore;
     if (newScore > hiScore_)
     {
         hiScore_ = newScore;

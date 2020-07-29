@@ -9,7 +9,7 @@ public:
     ~Score();
     int getScore();
     int getHiScore();
-    void setScore(int);
+    void addScore(int);
 
 private:
     int currScore_;
