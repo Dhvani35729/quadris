@@ -61,6 +61,14 @@ std::istream &operator>>(std::istream &in, Interpreter &i)
     {
         i.addCommand(COUNTERCLOCKWISE);
     }
+    else if (cmd == "levelup")
+    {
+        i.addCommand(LEVEL_UP);
+    }
+    else if (cmd == "leveldown")
+    {
+        i.addCommand(LEVEL_DOWN);
+    }
     else if (cmd == "restart")
     {
         i.addCommand(RESTART);

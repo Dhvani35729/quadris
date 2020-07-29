@@ -11,8 +11,8 @@ Model::Model(int h, int w)
     std::cout << "Model born" << std::endl;
     this->board_ = new Board(h, w);
     this->score_ = new Score();
-    // this->level_ = new LevelZero("sequence.txt");
-    this->level_ = new LevelTwo();
+    this->level_ = new LevelZero("sequence.txt");
+    // this->level_ = new LevelTwo();
     this->nextBlock_ = nullptr;
     this->gameOver_ = false;
 }
@@ -114,8 +114,23 @@ void Model::resetGame()
     this->startGame();
 };
 
-void Model::setLevel(Level *){
+void Model::levelUp()
+{
+    // Set back to 1
+    int newLevelNum = this->level_->getLevelNum() + 2;
+    if (newLevelNum == 2)
+    {
+        Level *oldLevel = this->level_;
+        LevelTwo *newLevel = new LevelTwo();
+        this->level_ = newLevel;
+        delete oldLevel;
+    }
+    notify();
+};
 
+void Model::levelDown()
+{
+    notify();
 };
 
 void Model::changeCurrentBlock(BlockType newType)
