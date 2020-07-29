@@ -41,9 +41,14 @@ Board::~Board()
             delete cell;
         }
     }
-    for (int i = 0; i < this->blocks_.size(); i++)
+    for (int i = 0; i < this->activeBlocks_.size(); i++)
     {
-        Block *block = this->blocks_[i];
+        Block *block = this->activeBlocks_[i];
+        delete block;
+    }
+    for (int i = 0; i < this->clearedBlocks_.size(); i++)
+    {
+        Block *block = this->clearedBlocks_[i];
         delete block;
     }
 };
@@ -58,7 +63,7 @@ bool Board::addBlock(Block *block)
     if (canPlaceBlk)
     {
         this->currBlock_ = block;
-        this->blocks_.push_back(block);
+        this->activeBlocks_.push_back(block);
         this->updateCells(block);
     }
     return canPlaceBlk;
@@ -226,22 +231,31 @@ int Board::dropCurrentBlock()
             rowsCleared += 1;
             this->removeLine(h);
 
+            // TODO: Find a better way to do this
+
             // Need to check which blocks were placed at this
             // h. These blocks are now completely celeared
-            for (int i = 0; i < this->blocks_.size(); i++)
+
+            for (int i = 0; i < this->activeBlocks_.size(); i++)
             {
-                Block *placedBlock = this->blocks_[i];
+                Block *placedBlock = this->activeBlocks_[i];
                 pair<int, int> curPos = placedBlock->getPos();
+                int rowStart = curPos.first;
+                int rowEnd = rowStart + placedBlock->getBlockHeight() - 1;
                 // cout << "Block first: " << curPos.first << endl;
-                if (curPos.first == h)
+                // Removing top row == block is cleared
+                if (h == rowStart)
                 {
+                    this->activeBlocks_.erase(this->activeBlocks_.begin() + i);
+                    this->clearedBlocks_.push_back(placedBlock);
+                    i--;
+                }
+                else if (h > rowStart && h <= rowEnd)
+                {
+                    // Clearing a portion
+                    // Move block down by 1
                     curPos.first += 1;
                     placedBlock->setPos(curPos);
-                    // Block completely cleared
-                    if (curPos.first == this->height_)
-                    {
-                        clearedBlocks_.push_back(placedBlock);
-                    }
                 }
             }
         }
@@ -250,6 +264,17 @@ int Board::dropCurrentBlock()
             h--;
         }
     } while (rowFull || h >= 0);
+
+    // cout << "Active blocks: " << this->activeBlocks_.size() << endl;
+    // for (int i = 0; i < this->activeBlocks_.size(); i++)
+    // {
+    //     cout << *this->activeBlocks_[i] << endl;
+    // }
+    // cout << "Cleared blocks: " << this->clearedBlocks_.size() << endl;
+    // for (int i = 0; i < this->clearedBlocks_.size(); i++)
+    // {
+    //     cout << *this->clearedBlocks_[i] << endl;
+    // }
 
     return rowsCleared;
 };

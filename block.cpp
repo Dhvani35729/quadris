@@ -92,26 +92,6 @@ Block::~Block()
     std::cout << "Block died" << std::endl;
 };
 
-std::vector<std::vector<char>> Block::getCells()
-{
-    return this->matrix_;
-};
-
-int Block::getBoxWidth()
-{
-    return this->mWidth_;
-};
-
-int Block::getBoxHeight()
-{
-    return this->mHeight_;
-};
-
-std::pair<int, int> Block::getPos()
-{
-    return this->coords_;
-};
-
 Block Block::moveBlock(Command c)
 {
     // Copy current block
@@ -132,6 +112,7 @@ Block Block::moveBlock(Command c)
     return movedBlock;
 };
 
+// TODO: Helper remove
 void print(std::vector<std::vector<char>> &mat)
 {
     for (int i = 0; i < mat.size(); i++)
@@ -367,16 +348,6 @@ Block Block::rotateBlock(Command c)
     return rotatedBlock;
 };
 
-int Block::getBlockHeight()
-{
-    return this->blockHeight_;
-};
-
-int Block::getBlockWidth()
-{
-    return this->blockWidth_;
-};
-
 void Block::setMatrix(std::vector<std::vector<char>> m)
 {
     this->matrix_ = m;
@@ -393,12 +364,65 @@ void Block::setScoreCounted(bool b)
     this->scoredCounted_ = b;
 }
 
-int Block::getLevelGen()
+int Block::getBlockHeight() const
+{
+    return this->blockHeight_;
+};
+
+int Block::getBlockWidth() const
+{
+    return this->blockWidth_;
+};
+
+int Block::getLevelGen() const
 {
     return this->level_;
 };
 
-bool Block::getScoreCounted()
+bool Block::getScoreCounted() const
 {
     return this->scoredCounted_;
+};
+
+std::vector<std::vector<char>> Block::getCells() const
+{
+    return this->matrix_;
+};
+
+int Block::getBoxWidth() const
+{
+    return this->mWidth_;
+};
+
+int Block::getBoxHeight() const
+{
+    return this->mHeight_;
+};
+
+std::pair<int, int> Block::getPos() const
+{
+    return this->coords_;
+};
+
+std::ostream &operator<<(std::ostream &sout, const Block &b)
+{
+    std::vector<std::vector<char>> cells = b.getCells();
+    for (int i = 0; i < cells.size(); i++)
+    {
+        string row;
+        bool emptyRow = true;
+        for (int j = 0; j < cells[i].size(); j++)
+        {
+            if (cells[i][j] != ' ')
+            {
+                emptyRow = false;
+            }
+            row += cells[i][j];
+        }
+        if (!emptyRow)
+        {
+            sout << row << endl;
+        }
+    }
+    return sout;
 };

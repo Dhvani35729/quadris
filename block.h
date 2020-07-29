@@ -24,19 +24,22 @@ class Block
 public:
     Block(BlockType, std::pair<int, int>, int);
     virtual ~Block();
-    std::vector<std::vector<char>> getCells();
-    std::pair<int, int> getPos();
+
     Block moveBlock(Command);
     Block rotateBlock(Command);
 
-    int getBoxWidth();
-    int getBoxHeight();
+    std::vector<std::vector<char>> getCells() const;
+    std::pair<int, int> getPos() const;
 
-    int getBlockHeight();
-    int getBlockWidth();
+    int getBoxWidth() const;
+    int getBoxHeight() const;
 
-    int getLevelGen();
-    bool getScoreCounted();
+    int getBlockHeight() const;
+    int getBlockWidth() const;
+
+    int getLevelGen() const;
+
+    bool getScoreCounted() const;
 
     void setMatrix(std::vector<std::vector<char>>);
     void setPos(std::pair<int, int>);
@@ -48,18 +51,21 @@ private:
     void calcBlockSize();
     void removeWhitespace();
 
-    int level_;
-    BlockType type_;
-    bool scoredCounted_;
-
     std::vector<std::vector<char>> matrix_;
     int mWidth_;
     int mHeight_;
+
+    BlockType type_;
     int blockHeight_;
     int blockWidth_;
-    // top left
+
+    // top left corner
     std::pair<int, int> coords_;
+    int level_;
+    bool scoredCounted_;
 };
+
+std::ostream &operator<<(std::ostream &sout, const Block &b);
 
 class HeavyBlock : public Block
 {

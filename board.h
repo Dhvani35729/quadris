@@ -45,7 +45,7 @@ private:
     int height_;
     std::vector<std::vector<Cell *>> board_;
 
-    std::vector<Block *> blocks_;
+    std::vector<Block *> activeBlocks_;
     std::vector<Block *> clearedBlocks_;
 
     Block *currBlock_;
