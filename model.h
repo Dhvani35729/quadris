@@ -11,25 +11,31 @@
 
 #include <vector>
 
-// Model
+// Model (Quadris)
+// Game object
 class Model : public Subject
 {
 public:
     Model(int, int);
     ~Model();
 
-    bool checkGameOver();
     void startGame();
+    bool checkGameOver();
+
     void moveBlock(Command);
     void rotateBlock(Command);
     void dropBlock();
+
     void resetGame();
+
     void setLevel(Level *);
+
     int getBoardHeight() const;
     int getBoardWidth() const;
     int getLevelNum() const;
     int getScore() const;
     int getHiScore() const;
+
     std::vector<std::vector<char>> getNextBlock() const;
     std::vector<std::vector<char>> getBoard() const;
 

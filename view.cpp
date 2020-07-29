@@ -36,7 +36,7 @@ void View::update()
 void View::run()
 {
     std::cout << "Running application" << std::endl;
-    this->startGame();
+    this->model_->startGame();
 
     while (!this->model_->checkGameOver())
     {
@@ -50,6 +50,7 @@ void View::draw()
     std::cout << "Score:     " << model_->getScore() << std::endl;
     std::cout << "Hi Score: " << model_->getHiScore() << std::endl;
     std::cout << "-----------" << std::endl;
+
     // TODO: Maybe use overloaded << operator
     std::vector<std::vector<char>> board = model_->getBoard();
     int height = model_->getBoardHeight();
@@ -83,9 +84,4 @@ void View::draw()
             cout << row << endl;
         }
     }
-}
-
-void View::startGame()
-{
-    model_->startGame();
 }

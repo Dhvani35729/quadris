@@ -4,8 +4,8 @@
 
 Score::Score()
 {
-    currScore_ = 0;
-    hiScore_ = 0;
+    this->currScore_ = 0;
+    this->hiScore_ = 0;
     std::cout << "Score born" << std::endl;
 };
 
@@ -33,3 +33,8 @@ void Score::addScore(int addScore)
     }
     currScore_ = newScore;
 };
+
+void Score::resetScore()
+{
+    this->currScore_ = 0;
+}

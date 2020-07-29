@@ -7,9 +7,11 @@ class Score
 public:
     Score();
     ~Score();
+
     int getScore();
     int getHiScore();
     void addScore(int);
+    void resetScore();
 
 private:
     int currScore_;

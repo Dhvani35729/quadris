@@ -12,6 +12,8 @@ Model::Model(int h, int w)
     this->board_ = new Board(h, w);
     this->score_ = new Score();
     this->level_ = new LevelZero("sequence.txt");
+    this->nextBlock_ = nullptr;
+    this->gameOver_ = false;
 }
 
 Model::~Model()
@@ -30,15 +32,10 @@ bool Model::checkGameOver()
 void Model::startGame()
 {
     std::cout << "Starting game" << std::endl;
-    if (nullptr == this->nextBlock_)
-    {
-        Block *newBlock = this->level_->nextBlock();
-        this->board_->addBlock(newBlock);
-    }
-    else
-    {
-        this->board_->addBlock(this->nextBlock_);
-    }
+
+    Block *newBlock = this->level_->nextBlock();
+    this->board_->addBlock(newBlock);
+
     this->nextBlock_ = this->level_->nextBlock();
 
     notify();
@@ -59,15 +56,12 @@ void Model::rotateBlock(Command c)
 void Model::dropBlock()
 {
     int linesDropped = this->board_->dropCurrentBlock();
+
     // Could not drop block
-    if (linesDropped == -1)
+    if (linesDropped >= 0)
     {
-        // Do nothing
-        cout << "Do nothing" << endl;
-    }
-    // Dropped block
-    else
-    {
+        // Dropped block
+
         // Update score
         int addScore = (this->level_->getLevelNum() + linesDropped);
         addScore *= addScore;
@@ -98,10 +92,12 @@ void Model::dropBlock()
         }
         else
         {
-            // Game over
+            // Game over - could not add block
             this->gameOver_ = true;
         }
     }
+
+    // TODO: Check if this should be inside if
     notify();
 };
 
