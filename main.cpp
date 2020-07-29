@@ -3,9 +3,31 @@
 #include "view.h"
 
 #include <iostream>
+#include <vector>
+#include <cstdlib>
+
+int generate()
+{
+    return std::rand() % 8;
+}
 
 int main(int argc, char *argv[])
 {
+    std::vector<int> freq;
+    freq.resize(7, 0);
+
+    for (int i = 0; i < 1000000; i++)
+    {
+        int r = generate();
+        // std::cout << "got Rand: " << r << std::endl;
+        freq[r] += 1;
+    }
+
+    for (int i = 0; i < freq.size(); i++)
+    {
+        std::cout << "i ~ " << freq[i] << std::endl;
+    }
+
     std::cout << "Starting program..." << std::endl;
     std::cout << std::endl;
 
