@@ -65,6 +65,34 @@ std::istream &operator>>(std::istream &in, Interpreter &i)
     {
         i.addCommand(RESTART);
     }
+    else if (cmd == "I")
+    {
+        i.addCommand(I);
+    }
+    else if (cmd == "J")
+    {
+        i.addCommand(J);
+    }
+    else if (cmd == "L")
+    {
+        i.addCommand(L);
+    }
+    else if (cmd == "S")
+    {
+        i.addCommand(S);
+    }
+    else if (cmd == "Z")
+    {
+        i.addCommand(Z);
+    }
+    else if (cmd == "O")
+    {
+        i.addCommand(O);
+    }
+    else if (cmd == "T")
+    {
+        i.addCommand(T);
+    }
     else
     {
         i.addCommand(BAD_COMMAND);

@@ -29,6 +29,7 @@ public:
     void resetGame();
 
     void setLevel(Level *);
+    void changeCurrentBlock(BlockType);
 
     int getBoardHeight() const;
     int getBoardWidth() const;

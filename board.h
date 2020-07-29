@@ -26,6 +26,8 @@ public:
     // and a list of blocks cleared
     std::pair<int, std::vector<Block>> dropCurrentBlock();
 
+    bool changeCurrentBlock(BlockType);
+
     std::vector<std::vector<char>> getBoard();
     std::vector<Block *> getClearedBlocks();
 

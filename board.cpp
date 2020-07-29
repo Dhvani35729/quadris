@@ -60,6 +60,29 @@ void Board::clearBlocks()
     this->clearedBlocks_.clear();
 }
 
+bool Board::changeCurrentBlock(BlockType newType)
+{
+    Block *newBlock = new Block(newType, this->currBlock_->getPos(), this->currBlock_->getLevelGen());
+    this->clearCells(this->currBlock_);
+    // Check if there's space
+    bool canPlaceBlk = this->canPlace(*newBlock);
+
+    if (canPlaceBlk)
+    {
+        // Current block is last active
+        this->activeBlocks_.pop_back();
+
+        delete this->currBlock_;
+
+        this->currBlock_ = newBlock;
+        this->activeBlocks_.push_back(newBlock);
+    }
+
+    this->updateCells(this->currBlock_);
+
+    return canPlaceBlk;
+}
+
 bool Board::addBlock(Block *block)
 {
     std::cout << "Adding block to board" << std::endl;

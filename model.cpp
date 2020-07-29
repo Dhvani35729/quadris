@@ -114,6 +114,12 @@ void Model::setLevel(Level *){
 
 };
 
+void Model::changeCurrentBlock(BlockType newType)
+{
+    this->board_->changeCurrentBlock(newType);
+    notify();
+};
+
 int Model::getScore() const
 {
     return this->score_->getScore();
