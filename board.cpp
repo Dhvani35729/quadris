@@ -262,6 +262,7 @@ std::pair<int, std::vector<Block>> Board::dropCurrentBlock()
             // cout << "Removing h: " << h << endl;
             rowsCleared += 1;
             std::vector<Block> blocksCleared = this->removeLine(h);
+
             for (int i = 0; i < blocksCleared.size(); i++)
             {
                 totalBlocksCleared.push_back(blocksCleared[i]);
@@ -343,14 +344,18 @@ vector<Block> Board::removeLine(int h)
     // h. These blocks are now completely celeared
 
     vector<Block> clearedBlocks;
+
     for (int i = 0; i < this->activeBlocks_.size(); i++)
     {
         Block *placedBlock = this->activeBlocks_[i];
+
         pair<int, int> curPos = placedBlock->getPos();
         int rowStart = curPos.first;
         int rowEnd = rowStart + placedBlock->getBlockHeight() - 1;
         // cout << "Block first: " << curPos.first << endl;
         // Removing top row == block is cleared
+
+        // TODO: Fix bottom up - keep counter of how many cells are active on the BLOCK object
         if (h == rowStart)
         {
             this->activeBlocks_.erase(this->activeBlocks_.begin() + i);
@@ -366,6 +371,7 @@ vector<Block> Board::removeLine(int h)
             placedBlock->setPos(curPos);
         }
     }
+
     return clearedBlocks;
 };
 

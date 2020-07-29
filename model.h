@@ -39,7 +39,7 @@ public:
     int getScore() const;
     int getHiScore() const;
 
-    std::vector<std::vector<char>> getNextBlock() const;
+    Block getNextBlock() const;
     std::vector<std::vector<char>> getBoard() const;
 
 private:

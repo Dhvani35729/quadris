@@ -66,22 +66,5 @@ void View::draw()
 
     std::cout << "-----------" << std::endl;
     std::cout << "Next:      " << std::endl;
-    std::vector<std::vector<char>> nextBlock = model_->getNextBlock();
-    for (int i = 0; i < nextBlock.size(); i++)
-    {
-        string row;
-        bool emptyRow = true;
-        for (int j = 0; j < nextBlock[i].size(); j++)
-        {
-            if (nextBlock[i][j] != ' ')
-            {
-                emptyRow = false;
-            }
-            row += nextBlock[i][j];
-        }
-        if (!emptyRow)
-        {
-            cout << row << endl;
-        }
-    }
+    std::cout << model_->getNextBlock();
 }

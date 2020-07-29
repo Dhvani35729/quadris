@@ -7,6 +7,7 @@
 
 using namespace std;
 
+// TODO: Pure virtual check
 Level::Level()
 {
     std::cout << "Level born" << std::endl;
@@ -115,13 +116,16 @@ Block *LevelZero::nextBlock()
 
 Block *LevelOne::nextBlock()
 {
-    return;
+    // TODO: Fix
+    Block *newBlock = new Block(I_BLK, std::make_pair(3, 0), this->levelNum_);
+
+    return newBlock;
 }
 
 Block *LevelTwo::nextBlock()
 {
     int blkInd = rand() % BAD_BLK;
-    cout << "Random block: " << blkInd << endl;
+    // cout << "Random block: " << blkInd << endl;
     BlockType type = (BlockType)blkInd;
 
     Block *newBlock = new Block(type, std::make_pair(3, 0), this->levelNum_);

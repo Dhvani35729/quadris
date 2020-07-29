@@ -6,6 +6,7 @@
 #include <string>
 
 // Level
+// TODO: Pure virtual check
 class Level
 {
 public:

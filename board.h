@@ -33,13 +33,16 @@ public:
 
     void resetBoard();
     void showHint();
+
     int getHeight() const;
     int getWidth() const;
 
 private:
     void setCell(int, int, char);
+
     void updateCells(Block *);
     void clearCells(Block *);
+
     bool canPlace(Block &);
 
     bool isOccupied(int, int);
