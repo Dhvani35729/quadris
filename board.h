@@ -9,6 +9,7 @@
 #include "interpreter.h"
 
 #include <vector>
+#include <memory>
 
 // Board
 class Board
@@ -17,7 +18,7 @@ public:
     Board(int, int);
     ~Board();
 
-    bool addBlock(Block *);
+    bool addBlock(std::shared_ptr<Block>);
 
     bool moveCurrentBlock(Command);
     bool rotateCurrentBlock(Command);
@@ -29,7 +30,6 @@ public:
     bool changeCurrentBlock(BlockType);
 
     std::vector<std::vector<char>> getBoard() const;
-    std::vector<Block *> getClearedBlocks();
 
     void resetBoard();
     void showHint();
@@ -40,14 +40,13 @@ public:
 private:
     void setCell(int, int, char);
 
-    void updateCells(Block *);
-    void clearCells(Block *);
+    void updateCells(std::shared_ptr<Block>);
+    void clearCells(std::shared_ptr<Block>);
 
     bool canPlace(Block &);
 
     bool isOccupied(int, int);
     bool isLineFull(int);
-    void clearBlocks();
 
     std::vector<Block> removeLine(int h);
 
@@ -55,10 +54,10 @@ private:
     int height_;
     std::vector<std::vector<Cell *>> board_;
 
-    std::vector<Block *> activeBlocks_;
-    std::vector<Block *> clearedBlocks_;
+    std::vector<std::shared_ptr<Block>> activeBlocks_;
+    std::vector<std::shared_ptr<Block>> clearedBlocks_;
 
-    Block *currBlock_;
+    std::shared_ptr<Block> currBlock_;
 };
 
 std::ostream &operator<<(std::ostream &sout, const Board &b);

@@ -12,7 +12,7 @@ Controller::Controller(std::shared_ptr<Model> m)
 {
     std::cout << "Controller born" << std::endl;
     this->model_ = m;
-    this->inter_ = std::make_shared<Interpreter>();
+    this->inter_ = std::make_unique<Interpreter>();
 }
 
 Controller::~Controller()

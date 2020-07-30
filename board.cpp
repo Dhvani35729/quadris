@@ -7,6 +7,7 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <memory>
 
 using namespace std;
 
@@ -40,28 +41,13 @@ Board::~Board(){
     //         delete cell;
     //     }
     // }
-    // this->clearBlocks();
 };
-
-void Board::clearBlocks()
-{
-    for (int i = 0; i < this->activeBlocks_.size(); i++)
-    {
-        Block *block = this->activeBlocks_[i];
-        delete block;
-    }
-    this->activeBlocks_.clear();
-    for (int i = 0; i < this->clearedBlocks_.size(); i++)
-    {
-        Block *block = this->clearedBlocks_[i];
-        delete block;
-    }
-    this->clearedBlocks_.clear();
-}
 
 bool Board::changeCurrentBlock(BlockType newType)
 {
-    Block *newBlock = new Block(newType, this->currBlock_->getPos(), this->currBlock_->getLevelGen());
+
+    std::shared_ptr<Block> newBlock = std::make_shared<Block>(newType, this->currBlock_->getPos(), this->currBlock_->getLevelGen());
+
     this->clearCells(this->currBlock_);
     // Check if there's space
     bool canPlaceBlk = this->canPlace(*newBlock);
@@ -70,8 +56,6 @@ bool Board::changeCurrentBlock(BlockType newType)
     {
         // Current block is last active
         this->activeBlocks_.pop_back();
-
-        delete this->currBlock_;
 
         this->currBlock_ = newBlock;
         this->activeBlocks_.push_back(newBlock);
@@ -82,7 +66,7 @@ bool Board::changeCurrentBlock(BlockType newType)
     return canPlaceBlk;
 }
 
-bool Board::addBlock(Block *block)
+bool Board::addBlock(std::shared_ptr<Block> block)
 {
     std::cout << "Adding block to board" << std::endl;
 
@@ -98,7 +82,7 @@ bool Board::addBlock(Block *block)
     return canPlaceBlk;
 };
 
-void Board::clearCells(Block *block)
+void Board::clearCells(std::shared_ptr<Block> block)
 {
     std::vector<std::vector<char>> cells = block->getCells();
     int cellWidth = block->getBoxWidth();
@@ -106,7 +90,6 @@ void Board::clearCells(Block *block)
 
     std::pair<int, int> topLeftCorner = block->getPos();
 
-    // TODO: SHOULD BE ITERATOR PATTERN?
     // Set cells
     int bRow = topLeftCorner.first;
     int bCol = topLeftCorner.second;
@@ -123,7 +106,7 @@ void Board::clearCells(Block *block)
     }
 }
 
-void Board::updateCells(Block *block)
+void Board::updateCells(std::shared_ptr<Block> block)
 {
     std::vector<std::vector<char>> cells = block->getCells();
     int cellWidth = block->getBoxWidth();
@@ -278,17 +261,6 @@ std::pair<int, std::vector<Block>> Board::dropCurrentBlock()
         }
     } while (rowFull || h >= 0);
 
-    // cout << "Active blocks: " << this->activeBlocks_.size() << endl;
-    // for (int i = 0; i < this->activeBlocks_.size(); i++)
-    // {
-    //     cout << *this->activeBlocks_[i] << endl;
-    // }
-    // cout << "Cleared blocks: " << this->clearedBlocks_.size() << endl;
-    // for (int i = 0; i < this->clearedBlocks_.size(); i++)
-    // {
-    //     cout << *this->clearedBlocks_[i] << endl;
-    // }
-
     metaData.first = rowsCleared;
     metaData.second = totalBlocksCleared;
 
@@ -334,7 +306,8 @@ vector<Block> Board::removeLine(int h)
 
     for (int i = 0; i < this->activeBlocks_.size(); i++)
     {
-        Block *placedBlock = this->activeBlocks_[i];
+
+        std::shared_ptr<Block> placedBlock = this->activeBlocks_[i];
 
         pair<int, int> curPos = placedBlock->getPos();
         int bHeight = placedBlock->getBlockHeight();
@@ -363,7 +336,7 @@ vector<Block> Board::removeLine(int h)
     // cout << "Moving down" << endl;
     for (int i = 0; i < this->activeBlocks_.size(); i++)
     {
-        Block *placedBlock = this->activeBlocks_[i];
+        std::shared_ptr<Block> placedBlock = this->activeBlocks_[i];
 
         pair<int, int> curPos = placedBlock->getPos();
         int rowStart = curPos.first;
@@ -392,7 +365,8 @@ void Board::resetBoard()
         }
     }
 
-    this->clearBlocks();
+    this->activeBlocks_.clear();
+    this->clearedBlocks_.clear();
 
     this->currBlock_ = nullptr;
 };
@@ -406,11 +380,6 @@ int Board::getHeight() const
 int Board::getWidth() const
 {
     return this->width_;
-};
-
-std::vector<Block *> Board::getClearedBlocks()
-{
-    return this->clearedBlocks_;
 };
 
 std::ostream &operator<<(std::ostream &sout, const Board &b)

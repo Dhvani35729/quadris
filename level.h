@@ -4,6 +4,7 @@
 #include "block.h"
 
 #include <string>
+#include <memory>
 
 // Level
 // TODO: Pure virtual check
@@ -12,7 +13,7 @@ class Level
 public:
     Level();
     virtual ~Level();
-    virtual Block *nextBlock() = 0;
+    virtual std::shared_ptr<Block> nextBlock() = 0;
     int getLevelNum() const;
 
 protected:
@@ -24,7 +25,7 @@ class LevelZero : public Level
 public:
     LevelZero(std::string);
     ~LevelZero();
-    Block *nextBlock() override;
+    std::shared_ptr<Block> nextBlock() override;
 
 private:
     std::string fileName_;
@@ -37,7 +38,7 @@ class LevelOne : public Level
 public:
     LevelOne();
     ~LevelOne();
-    Block *nextBlock() override;
+    std::shared_ptr<Block> nextBlock() override;
 
 private:
 };
@@ -47,7 +48,7 @@ class LevelTwo : public Level
 public:
     LevelTwo();
     ~LevelTwo();
-    Block *nextBlock() override;
+    std::shared_ptr<Block> nextBlock() override;
 
 private:
 };

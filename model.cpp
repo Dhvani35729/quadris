@@ -3,15 +3,17 @@
 #include "block.h"
 
 #include <iostream>
+#include <memory>
 
 using namespace std;
 
 Model::Model(int h, int w)
 {
     std::cout << "Model born" << std::endl;
-    this->board_ = new Board(h, w);
-    this->score_ = new Score();
-    this->level_ = new LevelZero("sequence.txt");
+    this->board_ = std::make_unique<Board>(h, w);
+    this->score_ = std::make_unique<Score>();
+    this->level_ = std::make_unique<LevelZero>("sequence.txt");
+
     // this->level_ = new LevelTwo();
     this->nextBlock_ = nullptr;
     this->gameOver_ = false;
@@ -20,10 +22,6 @@ Model::Model(int h, int w)
 Model::~Model()
 {
     std::cout << "Model died" << std::endl;
-    delete this->board_;
-    delete this->score_;
-    delete this->level_;
-    delete this->nextBlock_;
 }
 
 bool Model::checkGameOver()
@@ -35,7 +33,7 @@ void Model::startGame()
 {
     std::cout << "Starting game" << std::endl;
 
-    Block *newBlock = this->level_->nextBlock();
+    std::shared_ptr<Block> newBlock = this->level_->nextBlock();
     this->board_->addBlock(newBlock);
 
     this->nextBlock_ = this->level_->nextBlock();
@@ -110,7 +108,6 @@ void Model::resetGame()
     this->board_->resetBoard();
     this->score_->resetScore();
 
-    delete nextBlock_;
     this->nextBlock_ = nullptr;
 
     this->startGame();
@@ -119,14 +116,14 @@ void Model::resetGame()
 void Model::levelUp()
 {
     // TODO: Set back to 1
-    int newLevelNum = this->level_->getLevelNum() + 2;
-    if (newLevelNum == 2)
-    {
-        Level *oldLevel = this->level_;
-        LevelTwo *newLevel = new LevelTwo();
-        this->level_ = newLevel;
-        delete oldLevel;
-    }
+    // int newLevelNum = this->level_->getLevelNum() + 2;
+    // if (newLevelNum == 2)
+    // {
+    //     Level *oldLevel = this->level_;
+    //     LevelTwo *newLevel = new LevelTwo();
+    //     this->level_ = newLevel;
+    //     delete oldLevel;
+    // }
     notify();
 };
 

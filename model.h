@@ -10,6 +10,7 @@
 #include "cell.h"
 
 #include <vector>
+#include <memory>
 
 // Model (Quadris)
 // Game object
@@ -43,10 +44,10 @@ public:
     Board getBoard() const;
 
 private:
-    Level *level_;
-    Board *board_;
-    Score *score_;
-    Block *nextBlock_;
+    std::unique_ptr<Level> level_;
+    std::unique_ptr<Board> board_;
+    std::unique_ptr<Score> score_;
+    std::shared_ptr<Block> nextBlock_;
     bool gameOver_;
 };
 

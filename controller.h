@@ -18,7 +18,7 @@ public:
 
 private:
     std::shared_ptr<Model> model_;
-    std::shared_ptr<Interpreter> inter_;
+    std::unique_ptr<Interpreter> inter_;
 };
 
 #endif

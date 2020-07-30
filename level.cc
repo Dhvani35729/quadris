@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <cstdlib>
+#include <memory>
 
 using namespace std;
 
@@ -63,7 +64,7 @@ int Level::getLevelNum() const
     return this->levelNum_;
 }
 
-Block *LevelZero::nextBlock()
+std::shared_ptr<Block> LevelZero::nextBlock()
 {
     char nextBlock = this->blockSequence_[this->curIndex];
     BlockType type;
@@ -102,7 +103,7 @@ Block *LevelZero::nextBlock()
 
     if (type != BAD_BLK)
     {
-        Block *newBlock = new Block(type, std::make_pair(3, 0), this->levelNum_);
+        std::shared_ptr<Block> newBlock = std::make_shared<Block>(type, std::make_pair(3, 0), this->levelNum_);
         this->curIndex += 1;
 
         if (this->curIndex == this->blockSequence_.size())
@@ -114,21 +115,21 @@ Block *LevelZero::nextBlock()
     return nullptr;
 }
 
-Block *LevelOne::nextBlock()
+std::shared_ptr<Block> LevelOne::nextBlock()
 {
-    // TODO: Fix
-    Block *newBlock = new Block(I_BLK, std::make_pair(3, 0), this->levelNum_);
+    // TODO:
+    std::shared_ptr<Block> newBlock = std::make_shared<Block>(I_BLK, std::make_pair(3, 0), this->levelNum_);
 
     return newBlock;
 }
 
-Block *LevelTwo::nextBlock()
+std::shared_ptr<Block> LevelTwo::nextBlock()
 {
     int blkInd = rand() % BAD_BLK;
     // cout << "Random block: " << blkInd << endl;
     BlockType type = (BlockType)blkInd;
 
-    Block *newBlock = new Block(type, std::make_pair(3, 0), this->levelNum_);
+    std::shared_ptr<Block> newBlock = std::make_shared<Block>(type, std::make_pair(3, 0), this->levelNum_);
 
     return newBlock;
 }
