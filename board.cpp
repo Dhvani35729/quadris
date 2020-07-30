@@ -30,18 +30,17 @@ Board::Board(int h, int w)
     this->currBlock_ = nullptr;
 };
 
-Board::~Board()
-{
-    std::cout << "Board died" << std::endl;
-    for (int i = 0; i < this->height_; i++)
-    {
-        for (int j = 0; j < this->width_; j++)
-        {
-            Cell *cell = this->board_[i][j];
-            delete cell;
-        }
-    }
-    this->clearBlocks();
+Board::~Board(){
+    // std::cout << "Board died" << std::endl;
+    // for (int i = 0; i < this->height_; i++)
+    // {
+    //     for (int j = 0; j < this->width_; j++)
+    //     {
+    //         Cell *cell = this->board_[i][j];
+    //         delete cell;
+    //     }
+    // }
+    // this->clearBlocks();
 };
 
 void Board::clearBlocks()
@@ -158,11 +157,13 @@ bool Board::moveCurrentBlock(Command c)
     cout << "Moving block" << endl;
 
     Block newBlock = this->currBlock_->moveBlock(c);
+    cout << "got new block" << endl;
 
     // Clear old cells so we dont recheck it
     this->clearCells(this->currBlock_);
 
     bool canMove = this->canPlace(newBlock);
+    cout << "Can move" << endl;
 
     if (canMove)
     {
@@ -171,6 +172,8 @@ bool Board::moveCurrentBlock(Command c)
     }
 
     this->updateCells(this->currBlock_);
+
+    cout << "Done moving" << endl;
 
     return canMove;
 };
@@ -292,7 +295,7 @@ std::pair<int, std::vector<Block>> Board::dropCurrentBlock()
     return metaData;
 };
 
-std::vector<std::vector<char>> Board::getBoard()
+std::vector<std::vector<char>> Board::getBoard() const
 {
     std::vector<std::vector<char>> printBoard;
     for (int i = 0; i < this->height_; i++)
@@ -409,3 +412,19 @@ std::vector<Block *> Board::getClearedBlocks()
 {
     return this->clearedBlocks_;
 };
+
+std::ostream &operator<<(std::ostream &sout, const Board &b)
+{
+    std::vector<std::vector<char>> board = b.getBoard();
+    int height = b.getHeight();
+    int width = b.getWidth();
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            sout << board[i][j];
+        }
+        sout << std::endl;
+    }
+    return sout;
+}

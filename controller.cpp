@@ -6,17 +6,18 @@
 #include <string>
 #include <vector>
 #include <istream>
+#include <memory>
 
-Controller::Controller(Model *m) : model_(m)
+Controller::Controller(std::shared_ptr<Model> m)
 {
     std::cout << "Controller born" << std::endl;
-    inter_ = new Interpreter();
+    this->model_ = m;
+    this->inter_ = std::make_shared<Interpreter>();
 }
 
 Controller::~Controller()
 {
     std::cout << "Controller died" << std::endl;
-    delete inter_;
 }
 
 void Controller::getCommand()

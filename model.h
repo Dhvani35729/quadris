@@ -40,7 +40,7 @@ public:
     int getHiScore() const;
 
     Block getNextBlock() const;
-    std::vector<std::vector<char>> getBoard() const;
+    Board getBoard() const;
 
 private:
     Level *level_;

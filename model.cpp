@@ -155,9 +155,9 @@ int Model::getLevelNum() const
     return this->level_->getLevelNum();
 };
 
-std::vector<std::vector<char>> Model::getBoard() const
+Board Model::getBoard() const
 {
-    return this->board_->getBoard();
+    return *this->board_;
 }
 int Model::getBoardHeight() const
 {

@@ -28,7 +28,7 @@ public:
 
     bool changeCurrentBlock(BlockType);
 
-    std::vector<std::vector<char>> getBoard();
+    std::vector<std::vector<char>> getBoard() const;
     std::vector<Block *> getClearedBlocks();
 
     void resetBoard();
@@ -60,5 +60,7 @@ private:
 
     Block *currBlock_;
 };
+
+std::ostream &operator<<(std::ostream &sout, const Board &b);
 
 #endif

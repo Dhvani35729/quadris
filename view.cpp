@@ -5,12 +5,15 @@
 #include "subject.h"
 
 #include <iostream>
+#include <memory>
 
 using namespace std;
 
-View::View(Controller *c, Model *m) : model_(m), controller_(c)
+View::View(std::shared_ptr<Controller> c, std::shared_ptr<Model> m)
 {
     std::cout << "View born" << std::endl;
+    this->model_ = m;
+    this->controller_ = c;
 
     // Register view as observer of model
     model_->subscribe(this);
@@ -52,17 +55,7 @@ void View::draw()
     std::cout << "-----------" << std::endl;
 
     // TODO: Maybe use overloaded << operator
-    std::vector<std::vector<char>> board = model_->getBoard();
-    int height = model_->getBoardHeight();
-    int width = model_->getBoardWidth();
-    for (int i = 0; i < height; i++)
-    {
-        for (int j = 0; j < width; j++)
-        {
-            std::cout << board[i][j];
-        }
-        std::cout << std::endl;
-    }
+    std::cout << model_->getBoard();
 
     std::cout << "-----------" << std::endl;
     std::cout << "Next:      " << std::endl;

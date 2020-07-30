@@ -4,19 +4,21 @@
 #include "model.h"
 #include "interpreter.h"
 
+#include <memory>
+
 class Model;
 
 // Controller
 class Controller
 {
 public:
-    Controller(Model *);
+    Controller(std::shared_ptr<Model>);
     ~Controller();
     void getCommand();
 
 private:
-    Model *model_;
-    Interpreter *inter_;
+    std::shared_ptr<Model> model_;
+    std::shared_ptr<Interpreter> inter_;
 };
 
 #endif

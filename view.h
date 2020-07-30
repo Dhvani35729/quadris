@@ -2,6 +2,7 @@
 #define MVC_VIEW_H
 
 #include "observer.h"
+#include <memory>
 
 class Controller;
 class Model;
@@ -10,19 +11,19 @@ class Model;
 class View : public Observer
 {
 public:
-    View(Controller *, Model *);
+    View(std::shared_ptr<Controller>, std::shared_ptr<Model>);
     virtual ~View();
     virtual void update(); // Observer Pattern: concrete update() method
     void run();
 
 private:
+    void draw();
+
     // Observer Pattern: to access Model accessors without having to downcast subject
-    Model *model_;
+    std::shared_ptr<Model> model_;
 
     // Strategy Pattern member (plus signal handlers)
-    Controller *controller_;
-
-    void draw();
+    std::shared_ptr<Controller> controller_;
 };
 
 #endif
