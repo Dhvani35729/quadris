@@ -92,12 +92,29 @@ HeavyBlock::HeavyBlock(BlockType t, std::pair<int, int> pos, int level) : Block(
 {
     std::cout << "Heavy block born" << std::endl;
 }
+StarBlock::StarBlock(std::pair<int, int> pos, int level) : Block(SPECIAL_BLK, pos, level)
+{
+    // std::cout << "Block born" << std::endl;
+
+    this->mWidth_ = 1;
+    this->mHeight_ = 1;
+
+    this->matrix_.resize(this->mHeight_, std::vector<char>(this->mWidth_, ' '));
+    matrix_[0][0] = 'X';
+
+    this->blockHeight_ = 1;
+    this->blockWidth_ = 1;
+}
 
 Block::~Block(){
     // std::cout << "Block died" << std::endl;
 };
 
 HeavyBlock::~HeavyBlock(){
+    // std::cout << "Block died" << std::endl;
+};
+
+StarBlock::~StarBlock(){
     // std::cout << "Block died" << std::endl;
 };
 

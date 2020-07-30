@@ -15,23 +15,9 @@ Model::Model(int h, int w, int levelNum, string fileName)
     this->score_ = std::make_unique<Score>();
     this->scriptFile_ = fileName;
 
-    if (levelNum == 0)
-    {
-        this->level_ = std::make_unique<LevelZero>(fileName);
-    }
-    else if (levelNum == 1)
-    {
-        this->level_ = std::make_unique<LevelOne>();
-    }
-    else if (levelNum == 2)
-    {
-        this->level_ = std::make_unique<LevelTwo>();
-    }
-    else if (levelNum == 3)
-    {
-        this->level_ = std::make_unique<LevelThree>();
-    }
-    else
+    this->level_ = this->makeLevel(levelNum);
+
+    if (nullptr == this->level_)
     {
         throw Model::LevelNotFoundException(levelNum);
     }
@@ -134,48 +120,53 @@ void Model::resetGame()
     this->startGame();
 };
 
+std::unique_ptr<Level> Model::makeLevel(int levelNum)
+{
+    std::unique_ptr<Level> newLevel = nullptr;
+
+    if (levelNum == 0)
+    {
+        newLevel = std::make_unique<LevelZero>(this->scriptFile_);
+    }
+    else if (levelNum == 1)
+    {
+        newLevel = std::make_unique<LevelOne>();
+    }
+    else if (levelNum == 2)
+    {
+        newLevel = std::make_unique<LevelTwo>();
+    }
+    else if (levelNum == 3)
+    {
+        newLevel = std::make_unique<LevelThree>();
+    }
+    else if (levelNum == 4)
+    {
+        newLevel = std::make_unique<LevelFour>();
+    }
+
+    return newLevel;
+}
+
 void Model::levelUp()
 {
     int newLevelNum = this->level_->getLevelNum() + 1;
-    if (newLevelNum == 1)
+    std::unique_ptr<Level> newLevel = this->makeLevel(newLevelNum);
+
+    if (nullptr != newLevel)
     {
-        std::unique_ptr<LevelOne> newLevel = std::make_unique<LevelOne>();
         this->level_ = move(newLevel);
     }
-    else if (newLevelNum == 2)
-    {
-        std::unique_ptr<LevelTwo> newLevel = std::make_unique<LevelTwo>();
-        this->level_ = move(newLevel);
-    }
-    else if (newLevelNum == 3)
-    {
-        std::unique_ptr<LevelThree> newLevel = std::make_unique<LevelThree>();
-        this->level_ = move(newLevel);
-    }
+
     notify();
 };
 
 void Model::levelDown()
 {
     int newLevelNum = this->level_->getLevelNum() - 1;
-    if (newLevelNum == 0)
+    std::unique_ptr<Level> newLevel = this->makeLevel(newLevelNum);
+    if (nullptr != newLevel)
     {
-        std::unique_ptr<LevelZero> newLevel = std::make_unique<LevelZero>(this->scriptFile_);
-        this->level_ = move(newLevel);
-    }
-    else if (newLevelNum == 1)
-    {
-        std::unique_ptr<LevelOne> newLevel = std::make_unique<LevelOne>();
-        this->level_ = move(newLevel);
-    }
-    else if (newLevelNum == 2)
-    {
-        std::unique_ptr<LevelTwo> newLevel = std::make_unique<LevelTwo>();
-        this->level_ = move(newLevel);
-    }
-    else if (newLevelNum == 3)
-    {
-        std::unique_ptr<LevelThree> newLevel = std::make_unique<LevelThree>();
         this->level_ = move(newLevel);
     }
     notify();

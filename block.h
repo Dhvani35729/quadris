@@ -16,7 +16,9 @@ enum BlockType
     S_BLK,
     Z_BLK,
     T_BLK,
+    NUM_BLKS,
     BAD_BLK,
+    SPECIAL_BLK
 };
 
 // Block
@@ -45,7 +47,7 @@ public:
 
     bool removeLine(int h);
 
-private:
+protected:
     void rotateClockwise();
     void rotateCounterclockwise();
     void calcBlockSize();
@@ -75,6 +77,13 @@ public:
     ~HeavyBlock();
     std::queue<Block> moveBlock(Command) override;
     std::queue<Block> rotateBlock(Command) override;
+};
+
+class StarBlock : public Block
+{
+public:
+    StarBlock(std::pair<int, int>, int);
+    ~StarBlock();
 };
 
 #endif

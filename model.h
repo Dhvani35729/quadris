@@ -57,6 +57,8 @@ public:
     Board getBoard() const;
 
 private:
+    std::unique_ptr<Level> makeLevel(int levelNum);
+
     std::unique_ptr<Level> level_;
     std::unique_ptr<Board> board_;
     std::unique_ptr<Score> score_;

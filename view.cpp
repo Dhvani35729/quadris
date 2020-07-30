@@ -49,12 +49,12 @@ void View::run()
 void View::draw()
 {
     // Draw score
+    // TODO: Maybe use overloaded << operator
     std::cout << "Level:     " << model_->getLevelNum() << std::endl;
     std::cout << "Score:     " << model_->getScore() << std::endl;
     std::cout << "Hi Score: " << model_->getHiScore() << std::endl;
     std::cout << "-----------" << std::endl;
 
-    // TODO: Maybe use overloaded << operator
     std::cout << model_->getBoard();
 
     std::cout << "-----------" << std::endl;

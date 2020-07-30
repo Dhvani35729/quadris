@@ -7,7 +7,6 @@
 #include <memory>
 
 // Level
-// TODO: Pure virtual check
 class Level
 {
 public:
@@ -57,6 +56,17 @@ class LevelThree : public Level
 public:
     LevelThree();
     ~LevelThree();
+    std::shared_ptr<Block> nextBlock() override;
+
+private:
+    bool isRandom_;
+};
+
+class LevelFour : public Level
+{
+public:
+    LevelFour();
+    ~LevelFour();
     std::shared_ptr<Block> nextBlock() override;
 
 private:
