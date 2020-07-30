@@ -13,8 +13,6 @@ Model::Model(int h, int w)
     this->board_ = std::make_unique<Board>(h, w);
     this->score_ = std::make_unique<Score>();
     this->level_ = std::make_unique<LevelZero>("sequence.txt");
-
-    // this->level_ = new LevelTwo();
     this->nextBlock_ = nullptr;
     this->gameOver_ = false;
 }
@@ -115,20 +113,38 @@ void Model::resetGame()
 
 void Model::levelUp()
 {
-    // TODO: Set back to 1
-    // int newLevelNum = this->level_->getLevelNum() + 2;
-    // if (newLevelNum == 2)
-    // {
-    //     Level *oldLevel = this->level_;
-    //     LevelTwo *newLevel = new LevelTwo();
-    //     this->level_ = newLevel;
-    //     delete oldLevel;
-    // }
+    int newLevelNum = this->level_->getLevelNum() + 1;
+    if (newLevelNum == 1)
+    {
+        std::unique_ptr<LevelOne> newLevel = std::make_unique<LevelOne>();
+        this->level_ = move(newLevel);
+    }
+    else if (newLevelNum == 2)
+    {
+        std::unique_ptr<LevelTwo> newLevel = std::make_unique<LevelTwo>();
+        this->level_ = move(newLevel);
+    }
     notify();
 };
 
 void Model::levelDown()
 {
+    int newLevelNum = this->level_->getLevelNum() - 1;
+    if (newLevelNum == 0)
+    {
+        std::unique_ptr<LevelZero> newLevel = std::make_unique<LevelZero>("sequence.txt");
+        this->level_ = move(newLevel);
+    }
+    else if (newLevelNum == 1)
+    {
+        std::unique_ptr<LevelOne> newLevel = std::make_unique<LevelOne>();
+        this->level_ = move(newLevel);
+    }
+    else if (newLevelNum == 2)
+    {
+        std::unique_ptr<LevelTwo> newLevel = std::make_unique<LevelTwo>();
+        this->level_ = move(newLevel);
+    }
     notify();
 };
 

@@ -8,16 +8,15 @@
 
 using namespace std;
 
-// TODO: Pure virtual check
-Level::Level()
-{
-    std::cout << "Level born" << std::endl;
-    this->levelNum_ = -1;
-}
-
 Level::~Level()
 {
     std::cout << "Level died" << std::endl;
+}
+
+LevelOne::LevelOne()
+{
+    std::cout << "LevelOne born" << std::endl;
+    this->levelNum_ = 1;
 }
 
 LevelTwo::LevelTwo()
@@ -52,6 +51,11 @@ LevelZero::LevelZero(std::string f)
 LevelZero::~LevelZero()
 {
     std::cout << "LevelZero died" << std::endl;
+}
+
+LevelOne::~LevelOne()
+{
+    std::cout << "LevelOne died" << std::endl;
 }
 
 LevelTwo::~LevelTwo()

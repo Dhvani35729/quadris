@@ -11,7 +11,6 @@
 class Level
 {
 public:
-    Level();
     virtual ~Level();
     virtual std::shared_ptr<Block> nextBlock() = 0;
     int getLevelNum() const;
