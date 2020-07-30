@@ -16,6 +16,7 @@ Block::Block(BlockType t, std::pair<int, int> pos, int level)
     this->mWidth_ = 3;
     this->mHeight_ = 3;
     matrix_.resize(this->mHeight_, std::vector<char>(this->mWidth_, ' '));
+    this->numCells_ = 4;
 
     if (t == I_BLK)
     {
@@ -391,6 +392,49 @@ std::pair<int, int> Block::getPos() const
 {
     return this->coords_;
 };
+
+bool Block::removeLine(int h)
+{
+    // cout << "Removing line from matrix: " << h << endl;
+    // cout << "Old num cells: " << this->numCells_ << endl;
+    // print(this->matrix_);
+
+    int cellsCleared = 0;
+    for (int j = 0; j < this->blockWidth_; j++)
+    {
+        if (this->matrix_[h][j] != ' ')
+        {
+            this->matrix_[h][j] = ' ';
+            cellsCleared += 1;
+        }
+    }
+    this->numCells_ -= cellsCleared;
+
+    // print(this->matrix_);
+
+    if (h == 0)
+    {
+        this->coords_.first += 1;
+    }
+
+    if (this->numCells_ == 0)
+    {
+        return true;
+    }
+    else
+    {
+        // cout << "Remove whitespace" << endl;
+        this->removeWhitespace();
+
+        // cout << "Calc block size" << endl;
+        this->calcBlockSize();
+
+        // print(this->matrix_);
+
+        // cout << "New num cells: " << this->numCells_ << endl;
+    }
+    return false;
+}
 
 std::ostream &operator<<(std::ostream &sout, const Block &b)
 {

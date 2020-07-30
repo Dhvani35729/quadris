@@ -42,6 +42,8 @@ public:
     void setMatrix(std::vector<std::vector<char>>);
     void setPos(std::pair<int, int>);
 
+    bool removeLine(int h);
+
 private:
     void rotateClockwise();
     void rotateCounterclockwise();
@@ -55,6 +57,8 @@ private:
     BlockType type_;
     int blockHeight_;
     int blockWidth_;
+
+    int numCells_;
 
     // top left corner
     std::pair<int, int> coords_;

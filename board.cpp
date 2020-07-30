@@ -259,9 +259,10 @@ std::pair<int, std::vector<Block>> Board::dropCurrentBlock()
         // Clear bottom row
         if (rowFull)
         {
-            // cout << "Removing h: " << h << endl;
+            cout << "Removing h: " << h << endl;
             rowsCleared += 1;
             std::vector<Block> blocksCleared = this->removeLine(h);
+            cout << "Blockes cleared: " << blocksCleared.size() << endl;
 
             for (int i = 0; i < blocksCleared.size(); i++)
             {
@@ -326,23 +327,6 @@ bool Board::isLineFull(int h)
 
 vector<Block> Board::removeLine(int h)
 {
-    // Move everything down by 1
-    for (int i = h - 1; i >= 0; i--)
-    {
-        for (int j = 0; j < this->width_; j++)
-        {
-            this->setCell(i + 1, j, this->board_[i][j]->getSymbol());
-        }
-    }
-    // Clear top row
-    for (int j = 0; j < this->width_; j++)
-    {
-        this->setCell(0, j, ' ');
-    }
-
-    // Need to check which blocks were placed at this
-    // h. These blocks are now completely celeared
-
     vector<Block> clearedBlocks;
 
     for (int i = 0; i < this->activeBlocks_.size(); i++)
@@ -350,25 +334,45 @@ vector<Block> Board::removeLine(int h)
         Block *placedBlock = this->activeBlocks_[i];
 
         pair<int, int> curPos = placedBlock->getPos();
+        int bHeight = placedBlock->getBlockHeight();
         int rowStart = curPos.first;
-        int rowEnd = rowStart + placedBlock->getBlockHeight() - 1;
+        int rowEnd = rowStart + bHeight - 1;
         // cout << "Block first: " << curPos.first << endl;
         // Removing top row == block is cleared
+        // cout << "Checking block" << endl;
 
-        // TODO: Fix bottom up - keep counter of how many cells are active on the BLOCK object
-        if (h == rowStart)
+        if (h >= rowStart || rowEnd <= h)
         {
-            this->activeBlocks_.erase(this->activeBlocks_.begin() + i);
-            this->clearedBlocks_.push_back(placedBlock);
-            clearedBlocks.push_back(*placedBlock);
-            i--;
+            // move down
+            // cout << "Cleared block" << endl;
+            this->clearCells(placedBlock);
+            bool clearedBlock = placedBlock->removeLine(h - rowStart);
+            this->updateCells(placedBlock);
+            if (clearedBlock)
+            {
+                this->activeBlocks_.erase(this->activeBlocks_.begin() + i);
+                i--;
+                clearedBlocks.push_back(*placedBlock);
+            }
         }
-        else if (h > rowStart && h <= rowEnd)
+    }
+
+    // cout << "Moving down" << endl;
+    for (int i = 0; i < this->activeBlocks_.size(); i++)
+    {
+        Block *placedBlock = this->activeBlocks_[i];
+
+        pair<int, int> curPos = placedBlock->getPos();
+        int rowStart = curPos.first;
+
+        // cout << "Block start: " << rowStart << endl;
+        // cout << "h: " << h << endl;
+        if (rowStart < h)
         {
-            // Clearing a portion
-            // Move block down by 1
+            this->clearCells(placedBlock);
             curPos.first += 1;
             placedBlock->setPos(curPos);
+            this->updateCells(placedBlock);
         }
     }
 
