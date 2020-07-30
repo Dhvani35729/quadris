@@ -11,13 +11,26 @@
 
 #include <vector>
 #include <memory>
+#include <string>
 
 // Model (Quadris)
 // Game object
 class Model : public Subject
 {
 public:
-    Model(int h, int w, int levelNum = 0);
+    //define in-class exception object
+
+    class LevelNotFoundException
+    {
+    public:
+        LevelNotFoundException(int l) : level_(l){};
+        int getLevelNum() const { return level_; }
+
+    private:
+        int level_;
+    };
+
+    Model(int h, int w, int levelNum, std::string fileName);
     ~Model();
 
     void startGame();
@@ -49,6 +62,7 @@ private:
     std::unique_ptr<Score> score_;
     std::shared_ptr<Block> nextBlock_;
     bool gameOver_;
+    std::string scriptFile_;
 };
 
 #endif

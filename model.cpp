@@ -4,18 +4,20 @@
 
 #include <iostream>
 #include <memory>
+#include <string>
 
 using namespace std;
 
-Model::Model(int h, int w, int levelNum)
+Model::Model(int h, int w, int levelNum, string fileName)
 {
     std::cout << "Model born" << std::endl;
     this->board_ = std::make_unique<Board>(h, w);
     this->score_ = std::make_unique<Score>();
+    this->scriptFile_ = fileName;
 
     if (levelNum == 0)
     {
-        this->level_ = std::make_unique<LevelZero>("sequence.txt");
+        this->level_ = std::make_unique<LevelZero>(fileName);
     }
     else if (levelNum == 1)
     {
@@ -24,6 +26,10 @@ Model::Model(int h, int w, int levelNum)
     else if (levelNum == 2)
     {
         this->level_ = std::make_unique<LevelTwo>();
+    }
+    else
+    {
+        throw Model::LevelNotFoundException(levelNum);
     }
 
     this->nextBlock_ = nullptr;
@@ -145,7 +151,7 @@ void Model::levelDown()
     int newLevelNum = this->level_->getLevelNum() - 1;
     if (newLevelNum == 0)
     {
-        std::unique_ptr<LevelZero> newLevel = std::make_unique<LevelZero>("sequence.txt");
+        std::unique_ptr<LevelZero> newLevel = std::make_unique<LevelZero>(this->scriptFile_);
         this->level_ = move(newLevel);
     }
     else if (newLevelNum == 1)
