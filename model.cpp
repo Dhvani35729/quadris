@@ -172,6 +172,7 @@ Board Model::getBoard() const
 {
     return *this->board_;
 }
+
 int Model::getBoardHeight() const
 {
     return this->board_->getHeight();

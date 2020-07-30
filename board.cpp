@@ -13,19 +13,18 @@ using namespace std;
 
 Board::Board(int h, int w)
 {
-    std::cout << "Board born" << std::endl;
+    // std::cout << "Board born" << std::endl;
     this->height_ = h;
     this->width_ = w;
 
     // Create empty board
     for (int i = 0; i < h; i++)
     {
-        std::vector<Cell *> newRow;
+        std::vector<std::shared_ptr<Cell>> newRow;
         this->board_.push_back(newRow);
         for (int j = 0; j < w; j++)
         {
-            Cell *newCell = new Cell(i, j, ' ');
-            this->board_[i].push_back(newCell);
+            this->board_[i].push_back(std::make_unique<Cell>(i, j, ' '));
         }
     }
     this->currBlock_ = nullptr;
@@ -33,14 +32,6 @@ Board::Board(int h, int w)
 
 Board::~Board(){
     // std::cout << "Board died" << std::endl;
-    // for (int i = 0; i < this->height_; i++)
-    // {
-    //     for (int j = 0; j < this->width_; j++)
-    //     {
-    //         Cell *cell = this->board_[i][j];
-    //         delete cell;
-    //     }
-    // }
 };
 
 bool Board::changeCurrentBlock(BlockType newType)
@@ -140,13 +131,11 @@ bool Board::moveCurrentBlock(Command c)
     cout << "Moving block" << endl;
 
     Block newBlock = this->currBlock_->moveBlock(c);
-    cout << "got new block" << endl;
 
     // Clear old cells so we dont recheck it
     this->clearCells(this->currBlock_);
 
     bool canMove = this->canPlace(newBlock);
-    cout << "Can move" << endl;
 
     if (canMove)
     {
@@ -155,8 +144,6 @@ bool Board::moveCurrentBlock(Command c)
     }
 
     this->updateCells(this->currBlock_);
-
-    cout << "Done moving" << endl;
 
     return canMove;
 };
@@ -276,8 +263,7 @@ std::vector<std::vector<char>> Board::getBoard() const
         printBoard.push_back(newRow);
         for (int j = 0; j < this->width_; j++)
         {
-            Cell *cell = this->board_[i][j];
-            printBoard[i].push_back(cell->getSymbol());
+            printBoard[i].push_back(this->board_[i][j]->getSymbol());
         }
     }
     return printBoard;

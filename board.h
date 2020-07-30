@@ -52,7 +52,8 @@ private:
 
     int width_;
     int height_;
-    std::vector<std::vector<Cell *>> board_;
+
+    std::vector<std::vector<std::shared_ptr<Cell>>> board_;
 
     std::vector<std::shared_ptr<Block>> activeBlocks_;
     std::vector<std::shared_ptr<Block>> clearedBlocks_;
