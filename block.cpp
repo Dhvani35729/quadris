@@ -7,11 +7,12 @@
 
 using namespace std;
 
-Block::Block(BlockType t, std::pair<int, int> pos, int level)
+Block::Block(BlockType t, std::pair<int, int> pos, int level, bool playable)
 {
     this->type_ = t;
     this->coords_ = pos;
     this->level_ = level;
+    this->playable_ = playable;
     // std::cout << "Block born" << std::endl;
 
     this->mWidth_ = 3;
@@ -88,11 +89,11 @@ Block::Block(BlockType t, std::pair<int, int> pos, int level)
     }
 };
 
-HeavyBlock::HeavyBlock(BlockType t, std::pair<int, int> pos, int level) : Block(t, pos, level)
+HeavyBlock::HeavyBlock(BlockType t, std::pair<int, int> pos, int level, bool playable) : Block(t, pos, level, playable)
 {
     std::cout << "Heavy block born" << std::endl;
 }
-StarBlock::StarBlock(std::pair<int, int> pos, int level) : Block(SPECIAL_BLK, pos, level)
+StarBlock::StarBlock(std::pair<int, int> pos, int level, bool playable) : Block(SPECIAL_BLK, pos, level, playable)
 {
     // std::cout << "Block born" << std::endl;
 
@@ -395,6 +396,11 @@ void Block::setMatrix(std::vector<std::vector<char>> m, int mHeight, int mWidth)
 void Block::setPos(std::pair<int, int> m)
 {
     this->coords_ = m;
+}
+
+bool Block::isPlayable() const
+{
+    return this->playable_;
 }
 
 int Block::getBlockHeight() const

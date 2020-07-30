@@ -12,6 +12,7 @@ class Level
 public:
     virtual ~Level();
     virtual std::shared_ptr<Block> nextBlock() = 0;
+    virtual std::shared_ptr<Block> addSpecialBlock(int);
     int getLevelNum() const;
 
 protected:
@@ -68,6 +69,7 @@ public:
     LevelFour();
     ~LevelFour();
     std::shared_ptr<Block> nextBlock() override;
+    std::shared_ptr<Block> addSpecialBlock(int) override;
 
 private:
     bool isRandom_;

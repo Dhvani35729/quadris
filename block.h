@@ -25,7 +25,7 @@ enum BlockType
 class Block
 {
 public:
-    Block(BlockType, std::pair<int, int>, int);
+    Block(BlockType, std::pair<int, int>, int, bool);
     virtual ~Block();
 
     virtual std::queue<Block> moveBlock(Command);
@@ -33,6 +33,8 @@ public:
 
     std::vector<std::vector<char>> getCells() const;
     std::pair<int, int> getPos() const;
+
+    bool isPlayable() const;
 
     int getBoxWidth() const;
     int getBoxHeight() const;
@@ -66,6 +68,8 @@ protected:
     // top left corner
     std::pair<int, int> coords_;
     int level_;
+
+    bool playable_;
 };
 
 std::ostream &operator<<(std::ostream &sout, const Block &b);
@@ -73,7 +77,7 @@ std::ostream &operator<<(std::ostream &sout, const Block &b);
 class HeavyBlock : public Block
 {
 public:
-    HeavyBlock(BlockType, std::pair<int, int>, int);
+    HeavyBlock(BlockType, std::pair<int, int>, int, bool);
     ~HeavyBlock();
     std::queue<Block> moveBlock(Command) override;
     std::queue<Block> rotateBlock(Command) override;
@@ -82,7 +86,7 @@ public:
 class StarBlock : public Block
 {
 public:
-    StarBlock(std::pair<int, int>, int);
+    StarBlock(std::pair<int, int>, int, bool);
     ~StarBlock();
 };
 

@@ -38,7 +38,7 @@ Board::~Board(){
 bool Board::changeCurrentBlock(BlockType newType)
 {
 
-    Block newBlock = Block(newType, this->currBlock_->getPos(), this->currBlock_->getLevelGen());
+    Block newBlock = Block(newType, this->currBlock_->getPos(), this->currBlock_->getLevelGen(), true);
 
     this->clearCells(this->currBlock_);
     // Check if there's space

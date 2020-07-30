@@ -42,6 +42,7 @@ void Model::startGame()
 
     std::shared_ptr<Block> newBlock = this->level_->nextBlock();
     this->board_->addBlock(newBlock);
+    this->blocksSinceClear_ += 1;
 
     this->nextBlock_ = this->level_->nextBlock();
 
@@ -84,22 +85,54 @@ void Model::dropBlock()
         addScore += bonusPoints;
 
         this->score_->addScore(addScore);
+
+        this->blocksSinceClear_ = 0;
     }
 
-    // Add new block
-    bool addedBlock = this->board_->addBlock(this->nextBlock_);
-    if (addedBlock)
+    cout << "Check special block: " << this->blocksSinceClear_ << endl;
+    std::shared_ptr<Block> specialBlock = this->level_->addSpecialBlock(this->blocksSinceClear_);
+    if (nullptr != specialBlock)
     {
-        this->nextBlock_ = this->level_->nextBlock();
+        bool addedSpecialBlock = this->board_->addBlock(specialBlock);
+        if (addedSpecialBlock)
+        {
+            this->blocksSinceClear_ += 1;
+            if (!specialBlock->isPlayable())
+            {
+                this->dropBlock();
+            }
+        }
+        else
+        {
+            // Game over - could not add block
+            this->gameOver_ = true;
+            notify();
+        }
     }
     else
     {
-        // Game over - could not add block
-        this->gameOver_ = true;
-    }
 
-    // TODO: Check if this should be inside if
-    notify();
+        // Add new block
+        std::shared_ptr<Block> nextBlock = this->nextBlock_;
+        bool addedBlock = this->board_->addBlock(nextBlock);
+        if (addedBlock)
+        {
+            this->blocksSinceClear_ += 1;
+            if (!nextBlock->isPlayable())
+            {
+                this->dropBlock();
+            }
+            this->nextBlock_ = this->level_->nextBlock();
+        }
+        else
+        {
+            // Game over - could not add block
+            this->gameOver_ = true;
+        }
+
+        // TODO: Check if this should be inside if
+        notify();
+    }
 };
 
 void Model::toggleRandom(Command c)

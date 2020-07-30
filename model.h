@@ -64,6 +64,7 @@ private:
     std::unique_ptr<Score> score_;
     std::shared_ptr<Block> nextBlock_;
     bool gameOver_;
+    int blocksSinceClear_;
     std::string scriptFile_;
 };
 
