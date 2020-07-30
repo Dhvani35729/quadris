@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <utility>
+#include <queue>
 
 enum BlockType
 {
@@ -25,8 +26,8 @@ public:
     Block(BlockType, std::pair<int, int>, int);
     virtual ~Block();
 
-    Block moveBlock(Command);
-    Block rotateBlock(Command);
+    virtual std::queue<Block> moveBlock(Command);
+    virtual std::queue<Block> rotateBlock(Command);
 
     std::vector<std::vector<char>> getCells() const;
     std::pair<int, int> getPos() const;
@@ -39,7 +40,7 @@ public:
 
     int getLevelGen() const;
 
-    void setMatrix(std::vector<std::vector<char>>);
+    void setMatrix(std::vector<std::vector<char>>, int mHeight, int mWidth);
     void setPos(std::pair<int, int>);
 
     bool removeLine(int h);
@@ -70,7 +71,10 @@ std::ostream &operator<<(std::ostream &sout, const Block &b);
 class HeavyBlock : public Block
 {
 public:
-    HeavyBlock();
+    HeavyBlock(BlockType, std::pair<int, int>, int);
+    ~HeavyBlock();
+    std::queue<Block> moveBlock(Command) override;
+    std::queue<Block> rotateBlock(Command) override;
 };
 
 #endif

@@ -8,6 +8,7 @@
 #include <iostream>
 #include <algorithm>
 #include <memory>
+#include <queue>
 
 using namespace std;
 
@@ -37,19 +38,16 @@ Board::~Board(){
 bool Board::changeCurrentBlock(BlockType newType)
 {
 
-    std::shared_ptr<Block> newBlock = std::make_shared<Block>(newType, this->currBlock_->getPos(), this->currBlock_->getLevelGen());
+    Block newBlock = Block(newType, this->currBlock_->getPos(), this->currBlock_->getLevelGen());
 
     this->clearCells(this->currBlock_);
     // Check if there's space
-    bool canPlaceBlk = this->canPlace(*newBlock);
+    bool canPlaceBlk = this->canPlace(newBlock);
 
     if (canPlaceBlk)
     {
-        // Current block is last active
-        this->activeBlocks_.pop_back();
-
-        this->currBlock_ = newBlock;
-        this->activeBlocks_.push_back(newBlock);
+        this->currBlock_->setMatrix(newBlock.getCells(), newBlock.getBoxHeight(), newBlock.getBlockWidth());
+        this->currBlock_->setPos(newBlock.getPos());
     }
 
     this->updateCells(this->currBlock_);
@@ -102,17 +100,24 @@ void Board::updateCells(std::shared_ptr<Block> block)
     std::vector<std::vector<char>> cells = block->getCells();
     int cellWidth = block->getBoxWidth();
     int cellHeight = block->getBoxHeight();
+    // cout << "cellWidth: " << cellWidth << endl;
+    // cout << "cellHeight: " << cellHeight << endl;
 
     std::pair<int, int> topLeftCorner = block->getPos();
 
     // Set cells
     int bRow = topLeftCorner.first;
     int bCol = topLeftCorner.second;
+    // cout << "bRow: " << bRow << endl;
+    // cout << "bCol: " << bCol << endl;
 
     for (int i = bRow; i < bRow + cellHeight; i++)
     {
+        // cout << "Rows: " << cells.size() << endl;
         for (int j = bCol; j < bCol + cellWidth; j++)
         {
+            // cout << "Checking: " << i - bRow << ":" << j - bCol << endl;
+            // cout << "Cols: " << cells[i - bRow].size() << endl;
             if (cells[i - bRow][j - bCol] != ' ')
             {
                 this->setCell(i, j, cells[i - bRow][j - bCol]);
@@ -130,22 +135,60 @@ bool Board::moveCurrentBlock(Command c)
 {
     cout << "Moving block" << endl;
 
-    Block newBlock = this->currBlock_->moveBlock(c);
+    std::queue<Block> newBlocks = this->currBlock_->moveBlock(c);
 
-    // Clear old cells so we dont recheck it
-    this->clearCells(this->currBlock_);
-
-    bool canMove = this->canPlace(newBlock);
-
-    if (canMove)
+    bool canMove = true;
+    while (!newBlocks.empty() && canMove)
     {
-        this->currBlock_->setMatrix(newBlock.getCells());
-        this->currBlock_->setPos(newBlock.getPos());
+        Block newBlock = newBlocks.front();
+
+        // Clear old cells so we dont recheck it
+        this->clearCells(this->currBlock_);
+
+        canMove = this->canPlace(newBlock);
+
+        if (canMove)
+        {
+            this->currBlock_->setMatrix(newBlock.getCells(), newBlock.getBoxHeight(), newBlock.getBlockWidth());
+            this->currBlock_->setPos(newBlock.getPos());
+        }
+
+        this->updateCells(this->currBlock_);
+
+        newBlocks.pop();
     }
 
-    this->updateCells(this->currBlock_);
-
     return canMove;
+};
+
+bool Board::rotateCurrentBlock(Command c)
+{
+    cout << "Rotating block" << endl;
+
+    std::queue<Block> newBlocks = this->currBlock_->rotateBlock(c);
+
+    bool canRotate = true;
+    while (!newBlocks.empty() && canRotate)
+    {
+        Block newBlock = newBlocks.front();
+
+        // Clear old cells so we dont recheck it
+        this->clearCells(this->currBlock_);
+
+        canRotate = this->canPlace(newBlock);
+
+        if (canRotate)
+        {
+            this->currBlock_->setMatrix(newBlock.getCells(), newBlock.getBoxHeight(), newBlock.getBlockWidth());
+            this->currBlock_->setPos(newBlock.getPos());
+        }
+
+        this->updateCells(this->currBlock_);
+
+        newBlocks.pop();
+    }
+
+    return canRotate;
 };
 
 bool Board::canPlace(Block &newBlock)
@@ -186,27 +229,6 @@ bool Board::canPlace(Block &newBlock)
     // cout << "Place? " << canPlace << endl;
     return canPlace;
 }
-
-bool Board::rotateCurrentBlock(Command c)
-{
-    cout << "Rotating block" << endl;
-
-    Block newBlock = this->currBlock_->rotateBlock(c);
-
-    // Clear old cells so we dont recheck it
-    this->clearCells(this->currBlock_);
-
-    bool canRotate = this->canPlace(newBlock);
-    if (canRotate)
-    {
-        this->currBlock_->setMatrix(newBlock.getCells());
-        this->currBlock_->setPos(newBlock.getPos());
-    }
-
-    this->updateCells(this->currBlock_);
-
-    return canRotate;
-};
 
 std::pair<int, std::vector<Block>> Board::dropCurrentBlock()
 {

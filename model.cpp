@@ -27,6 +27,10 @@ Model::Model(int h, int w, int levelNum, string fileName)
     {
         this->level_ = std::make_unique<LevelTwo>();
     }
+    else if (levelNum == 3)
+    {
+        this->level_ = std::make_unique<LevelThree>();
+    }
     else
     {
         throw Model::LevelNotFoundException(levelNum);
@@ -143,6 +147,11 @@ void Model::levelUp()
         std::unique_ptr<LevelTwo> newLevel = std::make_unique<LevelTwo>();
         this->level_ = move(newLevel);
     }
+    else if (newLevelNum == 3)
+    {
+        std::unique_ptr<LevelThree> newLevel = std::make_unique<LevelThree>();
+        this->level_ = move(newLevel);
+    }
     notify();
 };
 
@@ -162,6 +171,11 @@ void Model::levelDown()
     else if (newLevelNum == 2)
     {
         std::unique_ptr<LevelTwo> newLevel = std::make_unique<LevelTwo>();
+        this->level_ = move(newLevel);
+    }
+    else if (newLevelNum == 3)
+    {
+        std::unique_ptr<LevelThree> newLevel = std::make_unique<LevelThree>();
         this->level_ = move(newLevel);
     }
     notify();

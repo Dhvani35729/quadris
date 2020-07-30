@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <utility>
+#include <queue>
 
 using namespace std;
 
@@ -87,12 +88,23 @@ Block::Block(BlockType t, std::pair<int, int> pos, int level)
     }
 };
 
+HeavyBlock::HeavyBlock(BlockType t, std::pair<int, int> pos, int level) : Block(t, pos, level)
+{
+    std::cout << "Heavy block born" << std::endl;
+}
+
 Block::~Block(){
     // std::cout << "Block died" << std::endl;
 };
 
-Block Block::moveBlock(Command c)
+HeavyBlock::~HeavyBlock(){
+    // std::cout << "Block died" << std::endl;
+};
+
+std::queue<Block> Block::moveBlock(Command c)
 {
+    // cout << "Move regular block" << endl;
+    std::queue<Block> blocks;
     // Copy current block
     Block movedBlock{*this};
 
@@ -108,7 +120,9 @@ Block Block::moveBlock(Command c)
     {
         movedBlock.coords_.first += 1;
     }
-    return movedBlock;
+    blocks.push(movedBlock);
+
+    return blocks;
 };
 
 // TODO: Helper remove
@@ -301,8 +315,12 @@ void Block::rotateCounterclockwise()
 };
 
 // Only supports rotations on square matrix
-Block Block::rotateBlock(Command c)
+std::queue<Block> Block::rotateBlock(Command c)
 {
+    cout << "Rotate regular block" << endl;
+
+    std::queue<Block> blocks;
+
     // Copy current block
     Block rotatedBlock{*this};
 
@@ -344,12 +362,16 @@ Block Block::rotateBlock(Command c)
 
     rotatedBlock.setPos(newTCorner);
 
-    return rotatedBlock;
+    blocks.push(rotatedBlock);
+
+    return blocks;
 };
 
-void Block::setMatrix(std::vector<std::vector<char>> m)
+void Block::setMatrix(std::vector<std::vector<char>> m, int mHeight, int mWidth)
 {
     this->matrix_ = m;
+    this->mHeight_ = mHeight;
+    this->mWidth_ = mWidth;
     this->calcBlockSize();
 }
 
@@ -458,3 +480,35 @@ std::ostream &operator<<(std::ostream &sout, const Block &b)
     }
     return sout;
 };
+
+std::queue<Block> HeavyBlock::moveBlock(Command c)
+{
+    // std::cout << "Heavy block move " << std::endl;
+
+    std::queue<Block> blocks = Block::moveBlock(c);
+
+    // Heavy blocks move down automatically by 1
+    Block newBlock = blocks.front();
+    pair<int, int> pos = newBlock.getPos();
+    pos.first += 1;
+    newBlock.setPos(pos);
+    blocks.push(newBlock);
+
+    return blocks;
+};
+
+std::queue<Block> HeavyBlock::rotateBlock(Command c)
+{
+    std::cout << "Heavy block rotate " << std::endl;
+
+    std::queue<Block> blocks = Block::rotateBlock(c);
+
+    // Heavy blocks move down automatically by 1
+    Block newBlock = blocks.front();
+    pair<int, int> pos = newBlock.getPos();
+    pos.first += 1;
+    newBlock.setPos(pos);
+    blocks.push(newBlock);
+
+    return blocks;
+}

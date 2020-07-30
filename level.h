@@ -52,4 +52,15 @@ public:
 private:
 };
 
+class LevelThree : public Level
+{
+public:
+    LevelThree();
+    ~LevelThree();
+    std::shared_ptr<Block> nextBlock() override;
+
+private:
+    bool isRandom_;
+};
+
 #endif

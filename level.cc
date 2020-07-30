@@ -25,6 +25,13 @@ LevelTwo::LevelTwo()
     this->levelNum_ = 2;
 }
 
+LevelThree::LevelThree()
+{
+    std::cout << "LevelThree born" << std::endl;
+    this->levelNum_ = 3;
+    this->isRandom_ = true;
+}
+
 LevelZero::LevelZero(std::string f)
 {
     std::cout << "LevelZero born" << std::endl;
@@ -50,7 +57,7 @@ LevelZero::LevelZero(std::string f)
 
 LevelZero::~LevelZero()
 {
-    std::cout << "LevelZero died" << std::endl;
+    std::cout << "LevelOne died" << std::endl;
 }
 
 LevelOne::~LevelOne()
@@ -61,6 +68,11 @@ LevelOne::~LevelOne()
 LevelTwo::~LevelTwo()
 {
     std::cout << "LevelTwo died" << std::endl;
+}
+
+LevelThree::~LevelThree()
+{
+    std::cout << "LevelThree died" << std::endl;
 }
 
 int Level::getLevelNum() const
@@ -121,7 +133,7 @@ std::shared_ptr<Block> LevelZero::nextBlock()
 
 std::shared_ptr<Block> LevelOne::nextBlock()
 {
-    // TODO:
+    // TODO: Fix probability
     std::shared_ptr<Block> newBlock = std::make_shared<Block>(I_BLK, std::make_pair(3, 0), this->levelNum_);
 
     return newBlock;
@@ -134,6 +146,18 @@ std::shared_ptr<Block> LevelTwo::nextBlock()
     BlockType type = (BlockType)blkInd;
 
     std::shared_ptr<Block> newBlock = std::make_shared<Block>(type, std::make_pair(3, 0), this->levelNum_);
+
+    return newBlock;
+}
+
+std::shared_ptr<Block> LevelThree::nextBlock()
+{
+    // TODO: Fix probability
+    int blkInd = rand() % BAD_BLK;
+    // cout << "Random block: " << blkInd << endl;
+    BlockType type = (BlockType)blkInd;
+
+    std::shared_ptr<Block> newBlock = std::make_shared<HeavyBlock>(type, std::make_pair(3, 0), this->levelNum_);
 
     return newBlock;
 }
