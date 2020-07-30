@@ -193,7 +193,7 @@ std::shared_ptr<Block> LevelFour::nextBlock()
 
 std::shared_ptr<Block> LevelFour::addSpecialBlock(int blockCount)
 {
-    if (blockCount % 5 == 0)
+    if (blockCount != 0 && blockCount % 5 == 0)
     {
         std::shared_ptr<Block> newBlock = std::make_shared<StarBlock>(std::make_pair(3, 5), this->levelNum_, false);
         return newBlock;

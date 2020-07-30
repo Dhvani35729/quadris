@@ -76,6 +76,8 @@ void Board::clearCells(std::shared_ptr<Block> block)
     std::vector<std::vector<char>> cells = block->getCells();
     int cellWidth = block->getBoxWidth();
     int cellHeight = block->getBoxHeight();
+    // cout << "cellWidth: " << cellWidth << endl;
+    // cout << "cellHeight: " << cellHeight << endl;
 
     std::pair<int, int> topLeftCorner = block->getPos();
 
@@ -83,13 +85,18 @@ void Board::clearCells(std::shared_ptr<Block> block)
     int bRow = topLeftCorner.first;
     int bCol = topLeftCorner.second;
 
+    // cout << "bRow: " << bRow << endl;
+    // cout << "bCol: " << bCol << endl;
     for (int i = bRow; i < bRow + cellHeight; i++)
     {
         for (int j = bCol; j < bCol + cellWidth; j++)
         {
             if (cells[i - bRow][j - bCol] != ' ')
             {
-                this->setCell(i, j, ' ');
+                if (i >= 0 && j >= 0 && i < this->height_ && j < this->width_)
+                {
+                    this->setCell(i, j, ' ');
+                }
             }
         }
     }
@@ -120,7 +127,10 @@ void Board::updateCells(std::shared_ptr<Block> block)
             // cout << "Cols: " << cells[i - bRow].size() << endl;
             if (cells[i - bRow][j - bCol] != ' ')
             {
-                this->setCell(i, j, cells[i - bRow][j - bCol]);
+                if (i >= 0 && j >= 0 && i < this->height_ && j < this->width_)
+                {
+                    this->setCell(i, j, cells[i - bRow][j - bCol]);
+                }
             }
         }
     }
@@ -254,10 +264,10 @@ std::pair<int, std::vector<Block>> Board::dropCurrentBlock()
         // Clear bottom row
         if (rowFull)
         {
-            cout << "Removing h: " << h << endl;
+            // cout << "Removing h: " << h << endl;
             rowsCleared += 1;
             std::vector<Block> blocksCleared = this->removeLine(h);
-            cout << "Blockes cleared: " << blocksCleared.size() << endl;
+            // cout << "Blockes cleared: " << blocksCleared.size() << endl;
 
             for (int i = 0; i < blocksCleared.size(); i++)
             {
@@ -322,18 +332,21 @@ vector<Block> Board::removeLine(int h)
         int rowStart = curPos.first;
         int rowEnd = rowStart + bHeight - 1;
         // cout << "Block first: " << curPos.first << endl;
+        // cout << "Block end: " << rowEnd << endl;
         // Removing top row == block is cleared
         // cout << "Checking block" << endl;
 
-        if (h >= rowStart || rowEnd <= h)
+        if (h >= rowStart && h <= rowEnd)
         {
             // move down
-            // cout << "Cleared block" << endl;
+            // cout << "Block in range" << endl;
             this->clearCells(placedBlock);
             bool clearedBlock = placedBlock->removeLine(h - rowStart);
+            // TODO: Check if this is safe
             this->updateCells(placedBlock);
             if (clearedBlock)
             {
+                // cout << "Cleared block" << endl;
                 this->activeBlocks_.erase(this->activeBlocks_.begin() + i);
                 i--;
                 clearedBlocks.push_back(*placedBlock);

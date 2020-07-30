@@ -105,6 +105,8 @@ StarBlock::StarBlock(std::pair<int, int> pos, int level, bool playable) : Block(
 
     this->blockHeight_ = 1;
     this->blockWidth_ = 1;
+
+    this->numCells_ = 1;
 }
 
 Block::~Block(){
@@ -447,6 +449,7 @@ bool Block::removeLine(int h)
     int cellsCleared = 0;
     for (int j = 0; j < this->blockWidth_; j++)
     {
+        // cout << "Checking: " << h << ":" << j << endl;
         if (this->matrix_[h][j] != ' ')
         {
             this->matrix_[h][j] = ' ';
@@ -461,6 +464,7 @@ bool Block::removeLine(int h)
     {
         this->coords_.first += 1;
     }
+    // cout << "New cords: " << this->coords_.first << endl;
 
     if (this->numCells_ == 0)
     {

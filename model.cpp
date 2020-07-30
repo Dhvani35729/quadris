@@ -89,7 +89,7 @@ void Model::dropBlock()
         this->blocksSinceClear_ = 0;
     }
 
-    cout << "Check special block: " << this->blocksSinceClear_ << endl;
+    // cout << "Check special block: " << this->blocksSinceClear_ << endl;
     std::shared_ptr<Block> specialBlock = this->level_->addSpecialBlock(this->blocksSinceClear_);
     if (nullptr != specialBlock)
     {
