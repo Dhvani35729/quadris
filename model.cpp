@@ -7,12 +7,25 @@
 
 using namespace std;
 
-Model::Model(int h, int w)
+Model::Model(int h, int w, int levelNum)
 {
     std::cout << "Model born" << std::endl;
     this->board_ = std::make_unique<Board>(h, w);
     this->score_ = std::make_unique<Score>();
-    this->level_ = std::make_unique<LevelZero>("sequence.txt");
+
+    if (levelNum == 0)
+    {
+        this->level_ = std::make_unique<LevelZero>("sequence.txt");
+    }
+    else if (levelNum == 1)
+    {
+        this->level_ = std::make_unique<LevelOne>();
+    }
+    else if (levelNum == 2)
+    {
+        this->level_ = std::make_unique<LevelTwo>();
+    }
+
     this->nextBlock_ = nullptr;
     this->gameOver_ = false;
 }

@@ -17,7 +17,7 @@
 class Model : public Subject
 {
 public:
-    Model(int, int);
+    Model(int h, int w, int levelNum = 0);
     ~Model();
 
     void startGame();
