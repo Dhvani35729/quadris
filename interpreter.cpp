@@ -41,7 +41,7 @@ std::istream &operator>>(std::istream &in, Interpreter &i)
     {
         i.addCommand(LEFT);
     }
-    else if (cmd == "right" || cmd == "ri" || cmd == "rig" || cmd == "righ" || cmd == "right") // r is not supported, added for convenience, delete later
+    else if (cmd == "right" || cmd == "ri" || cmd == "rig" || cmd == "righ" || cmd == "right" || cmd == "r") // r is not supported, added for convenience, delete later
     {
         i.addCommand(RIGHT);
     }
