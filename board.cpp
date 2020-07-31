@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <memory>
 #include <queue>
+#include <sstream>
 
 using namespace std;
 
@@ -509,50 +510,165 @@ void Board::showHint()
     // Save current block
     Block savedBlock = *this->currBlock_;
 
-    int permNum = 2;
+    int permNum = 1;
 
     cout << "Starting trials" << endl;
+    vector<string> failed;
     do
     {
         cout << "Getting commands of length: " << permNum << endl;
 
         vector<vector<Command>> newCommands;
         vector<Command> startCommands;
+        // generateCommands(commands, newCommands, startCommands, numCommands, permNum-1);
+        // for (int i = 0; i < newCommands.size(); i++)
+        // {
+        //     for (int j = 0; j < newCommands[i].size(); j++)
+        //     {
+        //         cout << newCommands[i][j] << " ";
+        //     }
+        //     cout << endl;
+        // }
+        // newCommands.clear();
         generateCommands(commands, newCommands, startCommands, numCommands, permNum);
-
-        legalBlocks.clear();
+        // for (int i = 0; i < newCommands.size(); i++)
+        // {
+        //     for (int j = 0; j < newCommands[i].size(); j++)
+        //     {
+        //         cout << newCommands[i][j] << " ";
+        //     }
+        //     cout << endl;
+        // }
+        // newCommands.clear();
+        // generateCommands(commands, newCommands, startCommands, numCommands, 3);
+        // for (int i = 0; i < newCommands.size(); i++)
+        // {
+        //     for (int j = 0; j < newCommands[i].size(); j++)
+        //     {
+        //         cout << newCommands[i][j] << " ";
+        //     }
+        //     cout << endl;
+        // }
+        // legalBlocks.clear();
+        // exit(1);
 
         // Need to execute each command and see if it is possilble
         cout << "Trying list of commands #: " << newCommands.size() << endl;
+        // Remove failed prefixes from last length
+        for (int i = 0; i < newCommands.size(); i++)
+        {
+            bool existingFail = false;
+            for (int j = 0; j < newCommands[i].size(); j++)
+            {
+                std::stringstream result;
+                std::copy(newCommands[i].begin(), newCommands[i].end(), std::ostream_iterator<int>(result, " "));
+                string curString = result.str();
+
+                for (int s = 0; s < failed.size(); s++)
+                {
+                    string lastFailed = failed[s];
+                    //  cout << "lastFailed" << lastFailed << endl;
+                    // cout << "Curr: " << curString << endl;
+                    if (curString.rfind(lastFailed, 0) == 0)
+                    {
+                        // cout << "Dont check!" << endl;
+                        existingFail = true;
+                        break;
+                    }
+                }
+                if (existingFail)
+                {
+                    break;
+                }
+            }
+            if (existingFail)
+            {
+                newCommands.erase(newCommands.begin() + i);
+                i--;
+            }
+        }
+        cout << "Trying trimmed list of commands #: " << newCommands.size() << endl;
+
         for (int i = 0; i < newCommands.size(); i++)
         {
             // cout << "Checking perm #: " << i << endl;
             string cmdPrint = "";
             // List of commands to try
             bool validCommand = false;
+            bool existingFail = false;
+            string failedCheck = "";
+
             for (int j = 0; j < newCommands[i].size(); j++)
             {
-                // cout << newCommands[i][j] << " ";
-                cmdPrint += to_string(newCommands[i][j]) + " ";
-                Command cmd = newCommands[i][j];
-                if (cmd == LEFT || cmd == RIGHT || cmd == DOWN)
+                std::stringstream result;
+                std::copy(newCommands[i].begin(), newCommands[i].end(), std::ostream_iterator<int>(result, " "));
+                string curString = result.str();
+
+                for (int s = 0; s < failed.size(); s++)
                 {
-                    validCommand = this->moveCurrentBlock(cmd);
-                }
-                if (cmd == CLOCKWISE || cmd == COUNTERCLOCKWISE)
-                {
-                    validCommand = this->rotateCurrentBlock(cmd);
+                    string lastFailed = failed[s];
+                    //  cout << "lastFailed" << lastFailed << endl;
+                    // cout << "Curr: " << curString << endl;
+                    if (curString.rfind(lastFailed, 0) == 0)
+                    {
+                        // cout << "Dont check!" << endl;
+                        existingFail = true;
+                        failedCheck = lastFailed;
+                        break;
+                    }
                 }
 
-                if (!validCommand)
+                if (failed.size() > 0 && existingFail)
                 {
+                    validCommand = false;
                     break;
+                }
+                else
+                {
+                    // cout << "No failed prefix" << endl;
+                    // cout << newCommands[i][j] << " ";
+                    cmdPrint += to_string(newCommands[i][j]) + " ";
+                    Command cmd = newCommands[i][j];
+                    if (cmd == LEFT || cmd == RIGHT || cmd == DOWN)
+                    {
+                        validCommand = this->moveCurrentBlock(cmd);
+                    }
+                    if (cmd == CLOCKWISE || cmd == COUNTERCLOCKWISE)
+                    {
+                        validCommand = this->rotateCurrentBlock(cmd);
+                    }
+
+                    if (!validCommand)
+                    {
+                        // cout << "invalid!" << endl;
+                        failed.push_back(curString);
+                        break;
+                    }
+                }
+            }
+
+            // Skip to a new index with new prefix
+            if (existingFail)
+            {
+                for (int l = i + 1; l < newCommands.size(); l++)
+                {
+                    std::stringstream result;
+                    std::copy(newCommands[l].begin(), newCommands[l].end(), std::ostream_iterator<int>(result, " "));
+                    string curString = result.str();
+
+                    if (curString.rfind(failedCheck, 0) != 0)
+                    {
+                        cout << "Skipped: " << (l - 1) - i << endl;
+                        i = l - 1;
+                        break;
+                    }
                 }
             }
             // cout << endl;
             cmdPrint += "\n";
             if (validCommand)
             {
+                // cout << "valid!" << endl;
                 bool moved = false;
                 do
                 {
