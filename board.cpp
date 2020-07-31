@@ -409,57 +409,6 @@ void Board::resetBoard()
     this->currBlock_ = nullptr;
 };
 
-void generateCommands(Command commands[], vector<vector<Command>> &newCommands, vector<Command> lastCommands,
-                      int totalCommands, int wantedLength)
-{
-
-    // Base case: wantedLength is 0,
-    if (wantedLength == 0)
-    {
-        newCommands.push_back(lastCommands);
-        return;
-    }
-
-    // One by one add all characters
-    // from set and recursively
-    // call for k equals to k-1
-    for (int i = 0; i < totalCommands; i++)
-    {
-        // Next character of input added
-        vector<Command> updatedCommands = lastCommands;
-
-        updatedCommands.push_back(commands[i]);
-        // k is decreased, because
-        // we have added a new character
-        generateCommands(commands, newCommands, updatedCommands, totalCommands, wantedLength - 1);
-    }
-}
-
-void generateCharCommands(char commands[], vector<string> &newCommands, string lastCommands,
-                          int totalCommands, int wantedLength)
-{
-
-    // Base case: wantedLength is 0,
-    if (wantedLength == 0)
-    {
-        newCommands.push_back(lastCommands);
-        return;
-    }
-
-    // One by one add all characters
-    // from set and recursively
-    // call for k equals to k-1
-    for (int i = 0; i < totalCommands; i++)
-    {
-        // Next character of input added
-        string updatedCommands = lastCommands + commands[i];
-
-        // k is decreased, because
-        // we have added a new character
-        generateCharCommands(commands, newCommands, updatedCommands, totalCommands, wantedLength - 1);
-    }
-}
-
 int Board::calcPenalty()
 {
     // We will assign a penalty to each list of commands
@@ -559,31 +508,34 @@ void Board::showHint()
     // Save current block
     Block savedBlock = *this->currBlock_;
 
-    int permNum = 2;
+    int permNum = 1;
     vector<string> newCommands = {"r", "l", "d", "c", "j"};
     do
     {
         // cout << "prev commands: " << newCommands.size() << endl;
-        for (int i = 0; i < newCommands.size(); i++)
+        // for (int i = 0; i < newCommands.size(); i++)
+        // {
+        //     cout << newCommands[i] << endl;
+        // }
+        if (permNum > 1)
         {
-            cout << newCommands[i] << endl;
+            vector<string> rawCommands;
+            // cout << "Getting commands of length: " << permNum << endl;
+            // generateCharCommands(commands, rawCommands, "", numCommands, permNum);
+            vector<string> prevCommands = newCommands;
+            genPermutations(commands, numCommands, rawCommands, prevCommands);
+            // for (int i = 0; i < rawCommands.size(); i++)
+            // {
+            //     cout << rawCommands[i] << endl;
+            // }
+            // cout << "Trying list of commands #: " << rawCommands.size() << endl;
+            newCommands = rawCommands;
         }
-        vector<string> rawCommands;
-        // cout << "Getting commands of length: " << permNum << endl;
-        // generateCharCommands(commands, rawCommands, "", numCommands, permNum);
-        vector<string> prevCommands = newCommands;
-        genPermutations(commands, numCommands, rawCommands, prevCommands);
-        for (int i = 0; i < rawCommands.size(); i++)
-        {
-            cout << rawCommands[i] << endl;
-        }
-        // cout << "Trying list of commands #: " << rawCommands.size() << endl;
-        newCommands = rawCommands;
 
         legalBlocks.clear();
 
         // Need to execute each command and see if it is possilble
-        cout << "Trying list of commands #: " << newCommands.size() << endl;
+        // cout << "Trying list of commands #: " << newCommands.size() << endl;
 
         for (int i = 0; i < newCommands.size(); i++)
         {
@@ -655,8 +607,8 @@ void Board::showHint()
                 }
                 else
                 {
-                    cout << "New block!" << endl;
-                    cout << newCommands[i] << endl;
+                    // cout << "New block!" << endl;
+                    // cout << newCommands[i] << endl;
 
                     // Calculate penalty of legal commands
                     int penalty = this->calcPenalty();
@@ -696,9 +648,9 @@ void Board::showHint()
         // TODO: Fix, too many permutations to check
     } while (legalBlocks.size() > 0);
 
-    cout << "Legal list of blocks #: " << totalLegalBlocks.size() << endl;
+    // cout << "Legal list of blocks #: " << totalLegalBlocks.size() << endl;
 
-    //     // End Trials
+    // End Trials
 
     // Take the first legal block with the lowest penalty
     for (int i = 0; i < totalLegalBlocks.size(); i++)
@@ -717,253 +669,6 @@ void Board::showHint()
         }
     }
 }
-
-// void Board::showHint()
-// {
-//     cout << "Showing hint" << endl;
-
-//     // Three commands:
-//     int numCommands = 5;
-//     Command commands[] = {LEFT, RIGHT, DOWN, CLOCKWISE, COUNTERCLOCKWISE};
-//     vector<pair<Block, int>> totalLegalBlocks;
-//     vector<Block> addedBlocks;
-//     int lowestPenalty = -1;
-//     // Start Trials
-//     vector<pair<Block, int>> legalBlocks;
-
-//     // Save current block
-//     Block savedBlock = *this->currBlock_;
-
-//     int permNum = 1;
-
-//     cout << "Starting trials" << endl;
-//     vector<string> failed;
-//     do
-//     {
-//         cout << "Getting commands of length: " << permNum << endl;
-
-//         vector<vector<Command>> newCommands;
-//         vector<Command> startCommands;
-//         // generateCommands(commands, newCommands, startCommands, numCommands, permNum-1);
-//         // for (int i = 0; i < newCommands.size(); i++)
-//         // {
-//         //     for (int j = 0; j < newCommands[i].size(); j++)
-//         //     {
-//         //         cout << newCommands[i][j] << " ";
-//         //     }
-//         //     cout << endl;
-//         // }
-//         // newCommands.clear();
-//         generateCommands(commands, newCommands, startCommands, numCommands, permNum);
-//         // for (int i = 0; i < newCommands.size(); i++)
-//         // {
-//         //     for (int j = 0; j < newCommands[i].size(); j++)
-//         //     {
-//         //         cout << newCommands[i][j] << " ";
-//         //     }
-//         //     cout << endl;
-//         // }
-//         // newCommands.clear();
-//         // generateCommands(commands, newCommands, startCommands, numCommands, 3);
-//         // for (int i = 0; i < newCommands.size(); i++)
-//         // {
-//         //     for (int j = 0; j < newCommands[i].size(); j++)
-//         //     {
-//         //         cout << newCommands[i][j] << " ";
-//         //     }
-//         //     cout << endl;
-//         // }
-//         // exit(1);
-
-//         legalBlocks.clear();
-//         // Need to execute each command and see if it is possilble
-//         cout << "Trying list of commands #: " << newCommands.size() << endl;
-//         // Remove failed prefixes from last length
-//         for (int i = 0; i < newCommands.size(); i++)
-//         {
-//             bool existingFail = false;
-//             for (int j = 0; j < newCommands[i].size(); j++)
-//             {
-//                 std::stringstream result;
-//                 std::copy(newCommands[i].begin(), newCommands[i].end(), std::ostream_iterator<int>(result, " "));
-//                 string curString = result.str();
-
-//                 for (int s = 0; s < failed.size(); s++)
-//                 {
-//                     string lastFailed = failed[s];
-//                     //  cout << "lastFailed" << lastFailed << endl;
-//                     // cout << "Curr: " << curString << endl;
-//                     if (curString.rfind(lastFailed, 0) == 0)
-//                     {
-//                         // cout << "Dont check!" << endl;
-//                         existingFail = true;
-//                         break;
-//                     }
-//                 }
-//                 if (existingFail)
-//                 {
-//                     break;
-//                 }
-//             }
-//             if (existingFail)
-//             {
-//                 newCommands.erase(newCommands.begin() + i);
-//                 i--;
-//             }
-//         }
-//         cout << "Trying trimmed list of commands #: " << newCommands.size() << endl;
-
-//         for (int i = 0; i < newCommands.size(); i++)
-//         {
-//             // cout << "Checking perm #: " << i << endl;
-//             string cmdPrint = "";
-//             // List of commands to try
-//             bool validCommand = false;
-//             bool existingFail = false;
-//             string failedCheck = "";
-
-//             for (int j = 0; j < newCommands[i].size(); j++)
-//             {
-//                 std::stringstream result;
-//                 std::copy(newCommands[i].begin(), newCommands[i].end(), std::ostream_iterator<int>(result, " "));
-//                 string curString = result.str();
-
-//                 for (int s = 0; s < failed.size(); s++)
-//                 {
-//                     string lastFailed = failed[s];
-//                     //  cout << "lastFailed" << lastFailed << endl;
-//                     // cout << "Curr: " << curString << endl;
-//                     if (curString.rfind(lastFailed, 0) == 0)
-//                     {
-//                         // cout << "Dont check!" << endl;
-//                         existingFail = true;
-//                         failedCheck = lastFailed;
-//                         break;
-//                     }
-//                 }
-
-//                 if (failed.size() > 0 && existingFail)
-//                 {
-//                     validCommand = false;
-//                     break;
-//                 }
-//                 else
-//                 {
-//                     // cout << "No failed prefix" << endl;
-//                     // cout << newCommands[i][j] << " ";
-//                     cmdPrint += to_string(newCommands[i][j]) + " ";
-//                     Command cmd = newCommands[i][j];
-//                     if (cmd == LEFT || cmd == RIGHT || cmd == DOWN)
-//                     {
-//                         validCommand = this->moveCurrentBlock(cmd);
-//                     }
-//                     if (cmd == CLOCKWISE || cmd == COUNTERCLOCKWISE)
-//                     {
-//                         validCommand = this->rotateCurrentBlock(cmd);
-//                     }
-
-//                     if (!validCommand)
-//                     {
-//                         // cout << "invalid!" << endl;
-//                         failed.push_back(curString);
-//                         break;
-//                     }
-//                 }
-//             }
-
-//             // Skip to a new index with new prefix
-//             if (existingFail)
-//             {
-//                 for (int l = i + 1; l < newCommands.size(); l++)
-//                 {
-//                     std::stringstream result;
-//                     std::copy(newCommands[l].begin(), newCommands[l].end(), std::ostream_iterator<int>(result, " "));
-//                     string curString = result.str();
-
-//                     if (curString.rfind(failedCheck, 0) != 0)
-//                     {
-//                         cout << "Skipped: " << (l - 1) - i << endl;
-//                         i = l - 1;
-//                         break;
-//                     }
-//                 }
-//             }
-//             // cout << endl;
-//             cmdPrint += "\n";
-//             if (validCommand)
-//             {
-//                 // cout << "valid!" << endl;
-//                 bool moved = false;
-//                 do
-//                 {
-//                     moved = this->moveCurrentBlock(DOWN);
-//                 } while (moved);
-
-//                 if (std::find(addedBlocks.begin(), addedBlocks.end(), *this->currBlock_) != addedBlocks.end())
-//                 {
-//                     // cout << "Block already there" << endl;
-//                 }
-//                 else
-//                 {
-//                     cout << "New block!" << endl;
-//                     cout << cmdPrint << endl;
-
-//                     // Calculate penalty of legal commands
-//                     int penalty = this->calcPenalty();
-//                     // cout << "Penalty: " << penalty << endl;
-//                     if (lowestPenalty == -1)
-//                     {
-//                         lowestPenalty = penalty;
-//                     }
-//                     if (penalty < lowestPenalty)
-//                     {
-//                         lowestPenalty = penalty;
-//                     }
-
-//                     // cout << "Valid ^^ " << endl;
-//                     pair<Block, int> legalBlk = make_pair(*this->currBlock_, penalty);
-//                     legalBlocks.push_back(legalBlk);
-//                     totalLegalBlocks.push_back(legalBlk);
-//                     addedBlocks.push_back(*this->currBlock_);
-//                 }
-//             }
-//             // else
-//             // {
-//             //     cout << "Invalid ^^ " << endl;
-//             // }
-
-//             this->clearCells(this->currBlock_);
-//             // Restore current block
-//             this->currBlock_->setMatrix(savedBlock.getCells(), savedBlock.getBoxHeight(), savedBlock.getBoxWidth());
-//             this->currBlock_->setPos(savedBlock.getPos());
-//             this->updateCells(this->currBlock_);
-//         }
-
-//         permNum += 1;
-//         // TODO: Fix, too many permutations to check
-//     } while (legalBlocks.size() > 0 && permNum < 8);
-
-//     // cout << "Legal list of blocks #: " << totalLegalBlocks.size() << endl;
-
-//     // End Trials
-
-//     // Take the first legal block with the lowest penalty
-//     for (int i = 0; i < totalLegalBlocks.size(); i++)
-//     {
-//         if (totalLegalBlocks[i].second <= lowestPenalty)
-//         {
-//             // cout << "Block found" << endl;
-//             HintBlock hintBlock(totalLegalBlocks[i].first);
-
-//             this->hintBlock_->setType(hintBlock.getBlockType());
-//             this->hintBlock_->setMatrix(hintBlock.getCells(), hintBlock.getBoxHeight(), hintBlock.getBoxWidth());
-//             this->hintBlock_->setPos(hintBlock.getPos());
-
-//             this->updateCells(this->hintBlock_);
-//             break;
-//         }
-//     }
-// };
 
 int Board::getHeight() const
 {

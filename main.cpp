@@ -7,35 +7,11 @@
 #include <vector>
 #include <string>
 
-// #include "TrieNode.h"
-
-using namespace std;
-
 int main(int argc, char *argv[])
 {
 
     std::cout << "Starting program..." << std::endl;
     std::cout << std::endl;
-
-    // // Input keys (use only 'a' through 'z'
-    // // and lower case)
-    // string keys[] = {"L", "R", "D",
-    //                  "C", "CW", "LL",
-    //                  "LLL", "LLR"};
-    // int n = sizeof(keys) / sizeof(keys[0]);
-
-    // struct TrieNode *root = getNode();
-
-    // // Construct trie
-    // for (int i = 0; i < n; i++)
-    //     insert(root, keys[i]);
-
-    // // Search for different keys
-    // // remove(root, "LL");
-    // search(root, "LL") ? cout << "Yes\n" : cout << "No\n";
-    // search(root, "these") ? cout << "Yes\n" : cout << "No\n";
-
-    // exit(1);
 
     int levelNum = 0;
     std::string scriptFile = "sequence.txt";
