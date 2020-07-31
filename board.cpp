@@ -540,33 +540,54 @@ void Board::showHint()
     vector<pair<Block, int>> totalLegalBlocks;
     vector<Block> addedBlocks;
     int lowestPenalty = -1;
-    //     // Start Trials
+
+    // Start Trials
     vector<pair<Block, int>> legalBlocks;
 
-    //     // Save current block
+    // Save current block
     Block savedBlock = *this->currBlock_;
 
     int permNum = 2;
     do
     {
         cout << "Getting commands of length: " << permNum << endl;
+        vector<string> rawCommands;
         vector<string> newCommands;
-        vector<string> filteredCommands;
-        generateCharCommands(commands, newCommands, "", numCommands, permNum);
+        generateCharCommands(commands, rawCommands, "", numCommands, permNum);
 
-        cout << "Trying list of commands #: " << newCommands.size() << endl;
-        for (int i = 0; i < newCommands.size(); i++)
+        cout << "Trying list of commands #: " << rawCommands.size() << endl;
+        for (int i = 0; i < rawCommands.size(); i++)
         {
+            // cout << "New cmd: " << rawCommands[i] << endl;
+            string patterns[] = {"lr", "rl", "cj", "jc"};
+            // Need to remove extraneous substrings that do nothing (eg. lr)
+            for (int p = 0; p < 4; p++)
+            {
+                string pattern = patterns[p];
+                std::string::size_type ind = rawCommands[i].find(pattern);
+                while (ind != std::string::npos)
+                {
+                    rawCommands[i].erase(ind, pattern.length());
+                    ind = rawCommands[i].find(pattern);
+                }
+                // cout << "Adjusted cmd: " << rawCommands[i] << endl;
+                // cout << "--" << endl;
+                // cout << endl;
+            }
+
             // Only insert into trie, if prefix exists
-            string cmd = newCommands[i];
+            string cmd = rawCommands[i];
             string cmdPrefix = cmd.substr(0, cmd.size() - 1);
-            // cout << newCommands[i] << endl;
-            if (search(root, cmdPrefix))
+            if (cmd.size() > 0 && search(root, cmdPrefix) && !search(root, cmd))
             {
                 // cout << "Found prefix, inserting" << endl;
                 insert(root, cmd);
                 trieSize += 1;
-                filteredCommands.push_back(cmd);
+                newCommands.push_back(cmd);
+            }
+            else
+            {
+                // cout << "Dont add" << endl;
             }
         }
         cout << "trieSize: " << trieSize << endl;
@@ -574,7 +595,7 @@ void Board::showHint()
         legalBlocks.clear();
 
         // Need to execute each command and see if it is possilble
-        cout << "Trying list of commands #: " << filteredCommands.size() << endl;
+        cout << "Trying list of commands #: " << newCommands.size() << endl;
 
         for (int i = 0; i < newCommands.size(); i++)
         {
@@ -640,11 +661,12 @@ void Board::showHint()
 
                 if (std::find(addedBlocks.begin(), addedBlocks.end(), *this->currBlock_) != addedBlocks.end())
                 {
-                    cout << "Block already there" << endl;
+                    // cout << "Block already there" << endl;
                 }
                 else
                 {
                     cout << "New block!" << endl;
+                    cout << newCommands[i] << endl;
 
                     // Calculate penalty of legal commands
                     int penalty = this->calcPenalty();
@@ -667,8 +689,8 @@ void Board::showHint()
             }
             else
             {
-                cout << "Invalid" << endl;
-                cout << newCommands[i] << endl;
+                // cout << "Invalid" << endl;
+                // cout << newCommands[i] << endl;
             }
 
             this->clearCells(this->currBlock_);
@@ -680,7 +702,7 @@ void Board::showHint()
 
         permNum += 1;
         // TODO: Fix, too many permutations to check
-    } while (legalBlocks.size() > 0 && permNum < 8);
+    } while (legalBlocks.size() > 0);
 
     cout << "Legal list of blocks #: " << totalLegalBlocks.size() << endl;
 
