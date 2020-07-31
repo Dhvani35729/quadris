@@ -75,6 +75,7 @@ protected:
 };
 
 std::ostream &operator<<(std::ostream &sout, const Block &b);
+bool operator==(const Block &lhs, const Block &rhs);
 
 class HeavyBlock : public Block
 {

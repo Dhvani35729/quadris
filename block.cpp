@@ -524,6 +524,49 @@ std::ostream &operator<<(std::ostream &sout, const Block &b)
     return sout;
 };
 
+bool operator==(const Block &lhs, const Block &rhs)
+{
+
+    const pair<int, int> lhsPos = lhs.getPos();
+    const pair<int, int> rhsPos = rhs.getPos();
+
+    if (lhs.getBlockType() != rhs.getBlockType())
+    {
+        return false;
+    }
+
+    if (lhsPos.first != rhsPos.first || lhsPos.second != rhsPos.second)
+    {
+        return false;
+    }
+
+    if (lhs.getBoxHeight() != rhs.getBoxHeight() || lhs.getBoxWidth() != rhs.getBoxWidth())
+    {
+        return false;
+    }
+
+    if (lhs.getBlockHeight() != rhs.getBlockHeight() || lhs.getBlockWidth() != rhs.getBlockWidth())
+    {
+        return false;
+    }
+
+    const vector<vector<char>> lhsCells = lhs.getCells();
+    const vector<vector<char>> rhsCells = rhs.getCells();
+
+    for (int i = 0; i < lhs.getBoxHeight(); i++)
+    {
+        for (int j = 0; j < lhs.getBoxWidth(); j++)
+        {
+            if (lhsCells[i][j] != rhsCells[i][j])
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+};
+
 std::queue<Block> HeavyBlock::moveBlock(Command c)
 {
     // std::cout << "Heavy block move " << std::endl;

@@ -478,6 +478,9 @@ int Board::calcPenalty()
     // cout << "Adding holes: " << holes << endl;
     penalty += holes;
 
+    // Check 2: Add height to penalty. The lower the better
+    penalty += this->height_ - this->currBlock_->getPos().first;
+
     return penalty;
 }
 
@@ -497,89 +500,120 @@ void Board::showHint()
     // Three commands:
     int numCommands = 5;
     Command commands[] = {LEFT, RIGHT, DOWN, CLOCKWISE, COUNTERCLOCKWISE};
-
-    vector<vector<Command>> newCommands;
-    vector<Command> startCommands;
-    generateCommands(commands, newCommands, startCommands, numCommands, 3);
+    vector<pair<Block, int>> totalLegalBlocks;
+    vector<Block> addedBlocks;
+    int lowestPenalty = -1;
+    // Start Trials
+    vector<pair<Block, int>> legalBlocks;
 
     // Save current block
     Block savedBlock = *this->currBlock_;
 
-    // Start Trials
-    int lowestPenalty = -1;
-    vector<pair<Block, int>> legalBlocks;
+    int permNum = 2;
 
-    // Need to execute each command and see if it is possilble
-    // cout << "Trying list of commands #: " << newCommands.size() << endl;
-    for (int i = 0; i < newCommands.size(); i++)
+    cout << "Starting trials" << endl;
+    do
     {
-        // List of commands to try
-        bool validCommand = false;
-        for (int j = 0; j < newCommands[i].size(); j++)
+        cout << "Getting commands of length: " << permNum << endl;
+
+        vector<vector<Command>> newCommands;
+        vector<Command> startCommands;
+        generateCommands(commands, newCommands, startCommands, numCommands, permNum);
+
+        legalBlocks.clear();
+
+        // Need to execute each command and see if it is possilble
+        cout << "Trying list of commands #: " << newCommands.size() << endl;
+        for (int i = 0; i < newCommands.size(); i++)
         {
-            // cout << newCommands[i][j] << " ";
-            Command cmd = newCommands[i][j];
-            if (cmd == LEFT || cmd == RIGHT || cmd == DOWN)
+            // cout << "Checking perm #: " << i << endl;
+            string cmdPrint = "";
+            // List of commands to try
+            bool validCommand = false;
+            for (int j = 0; j < newCommands[i].size(); j++)
             {
-                validCommand = this->moveCurrentBlock(cmd);
-            }
-            if (cmd == CLOCKWISE || cmd == COUNTERCLOCKWISE)
-            {
-                validCommand = this->rotateCurrentBlock(cmd);
-            }
+                // cout << newCommands[i][j] << " ";
+                cmdPrint += to_string(newCommands[i][j]) + " ";
+                Command cmd = newCommands[i][j];
+                if (cmd == LEFT || cmd == RIGHT || cmd == DOWN)
+                {
+                    validCommand = this->moveCurrentBlock(cmd);
+                }
+                if (cmd == CLOCKWISE || cmd == COUNTERCLOCKWISE)
+                {
+                    validCommand = this->rotateCurrentBlock(cmd);
+                }
 
-            if (!validCommand)
-            {
-                break;
+                if (!validCommand)
+                {
+                    break;
+                }
             }
+            // cout << endl;
+            cmdPrint += "\n";
+            if (validCommand)
+            {
+                bool moved = false;
+                do
+                {
+                    moved = this->moveCurrentBlock(DOWN);
+                } while (moved);
+
+                if (std::find(addedBlocks.begin(), addedBlocks.end(), *this->currBlock_) != addedBlocks.end())
+                {
+                    // cout << "Block already there" << endl;
+                }
+                else
+                {
+                    cout << "New block!" << endl;
+                    cout << cmdPrint << endl;
+
+                    // Calculate penalty of legal commands
+                    int penalty = this->calcPenalty();
+                    // cout << "Penalty: " << penalty << endl;
+                    if (lowestPenalty == -1)
+                    {
+                        lowestPenalty = penalty;
+                    }
+                    if (penalty < lowestPenalty)
+                    {
+                        lowestPenalty = penalty;
+                    }
+
+                    // cout << "Valid ^^ " << endl;
+                    pair<Block, int> legalBlk = make_pair(*this->currBlock_, penalty);
+                    legalBlocks.push_back(legalBlk);
+                    totalLegalBlocks.push_back(legalBlk);
+                    addedBlocks.push_back(*this->currBlock_);
+                }
+            }
+            // else
+            // {
+            //     cout << "Invalid ^^ " << endl;
+            // }
+
+            this->clearCells(this->currBlock_);
+            // Restore current block
+            this->currBlock_->setMatrix(savedBlock.getCells(), savedBlock.getBoxHeight(), savedBlock.getBoxWidth());
+            this->currBlock_->setPos(savedBlock.getPos());
+            this->updateCells(this->currBlock_);
         }
-        // cout << endl;
-        if (validCommand)
-        {
-            bool moved = false;
-            do
-            {
-                moved = this->moveCurrentBlock(DOWN);
-            } while (moved);
 
-            // Calculate penalty of legal commands
-            int penalty = this->calcPenalty();
-            // cout << "Penalty: " << penalty << endl;
-            if (lowestPenalty == -1)
-            {
-                lowestPenalty = penalty;
-            }
-            if (penalty < lowestPenalty)
-            {
-                lowestPenalty = penalty;
-            }
+        permNum += 1;
+        // TODO: Fix, too many permutations to check
+    } while (legalBlocks.size() > 0 && permNum < 8);
 
-            // cout << "Valid ^^ " << endl;
-            pair<Block, int> legalBlk = make_pair(*this->currBlock_, penalty);
-            legalBlocks.push_back(legalBlk);
-        }
-        // else
-        // {
-        //     cout << "Invalid ^^ " << endl;
-        // }
-
-        this->clearCells(this->currBlock_);
-        // Restore current block
-        this->currBlock_->setMatrix(savedBlock.getCells(), savedBlock.getBoxHeight(), savedBlock.getBoxWidth());
-        this->currBlock_->setPos(savedBlock.getPos());
-        this->updateCells(this->currBlock_);
-    }
-    // cout << "Legal list of blocks #: " << legalBlocks.size() << endl;
+    // cout << "Legal list of blocks #: " << totalLegalBlocks.size() << endl;
 
     // End Trials
 
     // Take the first legal block with the lowest penalty
-    for (int i = 0; i < legalBlocks.size(); i++)
+    for (int i = 0; i < totalLegalBlocks.size(); i++)
     {
-        if (legalBlocks[i].second <= lowestPenalty)
+        if (totalLegalBlocks[i].second <= lowestPenalty)
         {
             // cout << "Block found" << endl;
-            HintBlock hintBlock(legalBlocks[i].first);
+            HintBlock hintBlock(totalLegalBlocks[i].first);
 
             this->hintBlock_->setType(hintBlock.getBlockType());
             this->hintBlock_->setMatrix(hintBlock.getCells(), hintBlock.getBoxHeight(), hintBlock.getBoxWidth());
