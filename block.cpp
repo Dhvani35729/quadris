@@ -275,9 +275,9 @@ void Block::calcBlockSize()
 void Block::rotateClockwise()
 {
     std::vector<std::vector<char>> &mat = this->matrix_;
-    cout << "Clockwise" << endl;
-    print(mat);
-    cout << this->mWidth_ << endl;
+    // cout << "Clockwise" << endl;
+    // print(mat);
+
     int N = this->mWidth_;
 
     // Consider all squares one by one
@@ -305,8 +305,8 @@ void Block::rotateClockwise()
         }
     }
 
-    print(mat);
-    cout << "Done" << endl;
+    // print(mat);
+    // cout << "Done" << endl;
 };
 
 void Block::rotateCounterclockwise()
@@ -406,10 +406,20 @@ void Block::setPos(std::pair<int, int> m)
     this->coords_ = m;
 }
 
+void Block::setType(BlockType t)
+{
+    this->type_ = t;
+}
+
 bool Block::isPlayable() const
 {
     return this->playable_;
 }
+
+BlockType Block::getBlockType() const
+{
+    return this->type_;
+};
 
 int Block::getBlockHeight() const
 {
@@ -545,3 +555,19 @@ std::queue<Block> HeavyBlock::rotateBlock(Command c)
 
     return blocks;
 }
+
+HintBlock::HintBlock(const Block &b) : Block(b)
+{
+    cout << "Creating hint block" << endl;
+    // Update cells to question marks
+    for (int i = 0; i < this->mHeight_; i++)
+    {
+        for (int j = 0; j < this->mWidth_; j++)
+        {
+            if (this->matrix_[i][j] != ' ')
+            {
+                this->matrix_[i][j] = '?';
+            }
+        }
+    }
+};

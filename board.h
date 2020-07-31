@@ -33,6 +33,7 @@ public:
 
     void resetBoard();
     void showHint();
+    void hideHint();
 
     int getHeight() const;
     int getWidth() const;
@@ -61,6 +62,7 @@ private:
     std::vector<std::shared_ptr<Block>> clearedBlocks_;
 
     std::shared_ptr<Block> currBlock_;
+    std::shared_ptr<Block> hintBlock_;
 };
 
 std::ostream &operator<<(std::ostream &sout, const Board &b);

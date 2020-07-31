@@ -43,6 +43,7 @@ public:
 
     void resetGame();
     void showHint();
+    void hideHint();
 
     void levelUp();
     void levelDown();
