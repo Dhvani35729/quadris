@@ -10,7 +10,7 @@
 #include <memory>
 #include <queue>
 #include <sstream>
-#include "TrieNode.h"
+#include <string>
 
 using namespace std;
 
@@ -520,6 +520,26 @@ void Board::hideHint()
     }
 }
 
+void genPermutations(char baseCommands[], int totalCommands, vector<string> &newCommands, vector<string> &prevCommands)
+{
+    for (int i = 0; i < prevCommands.size(); i++)
+    {
+        for (int j = 0; j < totalCommands; j++)
+        {
+            // cout << "old: " << prevCommands[i] << endl;
+            string newCmd = prevCommands[i];
+            string newSuffix = newCmd.substr(newCmd.size() - 1) + baseCommands[j];
+            const char *cmpString = newSuffix.c_str();
+            // cout << "new: " << newCmd + baseCommands[j] << endl;
+            if (strcmp(cmpString, "lr") != 0 && strcmp(cmpString, "rl") != 0 && strcmp(cmpString, "cj") != 0 && strcmp(cmpString, "jc") != 0)
+            {
+                newCmd += baseCommands[j];
+                newCommands.push_back(newCmd);
+            }
+        }
+    }
+}
+
 void Board::showHint()
 {
     cout << "Showing hint" << endl;
@@ -527,14 +547,6 @@ void Board::showHint()
     // Setup
     char commands[] = {'l', 'r', 'd', 'c', 'j'};
     int numCommands = 5;
-
-    struct TrieNode *root = getNode();
-    for (int i = 0; i < numCommands; i++)
-    {
-        string cmd(1, commands[i]);
-        insert(root, cmd);
-    }
-    int trieSize = 5;
 
     // -------------------------------
     vector<pair<Block, int>> totalLegalBlocks;
@@ -548,49 +560,25 @@ void Board::showHint()
     Block savedBlock = *this->currBlock_;
 
     int permNum = 2;
+    vector<string> newCommands = {"r", "l", "d", "c", "j"};
     do
     {
-        cout << "Getting commands of length: " << permNum << endl;
+        // cout << "prev commands: " << newCommands.size() << endl;
+        for (int i = 0; i < newCommands.size(); i++)
+        {
+            cout << newCommands[i] << endl;
+        }
         vector<string> rawCommands;
-        vector<string> newCommands;
-        generateCharCommands(commands, rawCommands, "", numCommands, permNum);
-
-        cout << "Trying list of commands #: " << rawCommands.size() << endl;
+        // cout << "Getting commands of length: " << permNum << endl;
+        // generateCharCommands(commands, rawCommands, "", numCommands, permNum);
+        vector<string> prevCommands = newCommands;
+        genPermutations(commands, numCommands, rawCommands, prevCommands);
         for (int i = 0; i < rawCommands.size(); i++)
         {
-            // cout << "New cmd: " << rawCommands[i] << endl;
-            string patterns[] = {"lr", "rl", "cj", "jc"};
-            // Need to remove extraneous substrings that do nothing (eg. lr)
-            for (int p = 0; p < 4; p++)
-            {
-                string pattern = patterns[p];
-                std::string::size_type ind = rawCommands[i].find(pattern);
-                while (ind != std::string::npos)
-                {
-                    rawCommands[i].erase(ind, pattern.length());
-                    ind = rawCommands[i].find(pattern);
-                }
-                // cout << "Adjusted cmd: " << rawCommands[i] << endl;
-                // cout << "--" << endl;
-                // cout << endl;
-            }
-
-            // Only insert into trie, if prefix exists
-            string cmd = rawCommands[i];
-            string cmdPrefix = cmd.substr(0, cmd.size() - 1);
-            if (cmd.size() > 0 && search(root, cmdPrefix) && !search(root, cmd))
-            {
-                // cout << "Found prefix, inserting" << endl;
-                insert(root, cmd);
-                trieSize += 1;
-                newCommands.push_back(cmd);
-            }
-            else
-            {
-                // cout << "Dont add" << endl;
-            }
+            cout << rawCommands[i] << endl;
         }
-        cout << "trieSize: " << trieSize << endl;
+        // cout << "Trying list of commands #: " << rawCommands.size() << endl;
+        newCommands = rawCommands;
 
         legalBlocks.clear();
 
@@ -645,7 +633,7 @@ void Board::showHint()
                 {
                     // cout << "invalid!" << endl;
                     // cout << "Removing from trie" << endl;
-                    remove(root, newCommands[i]);
+                    // remove(root, newCommands[i]);
                     break;
                 }
             }
@@ -662,6 +650,8 @@ void Board::showHint()
                 if (std::find(addedBlocks.begin(), addedBlocks.end(), *this->currBlock_) != addedBlocks.end())
                 {
                     // cout << "Block already there" << endl;
+                    newCommands.erase(newCommands.begin() + i);
+                    i--;
                 }
                 else
                 {
@@ -691,6 +681,8 @@ void Board::showHint()
             {
                 // cout << "Invalid" << endl;
                 // cout << newCommands[i] << endl;
+                newCommands.erase(newCommands.begin() + i);
+                i--;
             }
 
             this->clearCells(this->currBlock_);
