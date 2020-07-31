@@ -37,6 +37,7 @@ void Controller::getCommand()
             // std::cout << "Controller: Received commands from Interpreter, length: " << commands.size() << std::endl;
             for (int i = 0; i < commands.size(); i++)
             {
+                model_->hideHint();
                 if (commands[i] == DROP)
                 {
                     model_->dropBlock();

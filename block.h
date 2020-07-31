@@ -43,7 +43,9 @@ public:
     int getBlockWidth() const;
 
     int getLevelGen() const;
+    BlockType getBlockType() const;
 
+    void setType(BlockType);
     void setMatrix(std::vector<std::vector<char>>, int mHeight, int mWidth);
     void setPos(std::pair<int, int>);
 
@@ -88,6 +90,12 @@ class StarBlock : public Block
 public:
     StarBlock(std::pair<int, int>, int, bool);
     ~StarBlock();
+};
+
+class HintBlock : public Block
+{
+public:
+    HintBlock(const Block &);
 };
 
 #endif

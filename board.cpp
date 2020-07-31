@@ -29,6 +29,7 @@ Board::Board(int h, int w)
         }
     }
     this->currBlock_ = nullptr;
+    this->hintBlock_ = make_shared<Block>(BAD_BLK, make_pair(-1, -1), 0, false);
 };
 
 Board::~Board(){
@@ -46,6 +47,7 @@ bool Board::changeCurrentBlock(BlockType newType)
 
     if (canPlaceBlk)
     {
+        this->currBlock_->setType(newType);
         this->currBlock_->setMatrix(newBlock.getCells(), newBlock.getBoxHeight(), newBlock.getBoxWidth());
         this->currBlock_->setPos(newBlock.getPos());
     }
@@ -173,11 +175,11 @@ bool Board::moveCurrentBlock(Command c)
 
 bool Board::rotateCurrentBlock(Command c)
 {
-    cout << "Rotating block" << endl;
+    // cout << "Rotating block" << endl;
 
     std::queue<Block> newBlocks = this->currBlock_->rotateBlock(c);
 
-    cout << newBlocks.size() << endl;
+    // cout << newBlocks.size() << endl;
     bool canRotate = true;
     while (!newBlocks.empty() && canRotate)
     {
@@ -436,8 +438,8 @@ int Board::calcPenalty()
     // We will assign a penalty to each list of commands
     // The hint will then be the command with the lowest penalty
 
-    cout << "Calcing penalty for: " << endl;
-    cout << *this << endl;
+    // cout << "Calcing penalty for: " << endl;
+    // cout << *this << endl;
 
     int penalty = 0;
     // Check #1
@@ -479,6 +481,15 @@ int Board::calcPenalty()
     return penalty;
 }
 
+void Board::hideHint()
+{
+    if (this->hintBlock_->getPos().first != -1)
+    {
+        this->clearCells(this->hintBlock_);
+        this->hintBlock_->setPos(make_pair(-1, -1));
+    }
+}
+
 void Board::showHint()
 {
     cout << "Showing hint" << endl;
@@ -489,13 +500,14 @@ void Board::showHint()
 
     vector<vector<Command>> newCommands;
     vector<Command> startCommands;
-    generateCommands(commands, newCommands, startCommands, numCommands, 2);
+    generateCommands(commands, newCommands, startCommands, numCommands, 3);
 
     // Save current block
     Block savedBlock = *this->currBlock_;
 
     // Start Trials
-    vector<vector<Command>> legalCommands;
+    int lowestPenalty = -1;
+    vector<pair<Block, int>> legalBlocks;
 
     // Need to execute each command and see if it is possilble
     // cout << "Trying list of commands #: " << newCommands.size() << endl;
@@ -503,10 +515,9 @@ void Board::showHint()
     {
         // List of commands to try
         bool validCommand = false;
-        cout << "List #: " << newCommands[i].size() << endl;
         for (int j = 0; j < newCommands[i].size(); j++)
         {
-            cout << newCommands[i][j] << " ";
+            // cout << newCommands[i][j] << " ";
             Command cmd = newCommands[i][j];
             if (cmd == LEFT || cmd == RIGHT || cmd == DOWN)
             {
@@ -522,7 +533,7 @@ void Board::showHint()
                 break;
             }
         }
-        cout << endl;
+        // cout << endl;
         if (validCommand)
         {
             bool moved = false;
@@ -533,10 +544,19 @@ void Board::showHint()
 
             // Calculate penalty of legal commands
             int penalty = this->calcPenalty();
-            cout << "Penalty: " << penalty << endl;
+            // cout << "Penalty: " << penalty << endl;
+            if (lowestPenalty == -1)
+            {
+                lowestPenalty = penalty;
+            }
+            if (penalty < lowestPenalty)
+            {
+                lowestPenalty = penalty;
+            }
 
             // cout << "Valid ^^ " << endl;
-            legalCommands.push_back(newCommands[i]);
+            pair<Block, int> legalBlk = make_pair(*this->currBlock_, penalty);
+            legalBlocks.push_back(legalBlk);
         }
         // else
         // {
@@ -549,9 +569,26 @@ void Board::showHint()
         this->currBlock_->setPos(savedBlock.getPos());
         this->updateCells(this->currBlock_);
     }
-    cout << "Legal list of commands #: " << legalCommands.size() << endl;
+    // cout << "Legal list of blocks #: " << legalBlocks.size() << endl;
 
     // End Trials
+
+    // Take the first legal block with the lowest penalty
+    for (int i = 0; i < legalBlocks.size(); i++)
+    {
+        if (legalBlocks[i].second <= lowestPenalty)
+        {
+            // cout << "Block found" << endl;
+            HintBlock hintBlock(legalBlocks[i].first);
+
+            this->hintBlock_->setType(hintBlock.getBlockType());
+            this->hintBlock_->setMatrix(hintBlock.getCells(), hintBlock.getBoxHeight(), hintBlock.getBoxWidth());
+            this->hintBlock_->setPos(hintBlock.getPos());
+
+            this->updateCells(this->hintBlock_);
+            break;
+        }
+    }
 };
 
 int Board::getHeight() const

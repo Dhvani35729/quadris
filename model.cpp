@@ -67,6 +67,11 @@ void Model::showHint()
     notify();
 };
 
+void Model::hideHint()
+{
+    this->board_->hideHint();
+};
+
 void Model::dropBlock()
 {
     std::pair<int, std::vector<Block>> metaData = this->board_->dropCurrentBlock();
