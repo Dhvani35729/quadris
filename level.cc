@@ -150,8 +150,8 @@ std::shared_ptr<Block> LevelZero::nextBlock()
 
 std::shared_ptr<Block> LevelOne::nextBlock()
 {
-    int blkInd = rand() % 6;
     BlockType type;
+    int blkInd = rand() % 6;
     if (blkInd == 5){
         type = T_BLK;
     }
@@ -164,7 +164,7 @@ std::shared_ptr<Block> LevelOne::nextBlock()
     else{
         type = (BlockType)blkInd;
     }
-    
+
     std::shared_ptr<Block> newBlock = std::make_shared<Block>(type, std::make_pair(3, 0), this->levelNum_, true);
 
     return newBlock;
@@ -183,10 +183,23 @@ std::shared_ptr<Block> LevelTwo::nextBlock()
 
 std::shared_ptr<Block> LevelThree::nextBlock()
 {
-    // TODO: Fix probability
-    int blkInd = rand() % NUM_BLKS;
-    // cout << "Random block: " << blkInd << endl;
-    BlockType type = (BlockType)blkInd;
+    BlockType type;
+    int blkInd = rand() % 9;
+    if (blkInd == 4){
+        type = T_BLK;
+    }
+    else if (blkInd == 5 || blkInd == 6)
+    {
+        type = S_BLK;
+    }
+    else if (blkInd == 7 || blkInd == 8)
+    {
+        type = Z_BLK;
+    }
+    else
+    {
+        type = (BlockType)blkInd;
+    }
 
     std::shared_ptr<Block> newBlock = std::make_shared<HeavyBlock>(type, std::make_pair(3, 0), this->levelNum_, true);
 
@@ -195,10 +208,23 @@ std::shared_ptr<Block> LevelThree::nextBlock()
 
 std::shared_ptr<Block> LevelFour::nextBlock()
 {
-    // TODO: Fix probability
-    int blkInd = rand() % NUM_BLKS;
-    // cout << "Random block: " << blkInd << endl;
-    BlockType type = (BlockType)blkInd;
+    BlockType type;
+    int blkInd = rand() % 9;
+    if (blkInd == 4){
+        type = T_BLK;
+    }
+    else if (blkInd == 5 || blkInd == 6)
+    {
+        type = S_BLK;
+    }
+    else if (blkInd == 7 || blkInd == 8)
+    {
+        type = Z_BLK;
+    }
+    else
+    {
+        type = (BlockType)blkInd;
+    }
 
     std::shared_ptr<Block> newBlock = std::make_shared<HeavyBlock>(type, std::make_pair(3, 0), this->levelNum_, true);
 
