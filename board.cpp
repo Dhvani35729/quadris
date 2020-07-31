@@ -46,7 +46,7 @@ bool Board::changeCurrentBlock(BlockType newType)
 
     if (canPlaceBlk)
     {
-        this->currBlock_->setMatrix(newBlock.getCells(), newBlock.getBoxHeight(), newBlock.getBlockWidth());
+        this->currBlock_->setMatrix(newBlock.getCells(), newBlock.getBoxHeight(), newBlock.getBoxWidth());
         this->currBlock_->setPos(newBlock.getPos());
     }
 
@@ -159,7 +159,7 @@ bool Board::moveCurrentBlock(Command c)
 
         if (canMove)
         {
-            this->currBlock_->setMatrix(newBlock.getCells(), newBlock.getBoxHeight(), newBlock.getBlockWidth());
+            this->currBlock_->setMatrix(newBlock.getCells(), newBlock.getBoxHeight(), newBlock.getBoxWidth());
             this->currBlock_->setPos(newBlock.getPos());
         }
 
@@ -177,6 +177,7 @@ bool Board::rotateCurrentBlock(Command c)
 
     std::queue<Block> newBlocks = this->currBlock_->rotateBlock(c);
 
+    cout << newBlocks.size() << endl;
     bool canRotate = true;
     while (!newBlocks.empty() && canRotate)
     {
@@ -189,7 +190,7 @@ bool Board::rotateCurrentBlock(Command c)
 
         if (canRotate)
         {
-            this->currBlock_->setMatrix(newBlock.getCells(), newBlock.getBoxHeight(), newBlock.getBlockWidth());
+            this->currBlock_->setMatrix(newBlock.getCells(), newBlock.getBoxHeight(), newBlock.getBoxWidth());
             this->currBlock_->setPos(newBlock.getPos());
         }
 
@@ -430,43 +431,65 @@ void generateCommands(Command commands[], vector<vector<Command>> &newCommands, 
     }
 }
 
+int Board::calcPenalty()
+{
+    // We will assign a penalty to each list of commands
+    // The hint will then be the command with the lowest penalty
+
+    cout << "Calcing penalty for: " << endl;
+    cout << *this << endl;
+
+    int penalty = 0;
+    // Check #1
+    // Num of holes left after block is placed
+
+    // Otherwise no lines full and no chances of holes
+    int holes = 0;
+    // Check all rows beneath this and count number of holes
+    for (int i = 0; i < this->height_; i++)
+    {
+        for (int j = 0; j < this->width_; j++)
+        {
+            if (!this->board_[i][j]->isOccupied())
+            {
+                // cout << "Check if space above for: " << i << ":" << j << endl;
+                // Is the col above it empty
+                bool spaceAbove = true;
+                for (int r = 0; r < i; r++)
+                {
+                    if (this->board_[r][j]->isOccupied())
+                    {
+                        // cout << "Occupied!: " << r << ":" << j << endl;
+                        spaceAbove = false;
+                        break;
+                    }
+                }
+                if (!spaceAbove)
+                {
+                    // cout << "Counting hole" << endl;
+                    holes += 1;
+                }
+            }
+        }
+    }
+
+    // cout << "Adding holes: " << holes << endl;
+    penalty += holes;
+
+    return penalty;
+}
+
 void Board::showHint()
 {
     cout << "Showing hint" << endl;
 
-    // Only use default rotation
-
-    // First get the highest h of the board
-
-    // pair<int, int> curPos = this->currBlock_->getPos();
-    // this->clearCells(this->currBlock_);
-    // int startH = this->height_;
-    // for (int i = curPos.first; i < this->height_; i++)
-    // {
-    //     if (!this->isLineEmpty(i))
-    //     {
-    //         startH = i;
-    //         break;
-    //     }
-    // }
-    // // this->updateCells(this->currBlock_);
-
-    // // offset h for current block height
-    // startH -= this->currBlock_->getBlockHeight();
-
-    // cout << "Start h: " << startH << endl;
-
-    // Test every possible start position
-
     // Three commands:
-    // Left, right, down
-    // vector<int> commands = {LEFT, RIGHT, DOWN};
-    Command commands[] = {LEFT, RIGHT, DOWN};
+    int numCommands = 5;
+    Command commands[] = {LEFT, RIGHT, DOWN, CLOCKWISE, COUNTERCLOCKWISE};
 
     vector<vector<Command>> newCommands;
     vector<Command> startCommands;
-
-    generateCommands(commands, newCommands, startCommands, 3, 2);
+    generateCommands(commands, newCommands, startCommands, numCommands, 2);
 
     // Save current block
     Block savedBlock = *this->currBlock_;
@@ -475,7 +498,7 @@ void Board::showHint()
     vector<vector<Command>> legalCommands;
 
     // Need to execute each command and see if it is possilble
-    cout << "Trying list of commands #: " << newCommands.size() << endl;
+    // cout << "Trying list of commands #: " << newCommands.size() << endl;
     for (int i = 0; i < newCommands.size(); i++)
     {
         // List of commands to try
@@ -485,7 +508,15 @@ void Board::showHint()
         {
             cout << newCommands[i][j] << " ";
             Command cmd = newCommands[i][j];
-            validCommand = this->moveCurrentBlock(cmd);
+            if (cmd == LEFT || cmd == RIGHT || cmd == DOWN)
+            {
+                validCommand = this->moveCurrentBlock(cmd);
+            }
+            if (cmd == CLOCKWISE || cmd == COUNTERCLOCKWISE)
+            {
+                validCommand = this->rotateCurrentBlock(cmd);
+            }
+
             if (!validCommand)
             {
                 break;
@@ -494,13 +525,23 @@ void Board::showHint()
         cout << endl;
         if (validCommand)
         {
-            cout << "Valid ^^ " << endl;
+            bool moved = false;
+            do
+            {
+                moved = this->moveCurrentBlock(DOWN);
+            } while (moved);
+
+            // Calculate penalty of legal commands
+            int penalty = this->calcPenalty();
+            cout << "Penalty: " << penalty << endl;
+
+            // cout << "Valid ^^ " << endl;
             legalCommands.push_back(newCommands[i]);
         }
-        else
-        {
-            cout << "Invalid ^^ " << endl;
-        }
+        // else
+        // {
+        //     cout << "Invalid ^^ " << endl;
+        // }
 
         this->clearCells(this->currBlock_);
         // Restore current block

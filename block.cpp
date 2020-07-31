@@ -275,6 +275,9 @@ void Block::calcBlockSize()
 void Block::rotateClockwise()
 {
     std::vector<std::vector<char>> &mat = this->matrix_;
+    cout << "Clockwise" << endl;
+    print(mat);
+    cout << this->mWidth_ << endl;
     int N = this->mWidth_;
 
     // Consider all squares one by one
@@ -301,6 +304,9 @@ void Block::rotateClockwise()
             mat[y][N - 1 - x] = temp;
         }
     }
+
+    print(mat);
+    cout << "Done" << endl;
 };
 
 void Block::rotateCounterclockwise()
@@ -337,7 +343,7 @@ void Block::rotateCounterclockwise()
 // Only supports rotations on square matrix
 std::queue<Block> Block::rotateBlock(Command c)
 {
-    cout << "Rotate regular block" << endl;
+    // cout << "Rotate regular block" << endl;
 
     std::queue<Block> blocks;
 
