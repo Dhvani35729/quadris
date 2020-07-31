@@ -143,7 +143,7 @@ void Board::setCell(int i, int j, char c)
 
 bool Board::moveCurrentBlock(Command c)
 {
-    cout << "Moving block" << endl;
+    // cout << "Moving block" << endl;
 
     std::queue<Block> newBlocks = this->currBlock_->moveBlock(c);
 
@@ -306,6 +306,18 @@ bool Board::isOccupied(int i, int j)
     return this->board_[i][j]->isOccupied();
 };
 
+bool Board::isLineEmpty(int h)
+{
+    for (int j = 0; j < this->width_; j++)
+    {
+        if (this->board_[h][j]->isOccupied())
+        {
+            return false;
+        }
+    }
+    return true;
+};
+
 bool Board::isLineFull(int h)
 {
     for (int j = 0; j < this->width_; j++)
@@ -392,7 +404,114 @@ void Board::resetBoard()
     this->currBlock_ = nullptr;
 };
 
-void Board::showHint(){};
+void generateCommands(Command commands[], vector<vector<Command>> &newCommands, vector<Command> lastCommands,
+                      int totalCommands, int wantedLength)
+{
+
+    // Base case: wantedLength is 0,
+    if (wantedLength == 0)
+    {
+        newCommands.push_back(lastCommands);
+        return;
+    }
+
+    // One by one add all characters
+    // from set and recursively
+    // call for k equals to k-1
+    for (int i = 0; i < totalCommands; i++)
+    {
+        // Next character of input added
+        vector<Command> updatedCommands = lastCommands;
+
+        updatedCommands.push_back(commands[i]);
+        // k is decreased, because
+        // we have added a new character
+        generateCommands(commands, newCommands, updatedCommands, totalCommands, wantedLength - 1);
+    }
+}
+
+void Board::showHint()
+{
+    cout << "Showing hint" << endl;
+
+    // Only use default rotation
+
+    // First get the highest h of the board
+
+    // pair<int, int> curPos = this->currBlock_->getPos();
+    // this->clearCells(this->currBlock_);
+    // int startH = this->height_;
+    // for (int i = curPos.first; i < this->height_; i++)
+    // {
+    //     if (!this->isLineEmpty(i))
+    //     {
+    //         startH = i;
+    //         break;
+    //     }
+    // }
+    // // this->updateCells(this->currBlock_);
+
+    // // offset h for current block height
+    // startH -= this->currBlock_->getBlockHeight();
+
+    // cout << "Start h: " << startH << endl;
+
+    // Test every possible start position
+
+    // Three commands:
+    // Left, right, down
+    // vector<int> commands = {LEFT, RIGHT, DOWN};
+    Command commands[] = {LEFT, RIGHT, DOWN};
+
+    vector<vector<Command>> newCommands;
+    vector<Command> startCommands;
+
+    generateCommands(commands, newCommands, startCommands, 3, 2);
+
+    // Save current block
+    Block savedBlock = *this->currBlock_;
+
+    // Start Trials
+    vector<vector<Command>> legalCommands;
+
+    // Need to execute each command and see if it is possilble
+    cout << "Trying list of commands #: " << newCommands.size() << endl;
+    for (int i = 0; i < newCommands.size(); i++)
+    {
+        // List of commands to try
+        bool validCommand = false;
+        cout << "List #: " << newCommands[i].size() << endl;
+        for (int j = 0; j < newCommands[i].size(); j++)
+        {
+            cout << newCommands[i][j] << " ";
+            Command cmd = newCommands[i][j];
+            validCommand = this->moveCurrentBlock(cmd);
+            if (!validCommand)
+            {
+                break;
+            }
+        }
+        cout << endl;
+        if (validCommand)
+        {
+            cout << "Valid ^^ " << endl;
+            legalCommands.push_back(newCommands[i]);
+        }
+        else
+        {
+            cout << "Invalid ^^ " << endl;
+        }
+
+        this->clearCells(this->currBlock_);
+        // Restore current block
+        this->currBlock_->setMatrix(savedBlock.getCells(), savedBlock.getBoxHeight(), savedBlock.getBoxWidth());
+        this->currBlock_->setPos(savedBlock.getPos());
+        this->updateCells(this->currBlock_);
+    }
+    cout << "Legal list of commands #: " << legalCommands.size() << endl;
+
+    // End Trials
+};
 
 int Board::getHeight() const
 {

@@ -47,6 +47,7 @@ private:
 
     bool isOccupied(int, int);
     bool isLineFull(int);
+    bool isLineEmpty(int);
 
     std::vector<Block> removeLine(int h);
 

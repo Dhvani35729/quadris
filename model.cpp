@@ -61,6 +61,12 @@ void Model::rotateBlock(Command c)
     notify();
 };
 
+void Model::showHint()
+{
+    this->board_->showHint();
+    notify();
+};
+
 void Model::dropBlock()
 {
     std::pair<int, std::vector<Block>> metaData = this->board_->dropCurrentBlock();

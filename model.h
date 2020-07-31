@@ -42,6 +42,7 @@ public:
     void toggleRandom(Command);
 
     void resetGame();
+    void showHint();
 
     void levelUp();
     void levelDown();

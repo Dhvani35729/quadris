@@ -65,6 +65,10 @@ void Controller::getCommand()
                 {
                     model_->levelDown();
                 }
+                else if (commands[i] == HINT)
+                {
+                    model_->showHint();
+                }
                 else if (commands[i] == I || commands[i] == J || commands[i] == L || commands[i] == S || commands[i] == Z || commands[i] == O || commands[i] == T)
                 {
                     BlockType blkType;
