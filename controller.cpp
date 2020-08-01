@@ -20,7 +20,7 @@ Controller::~Controller()
     std::cout << "Controller died" << std::endl;
 }
 
-void Controller::getCommand()
+bool Controller::getCommand()
 {
     // std::cout << "Controller: Getting command from user" << std::endl;
     // std::cout << std::endl;
@@ -38,6 +38,10 @@ void Controller::getCommand()
             // std::cout << "Controller: Received commands from Interpreter, length: " << commands.size() << std::endl;
             for (int i = 0; i < commands.size(); i++)
             {
+                if (commands[i] == EXIT)
+                {
+                    return true;
+                }
                 if (commands[i] == BOT_MODE)
                 {
                     // while (true)
@@ -131,4 +135,6 @@ void Controller::getCommand()
             keepAsking = true;
         }
     } while (keepAsking);
+
+    return false;
 }

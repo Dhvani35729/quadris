@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     int seed = 1;
     bool graphicsOn = true;
 
-    for (int i = 0; i < argc; i++)
+    for (int i = 1; i < argc; i++)
     {
         if (strcmp(argv[i], "-startlevel") == 0 || strcmp(argv[i], "--startlevel") == 0)
         {
@@ -47,6 +47,11 @@ int main(int argc, char *argv[])
         else if (strcmp(argv[i], "-text") == 0 || strcmp(argv[i], "--text") == 0)
         {
             graphicsOn = false;
+        }
+        else
+        {
+            std::cout << "Invalid command line arguments." << std::endl;
+            return 0;
         }
     }
 

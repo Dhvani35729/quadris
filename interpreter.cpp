@@ -37,7 +37,11 @@ std::istream &operator>>(std::istream &in, Interpreter &i)
     in >> cmd;
     i.resetCommand();
 
-    if (cmd == "left" || cmd == "lef" || cmd == "l") // l is not supposed to be supported (cuz levelup/leveldown). added for convenience, delete later
+    if (in.eof())
+    {
+        i.addCommand(EXIT);
+    }
+    else if (cmd == "left" || cmd == "lef" || cmd == "l") // l is not supposed to be supported (cuz levelup/leveldown). added for convenience, delete later
     {
         i.addCommand(LEFT);
     }
@@ -134,7 +138,8 @@ std::istream &operator>>(std::istream &in, Interpreter &i)
         i.addCommand(BAD_COMMAND);
     }
 
-    assert(!in.fail());
+    // TODO: Remove
+    // assert(!in.fail());
 
     return in;
 }
