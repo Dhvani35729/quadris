@@ -55,7 +55,8 @@ protected:
     void rotateClockwise();
     void rotateCounterclockwise();
     void calcBlockSize();
-    void removeWhitespace();
+    void removeVertWhitespace();
+    void removeHorizWhitespace();
 
     std::vector<std::vector<char>> matrix_;
     int mWidth_;

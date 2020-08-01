@@ -254,6 +254,8 @@ void Board::playHint()
     this->clearCells(this->currBlock_);
     this->currBlock_->setMatrix(this->hintBlock_->getCells(), this->hintBlock_->getBoxHeight(), this->hintBlock_->getBoxWidth());
     this->currBlock_->setPos(this->hintBlock_->getPos());
+    cout << "Hinted block pos: " << this->currBlock_->getPos().first << ":" << this->currBlock_->getPos().second << endl;
+
     this->updateCells(this->currBlock_);
 };
 std::pair<int, std::vector<Block>> Board::dropCurrentBlock()
@@ -359,7 +361,7 @@ vector<Block> Board::removeLine(int h)
         int bHeight = placedBlock->getBlockHeight();
         int rowStart = curPos.first;
         int rowEnd = rowStart + bHeight - 1;
-        // cout << "Block first: " << curPos.first << endl;
+        // cout << "Block pos: " << curPos.first << ":" << curPos.second << endl;
         // cout << "Block end: " << rowEnd << endl;
         // Removing top row == block is cleared
         // cout << "Checking block" << endl;
@@ -370,6 +372,7 @@ vector<Block> Board::removeLine(int h)
             // cout << "Block in range" << endl;
             this->clearCells(placedBlock);
             bool clearedBlock = placedBlock->removeLine(h - rowStart);
+
             // TODO: Check if this is safe
             this->updateCells(placedBlock);
             if (clearedBlock)
@@ -463,10 +466,13 @@ int Board::calcPenalty()
     }
 
     // cout << "Adding holes: " << holes << endl;
-    penalty += holes;
+    // Weight holes more:
+    penalty += holes * 2;
 
     // Check 2: Add height to penalty. The lower the better
     penalty += this->height_ - this->currBlock_->getPos().first;
+
+    // cout << "Penalty: " << penalty << endl;
 
     return penalty;
 }
@@ -662,7 +668,7 @@ void Board::showHint()
         }
 
         permNum += 1;
-        // TODO: Fix, too many permutations to check
+
     } while (legalBlocks.size() > 0);
 
     // cout << "Legal list of blocks #: " << totalLegalBlocks.size() << endl;
@@ -674,7 +680,8 @@ void Board::showHint()
     {
         if (totalLegalBlocks[i].second <= lowestPenalty)
         {
-            // cout << "Block found" << endl;
+            cout << "Block found" << endl;
+            cout << "Pos: " << totalLegalBlocks[i].first.getPos().first << ":" << totalLegalBlocks[i].first.getPos().second << endl;
             HintBlock hintBlock(totalLegalBlocks[i].first);
 
             this->hintBlock_->setType(hintBlock.getBlockType());

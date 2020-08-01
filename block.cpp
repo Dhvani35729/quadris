@@ -226,24 +226,58 @@ void removeCol(int w, std::vector<std::vector<char>> &mat)
     }
 };
 
-void Block::removeWhitespace()
+void Block::removeVertWhitespace()
+{
+
+    std::vector<std::vector<char>> &mat = this->matrix_;
+    // Remove empty horizontal rows by moving up
+    // cout << "Start" << endl;
+    // print(mat);
+
+    int col = 0;
+    int timesRemoved = 1;
+    while (col < this->mWidth_)
+    {
+        // cout << "Checking col: " << col << endl;
+        if (isColEmpty(col, mat) && timesRemoved < this->mWidth_)
+        {
+            // cout << "Remove!" << col << endl;
+            removeCol(col, mat);
+            timesRemoved += 1;
+        }
+        else
+        {
+            col += 1;
+            timesRemoved = 0;
+        }
+    }
+}
+void Block::removeHorizWhitespace()
 {
     std::vector<std::vector<char>> &mat = this->matrix_;
     // Remove empty horizontal rows by moving up
+    // cout << "Start" << endl;
+    // print(mat);
 
     int row = 0;
-    // cout << "Remove line?: " << row << endl;
-    // print(mat);
-    while (isRowEmpty(row, mat))
+    int timesRemoved = 1;
+    while (row < this->mHeight_)
     {
-        removeRow(row, mat);
+        // cout << "Checking row: " << row << endl;
+        if (isRowEmpty(row, mat) && timesRemoved < this->mHeight_)
+        {
+            removeRow(row, mat);
+            timesRemoved += 1;
+        }
+        else
+        {
+            row += 1;
+            timesRemoved = 0;
+        }
     }
 
-    int col = 0;
-    while (isColEmpty(col, mat))
-    {
-        removeCol(col, mat);
-    }
+    // cout << "End" << endl;
+    // print(mat);
 }
 
 void Block::calcBlockSize()
@@ -362,13 +396,15 @@ std::queue<Block> Block::rotateBlock(Command c)
     {
 
         rotatedBlock.rotateCounterclockwise();
-        rotatedBlock.removeWhitespace();
+        rotatedBlock.removeHorizWhitespace();
+        rotatedBlock.removeVertWhitespace();
         rotatedBlock.calcBlockSize();
     }
     else if (c == CLOCKWISE)
     {
         rotatedBlock.rotateClockwise();
-        rotatedBlock.removeWhitespace();
+        rotatedBlock.removeHorizWhitespace();
+        rotatedBlock.removeVertWhitespace();
         rotatedBlock.calcBlockSize();
     }
     else
@@ -535,7 +571,7 @@ bool Block::removeLine(int h)
     else
     {
         // cout << "Remove whitespace" << endl;
-        this->removeWhitespace();
+        this->removeHorizWhitespace();
 
         // cout << "Calc block size" << endl;
         this->calcBlockSize();
@@ -647,7 +683,8 @@ std::queue<Block> HeavyBlock::rotateBlock(Command c)
 
 HintBlock::HintBlock(const Block &b) : Block(b)
 {
-    // cout << "Creating hint block" << endl;
+    cout << "Creating hint block" << endl;
+    cout << "Block pos: " << b.getPos().first << ":" << b.getPos().second << endl;
     // Update cells to question marks
     for (int i = 0; i < this->mHeight_; i++)
     {

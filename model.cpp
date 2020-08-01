@@ -75,6 +75,9 @@ void Model::hideHint()
 void Model::playAI()
 {
     this->showHint();
+    // TODO: Remove - for testing AI mode
+    // char c;
+    // cin >> c;
     this->board_->playHint();
     this->dropBlock();
 }
