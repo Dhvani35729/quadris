@@ -54,14 +54,14 @@ std::istream &operator>>(std::istream &in, Interpreter &i)
         i.addCommand(DROP);
     }
     else if (cmd == "clockwise" || cmd == "cl" || cmd == "clo" || cmd == "cloc" ||
-            cmd == "clock" || cmd == "clockw" || cmd == "clockwi" || cmd == "clockwis" || cmd == "cw") // idk if cw is supported but it is now
+             cmd == "clock" || cmd == "clockw" || cmd == "clockwi" || cmd == "clockwis" || cmd == "cw") // idk if cw is supported but it is now
     {
         i.addCommand(CLOCKWISE);
     }
     else if (cmd == "counterclockwise" || cmd == "co" || cmd == "cou" || cmd == "coun" || cmd == "count" ||
-            cmd == "counte" || cmd == "counter" || cmd == "counterc" || cmd == "countercl" || cmd == "counterclo" ||
-            cmd == "countercloc" || cmd == "counterclock" || cmd == "counterclockw" || cmd == "counterclockwi" ||
-            cmd == "counterclockwis" || cmd == "ccw") // idk if ccw is supported but it is now
+             cmd == "counte" || cmd == "counter" || cmd == "counterc" || cmd == "countercl" || cmd == "counterclo" ||
+             cmd == "countercloc" || cmd == "counterclock" || cmd == "counterclockw" || cmd == "counterclockwi" ||
+             cmd == "counterclockwis" || cmd == "ccw") // idk if ccw is supported but it is now
     {
         i.addCommand(COUNTERCLOCKWISE);
     }
@@ -70,8 +70,8 @@ std::istream &operator>>(std::istream &in, Interpreter &i)
         i.addCommand(RANDOM);
     }
     else if (cmd == "norandom file" || cmd == "n" || cmd == "no" || cmd == "nor" || cmd == "nora" || cmd == "noran" ||
-                cmd == "norand" ||cmd == "norando" || cmd == "norandom" || cmd == "norandom " || cmd == "norandom f" ||
-                cmd == "norandom fi" || cmd == "norandom fil") //Relevant only during levels 3 and 4, this command restores randomness in these levels.
+             cmd == "norand" || cmd == "norando" || cmd == "norandom" || cmd == "norandom " || cmd == "norandom f" ||
+             cmd == "norandom fi" || cmd == "norandom fil") //Relevant only during levels 3 and 4, this command restores randomness in these levels.
     {
         i.addCommand(NO_RANDOM_FILE);
     }
@@ -92,8 +92,8 @@ std::istream &operator>>(std::istream &in, Interpreter &i)
         i.addCommand(HINT);
     }
     else if (cmd == "sequence file" || cmd == "s" || cmd == "se" || cmd == "seq" || cmd == "sequ" || cmd == "seque" ||
-            cmd == "sequen" || cmd == "sequenc" || cmd == "sequence" || cmd == "sequence " || cmd == "sequence f" ||
-            cmd == "sequence fi" || cmd == "sequence fil")
+             cmd == "sequen" || cmd == "sequenc" || cmd == "sequence" || cmd == "sequence " || cmd == "sequence f" ||
+             cmd == "sequence fi" || cmd == "sequence fil")
     {
         i.addCommand(SEQUENCE_FILE);
     }
@@ -124,6 +124,10 @@ std::istream &operator>>(std::istream &in, Interpreter &i)
     else if (cmd == "T")
     {
         i.addCommand(T);
+    }
+    else if (cmd == "ai")
+    {
+        i.addCommand(BOT_MODE);
     }
     else
     {

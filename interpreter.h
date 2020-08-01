@@ -26,6 +26,7 @@ enum Command
     Z,
     O,
     T,
+    BOT_MODE,
     BAD_COMMAND
 };
 

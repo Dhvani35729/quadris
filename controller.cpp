@@ -34,6 +34,7 @@ void Controller::getCommand()
         if (!commands.empty())
         {
             keepAsking = false;
+
             // std::cout << "Controller: Received commands from Interpreter, length: " << commands.size() << std::endl;
             for (int i = 0; i < commands.size(); i++)
             {
@@ -69,6 +70,13 @@ void Controller::getCommand()
                 else if (commands[i] == HINT)
                 {
                     model_->showHint();
+                }
+                else if (commands[i] == BOT_MODE)
+                {
+                    while (!model_->checkGameOver())
+                    {
+                        model_->playAI();
+                    }
                 }
                 else if (commands[i] == I || commands[i] == J || commands[i] == L || commands[i] == S || commands[i] == Z || commands[i] == O || commands[i] == T)
                 {

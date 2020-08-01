@@ -245,6 +245,17 @@ bool Board::canPlace(Block &newBlock)
     return canPlace;
 }
 
+void Board::playHint()
+{
+
+    this->clearCells(this->hintBlock_);
+    this->hintBlock_->setType(this->currBlock_->getBlockType());
+
+    this->clearCells(this->currBlock_);
+    this->currBlock_->setMatrix(this->hintBlock_->getCells(), this->hintBlock_->getBoxHeight(), this->hintBlock_->getBoxWidth());
+    this->currBlock_->setPos(this->hintBlock_->getPos());
+    this->updateCells(this->currBlock_);
+};
 std::pair<int, std::vector<Block>> Board::dropCurrentBlock()
 {
     cout << "Dropping block: " << endl;
@@ -489,6 +500,32 @@ void genPermutations(char baseCommands[], int totalCommands, vector<string> &new
     }
 }
 
+Command decodePerm(char cmdCode)
+{
+    Command cmd;
+    if (cmdCode == 'l')
+    {
+        cmd = LEFT;
+    }
+    else if (cmdCode == 'r')
+    {
+        cmd = RIGHT;
+    }
+    else if (cmdCode == 'd')
+    {
+        cmd = DOWN;
+    }
+    else if (cmdCode == 'c')
+    {
+        cmd = CLOCKWISE;
+    }
+    else if (cmdCode == 'j')
+    {
+        cmd = COUNTERCLOCKWISE;
+    }
+    return cmd;
+}
+
 void Board::showHint()
 {
     cout << "Showing hint" << endl;
@@ -550,27 +587,7 @@ void Board::showHint()
 
                 // Decode
                 char cmdCode = newCommands[i][j];
-                Command cmd;
-                if (cmdCode == 'l')
-                {
-                    cmd = LEFT;
-                }
-                else if (cmdCode == 'r')
-                {
-                    cmd = RIGHT;
-                }
-                else if (cmdCode == 'd')
-                {
-                    cmd = DOWN;
-                }
-                else if (cmdCode == 'c')
-                {
-                    cmd = CLOCKWISE;
-                }
-                else if (cmdCode == 'j')
-                {
-                    cmd = COUNTERCLOCKWISE;
-                }
+                Command cmd = decodePerm(cmdCode);
 
                 if (cmd == LEFT || cmd == RIGHT || cmd == DOWN)
                 {

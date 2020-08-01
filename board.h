@@ -34,6 +34,7 @@ public:
     void resetBoard();
     void showHint();
     void hideHint();
+    void playHint();
 
     int getHeight() const;
     int getWidth() const;
@@ -63,6 +64,9 @@ private:
 
     std::shared_ptr<Block> currBlock_;
     std::shared_ptr<Block> hintBlock_;
+
+    // TODO: Maybe store commands used to get there
+    // std::vector<Command> hintCommands_;
 };
 
 std::ostream &operator<<(std::ostream &sout, const Board &b);

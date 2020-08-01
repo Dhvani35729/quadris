@@ -406,9 +406,55 @@ void Block::setPos(std::pair<int, int> m)
     this->coords_ = m;
 }
 
+char getSymbol(BlockType t)
+{
+    char s = ' ';
+    if (t == I_BLK)
+    {
+        s = 'I';
+    }
+    else if (t == J_BLK)
+    {
+        s = 'J';
+    }
+    else if (t == L_BLK)
+    {
+        s = 'L';
+    }
+    else if (t == O_BLK)
+    {
+        s = 'O';
+    }
+    else if (t == S_BLK)
+    {
+        s = 'S';
+    }
+    else if (t == Z_BLK)
+    {
+        s = 'Z';
+    }
+    else if (t == T_BLK)
+    {
+        s = 'T';
+    }
+
+    return s;
+}
+
 void Block::setType(BlockType t)
 {
     this->type_ = t;
+    char newSymbol = getSymbol(t);
+    for (int i = 0; i < this->mHeight_; i++)
+    {
+        for (int j = 0; j < this->mWidth_; j++)
+        {
+            if (this->matrix_[i][j] != ' ')
+            {
+                this->matrix_[i][j] = newSymbol;
+            }
+        }
+    }
 }
 
 bool Block::isPlayable() const
@@ -585,7 +631,7 @@ std::queue<Block> HeavyBlock::moveBlock(Command c)
 
 std::queue<Block> HeavyBlock::rotateBlock(Command c)
 {
-    std::cout << "Heavy block rotate " << std::endl;
+    // std::cout << "Heavy block rotate " << std::endl;
 
     std::queue<Block> blocks = Block::rotateBlock(c);
 
@@ -601,7 +647,7 @@ std::queue<Block> HeavyBlock::rotateBlock(Command c)
 
 HintBlock::HintBlock(const Block &b) : Block(b)
 {
-    cout << "Creating hint block" << endl;
+    // cout << "Creating hint block" << endl;
     // Update cells to question marks
     for (int i = 0; i < this->mHeight_; i++)
     {

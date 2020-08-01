@@ -36,6 +36,8 @@ public:
     void startGame();
     bool checkGameOver();
 
+    void playAI();
+
     void moveBlock(Command);
     void rotateBlock(Command);
     void dropBlock();
