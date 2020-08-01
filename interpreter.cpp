@@ -89,7 +89,7 @@ std::istream &operator>>(std::istream &in, Interpreter &intp)
     }
     else
     {
-        int multiplier = 0;
+        int multiplier = 1;
         // Check if there is a multiplier prefix
         int cmdStartIndex = 0;
         for (int i = 0; i < cmd.length(); i++)
@@ -108,6 +108,7 @@ std::istream &operator>>(std::istream &in, Interpreter &intp)
             // crop out prefix before checking auto completer
             cmd = cmd.substr(cmdStartIndex);
         }
+
         // std::cout << "Got multiplier: " << multiplier << std::endl;
 
         Command parsedCommand = completer(cmd);
