@@ -76,27 +76,52 @@ Command completer(std::string rawCommand)
     }
 }
 
-std::istream &operator>>(std::istream &in, Interpreter &i)
+std::istream &operator>>(std::istream &in, Interpreter &intp)
 {
 
     std::string cmd;
     in >> cmd;
-    i.resetCommand();
+    intp.resetCommand();
 
     if (in.eof())
     {
-        i.addCommand(EXIT);
+        intp.addCommand(EXIT);
     }
     else
     {
+        int multiplier = 0;
+        // Check if there is a multiplier prefix
+        int cmdStartIndex = 0;
+        for (int i = 0; i < cmd.length(); i++)
+        {
+            if (!std::isdigit(cmd[i]))
+            {
+                cmdStartIndex = i;
+                break;
+            }
+        }
+
+        // There is a multiplier prefix
+        if (cmdStartIndex > 0)
+        {
+            multiplier = std::stoi(cmd.substr(0, cmdStartIndex));
+            // crop out prefix before checking auto completer
+            cmd = cmd.substr(cmdStartIndex);
+        }
+        // std::cout << "Got multiplier: " << multiplier << std::endl;
+
         Command parsedCommand = completer(cmd);
         if (parsedCommand == BAD_COMMAND)
         {
-            i.addCommand(BAD_COMMAND);
+            intp.addCommand(BAD_COMMAND);
         }
         else
         {
-            i.addCommand(parsedCommand);
+            // TODO: Check if multiplier is valid
+            for (int i = 0; i < multiplier; i++)
+            {
+                intp.addCommand(parsedCommand);
+            }
         }
     }
 
