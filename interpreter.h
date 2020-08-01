@@ -37,12 +37,12 @@ class Interpreter
 public:
     Interpreter();
     ~Interpreter();
-    std::vector<Command> getCommands();
-    void addCommand(Command);
+    std::vector<std::pair<Command, int>> getCommands();
+    void addCommand(Command, int);
     void resetCommand();
 
 private:
-    std::vector<Command> commands_;
+    std::vector<std::pair<Command, int>> commands_;
 };
 
 std::istream &operator>>(std::istream &, Interpreter &);

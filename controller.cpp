@@ -29,7 +29,7 @@ bool Controller::getCommand()
     {
         std::cout << ">";
         std::cin >> *inter_;
-        std::vector<Command> commands = inter_->getCommands();
+        std::vector<std::pair<Command, int>> commands = inter_->getCommands();
 
         if (!commands.empty())
         {
@@ -38,11 +38,14 @@ bool Controller::getCommand()
             // std::cout << "Controller: Received commands from Interpreter, length: " << commands.size() << std::endl;
             for (int i = 0; i < commands.size(); i++)
             {
-                if (commands[i] == EXIT)
+                Command cmd = commands[i].first;
+                int multiplier = commands[i].second;
+                if (cmd == EXIT)
                 {
                     return true;
                 }
-                if (commands[i] == BOT_MODE)
+
+                if (cmd == BOT_MODE)
                 {
                     // while (true)
                     // {
@@ -58,73 +61,73 @@ bool Controller::getCommand()
                     model_->hideHint();
                 }
 
-                if (commands[i] == DROP)
+                if (cmd == DROP)
                 {
                     model_->dropBlock();
                 }
-                else if (commands[i] == CLOCKWISE || commands[i] == COUNTERCLOCKWISE)
+                else if (cmd == CLOCKWISE || cmd == COUNTERCLOCKWISE)
                 {
-                    model_->rotateBlock(commands[i]);
+                    model_->rotateBlock(cmd);
                 }
-                else if (commands[i] == LEFT || commands[i] == RIGHT || commands[i] == DOWN)
+                else if (cmd == LEFT || cmd == RIGHT || cmd == DOWN)
                 {
-                    model_->moveBlock(commands[i]);
+                    model_->moveBlock(cmd);
                 }
-                else if (commands[i] == RANDOM || commands[i] == NO_RANDOM_FILE)
+                else if (cmd == RANDOM || cmd == NO_RANDOM_FILE)
                 {
-                    model_->toggleRandom(commands[i]);
+                    model_->toggleRandom(cmd);
                 }
-                else if (commands[i] == RESTART)
+                else if (cmd == RESTART)
                 {
                     model_->resetGame();
                 }
-                else if (commands[i] == LEVEL_UP)
+                else if (cmd == LEVEL_UP)
                 {
                     model_->levelUp();
                 }
-                else if (commands[i] == LEVEL_DOWN)
+                else if (cmd == LEVEL_DOWN)
                 {
                     model_->levelDown();
                 }
-                else if (commands[i] == HINT)
+                else if (cmd == HINT)
                 {
                     model_->showHint();
                 }
-                else if (commands[i] == I || commands[i] == J || commands[i] == L || commands[i] == S || commands[i] == Z || commands[i] == O || commands[i] == T)
+                else if (cmd == I || cmd == J || cmd == L || cmd == S || cmd == Z || cmd == O || cmd == T)
                 {
                     BlockType blkType;
                     // TODO: Should be a map or something better
-                    if (commands[i] == I)
+                    if (cmd == I)
                     {
                         blkType = I_BLK;
                     }
-                    else if (commands[i] == J)
+                    else if (cmd == J)
                     {
                         blkType = J_BLK;
                     }
-                    else if (commands[i] == L)
+                    else if (cmd == L)
                     {
                         blkType = L_BLK;
                     }
-                    else if (commands[i] == S)
+                    else if (cmd == S)
                     {
                         blkType = S_BLK;
                     }
-                    else if (commands[i] == Z)
+                    else if (cmd == Z)
                     {
                         blkType = Z_BLK;
                     }
-                    else if (commands[i] == O)
+                    else if (cmd == O)
                     {
                         blkType = O_BLK;
                     }
-                    else if (commands[i] == T)
+                    else if (cmd == T)
                     {
                         blkType = T_BLK;
                     }
                     model_->changeCurrentBlock(blkType);
                 }
-                else if (commands[i] == BAD_COMMAND)
+                else if (cmd == BAD_COMMAND)
                 {
                     std::cout << "Invalid command!" << std::endl;
                 }

@@ -15,14 +15,14 @@ Interpreter::~Interpreter()
     std::cout << "Interpreter died" << std::endl;
 }
 
-std::vector<Command> Interpreter::getCommands()
+std::vector<std::pair<Command, int>> Interpreter::getCommands()
 {
     return this->commands_;
 }
 
-void Interpreter::addCommand(Command c)
+void Interpreter::addCommand(Command c, int m)
 {
-    this->commands_.push_back(c);
+    this->commands_.push_back(std::make_pair(c, m));
 }
 
 void Interpreter::resetCommand()
@@ -83,13 +83,14 @@ std::istream &operator>>(std::istream &in, Interpreter &intp)
     in >> cmd;
     intp.resetCommand();
 
+    int multiplier = 1;
+
     if (in.eof())
     {
-        intp.addCommand(EXIT);
+        intp.addCommand(EXIT, multiplier);
     }
     else
     {
-        int multiplier = 1;
         // Check if there is a multiplier prefix
         int cmdStartIndex = 0;
         for (int i = 0; i < cmd.length(); i++)
@@ -114,14 +115,14 @@ std::istream &operator>>(std::istream &in, Interpreter &intp)
         Command parsedCommand = completer(cmd);
         if (parsedCommand == BAD_COMMAND)
         {
-            intp.addCommand(BAD_COMMAND);
+            intp.addCommand(BAD_COMMAND, multiplier);
         }
         else
         {
             // TODO: Check if multiplier is valid
             for (int i = 0; i < multiplier; i++)
             {
-                intp.addCommand(parsedCommand);
+                intp.addCommand(parsedCommand, multiplier);
             }
         }
     }
