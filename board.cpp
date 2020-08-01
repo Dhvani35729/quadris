@@ -465,6 +465,30 @@ int Board::calcPenalty()
         }
     }
 
+    // Penalize columns with 3 or more empty holes
+    // Bot is waiting for an I block
+    int iCols = 0;
+    for (int j = 0; j < this->width_; j++)
+    {
+        int rowEmpty = 0;
+        for (int i = this->height_ - 1; i >= 0; i--)
+        {
+            if (!this->board_[i][j]->isOccupied())
+            {
+                rowEmpty += 1;
+            }
+            else
+            {
+                break;
+            }
+        }
+        if (rowEmpty >= 3)
+        {
+            iCols += 1;
+        }
+    }
+    penalty += iCols;
+
     // cout << "Adding holes: " << holes << endl;
     // Weight holes more:
     penalty += holes * 2;

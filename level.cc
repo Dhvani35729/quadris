@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <memory>
+#include <time.h>
 
 using namespace std;
 
@@ -44,6 +45,8 @@ LevelOne::LevelOne()
 
 LevelTwo::LevelTwo()
 {
+    // Use current time as seed for random generator
+    srand(time(0));
     std::cout << "LevelTwo born" << std::endl;
     this->levelNum_ = 2;
 }
@@ -152,16 +155,18 @@ std::shared_ptr<Block> LevelOne::nextBlock()
 {
     BlockType type;
     int blkInd = rand() % 6;
-    if (blkInd == 5){
+    if (blkInd == 5)
+    {
         type = T_BLK;
     }
-    else if(blkInd == 4)
+    else if (blkInd == 4)
     {
         blkInd = rand() % 2;
         blkInd = blkInd == 0 ? S_BLK : Z_BLK;
         type = (BlockType)blkInd;
     }
-    else{
+    else
+    {
         type = (BlockType)blkInd;
     }
 
@@ -172,6 +177,7 @@ std::shared_ptr<Block> LevelOne::nextBlock()
 
 std::shared_ptr<Block> LevelTwo::nextBlock()
 {
+
     int blkInd = rand() % NUM_BLKS;
     // cout << "Random block: " << blkInd << endl;
     BlockType type = (BlockType)blkInd;
@@ -185,7 +191,8 @@ std::shared_ptr<Block> LevelThree::nextBlock()
 {
     BlockType type;
     int blkInd = rand() % 9;
-    if (blkInd == 4){
+    if (blkInd == 4)
+    {
         type = T_BLK;
     }
     else if (blkInd == 5 || blkInd == 6)
@@ -210,7 +217,8 @@ std::shared_ptr<Block> LevelFour::nextBlock()
 {
     BlockType type;
     int blkInd = rand() % 9;
-    if (blkInd == 4){
+    if (blkInd == 4)
+    {
         type = T_BLK;
     }
     else if (blkInd == 5 || blkInd == 6)
