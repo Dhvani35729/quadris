@@ -49,15 +49,21 @@ void Model::startGame()
     notify();
 };
 
-void Model::moveBlock(Command c)
+void Model::moveBlock(Command c, int multiplier)
 {
-    this->board_->moveCurrentBlock(c);
+    for (int i = 0; i < multiplier; i++)
+    {
+        this->board_->moveCurrentBlock(c);
+    }
     notify();
 };
 
-void Model::rotateBlock(Command c)
+void Model::rotateBlock(Command c, int multiplier)
 {
-    this->board_->rotateCurrentBlock(c);
+    for (int i = 0; i < multiplier; i++)
+    {
+        this->board_->rotateCurrentBlock(c);
+    }
     notify();
 };
 
@@ -79,10 +85,10 @@ void Model::playAI()
     // char c;
     // cin >> c;
     this->board_->playHint();
-    this->dropBlock();
+    this->dropBlock(1);
 }
 
-void Model::dropBlock()
+void Model::dropBlockHelper()
 {
     std::pair<int, std::vector<Block>> metaData = this->board_->dropCurrentBlock();
     int linesCleared = metaData.first;
@@ -120,14 +126,13 @@ void Model::dropBlock()
             this->blocksSinceClear_ += 1;
             if (!specialBlock->isPlayable())
             {
-                this->dropBlock();
+                this->dropBlockHelper();
             }
         }
         else
         {
             // Game over - could not add block
             this->gameOver_ = true;
-            notify();
         }
     }
     else
@@ -141,7 +146,7 @@ void Model::dropBlock()
             this->blocksSinceClear_ += 1;
             if (!nextBlock->isPlayable())
             {
-                this->dropBlock();
+                this->dropBlockHelper();
             }
             this->nextBlock_ = this->level_->nextBlock();
         }
@@ -152,8 +157,16 @@ void Model::dropBlock()
         }
 
         // TODO: Check if this should be inside if
-        notify();
     }
+}
+
+void Model::dropBlock(int multiplier)
+{
+    for (int i = 0; i < multiplier; i++)
+    {
+        this->dropBlockHelper();
+    }
+    notify();
 };
 
 void Model::toggleRandom(Command c)
@@ -203,26 +216,33 @@ std::unique_ptr<Level> Model::makeLevel(int levelNum)
     return newLevel;
 }
 
-void Model::levelUp()
+void Model::levelUp(int multiplier)
 {
-    int newLevelNum = this->level_->getLevelNum() + 1;
-    std::unique_ptr<Level> newLevel = this->makeLevel(newLevelNum);
-
-    if (nullptr != newLevel)
+    for (int i = 0; i < multiplier; i++)
     {
-        this->level_ = move(newLevel);
+        int newLevelNum = this->level_->getLevelNum() + 1;
+        std::unique_ptr<Level> newLevel = this->makeLevel(newLevelNum);
+
+        if (nullptr != newLevel)
+        {
+            this->level_ = move(newLevel);
+        }
     }
 
     notify();
 };
 
-void Model::levelDown()
+void Model::levelDown(int multiplier)
 {
-    int newLevelNum = this->level_->getLevelNum() - 1;
-    std::unique_ptr<Level> newLevel = this->makeLevel(newLevelNum);
-    if (nullptr != newLevel)
+    for (int i = 0; i < multiplier; i++)
     {
-        this->level_ = move(newLevel);
+
+        int newLevelNum = this->level_->getLevelNum() - 1;
+        std::unique_ptr<Level> newLevel = this->makeLevel(newLevelNum);
+        if (nullptr != newLevel)
+        {
+            this->level_ = move(newLevel);
+        }
     }
     notify();
 };

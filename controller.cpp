@@ -63,15 +63,15 @@ bool Controller::getCommand()
 
                 if (cmd == DROP)
                 {
-                    model_->dropBlock();
+                    model_->dropBlock(multiplier);
                 }
                 else if (cmd == CLOCKWISE || cmd == COUNTERCLOCKWISE)
                 {
-                    model_->rotateBlock(cmd);
+                    model_->rotateBlock(cmd, multiplier);
                 }
                 else if (cmd == LEFT || cmd == RIGHT || cmd == DOWN)
                 {
-                    model_->moveBlock(cmd);
+                    model_->moveBlock(cmd, multiplier);
                 }
                 else if (cmd == RANDOM || cmd == NO_RANDOM_FILE)
                 {
@@ -83,11 +83,11 @@ bool Controller::getCommand()
                 }
                 else if (cmd == LEVEL_UP)
                 {
-                    model_->levelUp();
+                    model_->levelUp(multiplier);
                 }
                 else if (cmd == LEVEL_DOWN)
                 {
-                    model_->levelDown();
+                    model_->levelDown(multiplier);
                 }
                 else if (cmd == HINT)
                 {
@@ -95,7 +95,7 @@ bool Controller::getCommand()
                 }
                 else if (cmd == I || cmd == J || cmd == L || cmd == S || cmd == Z || cmd == O || cmd == T)
                 {
-                    BlockType blkType;
+                    BlockType blkType = BAD_BLK;
                     // TODO: Should be a map or something better
                     if (cmd == I)
                     {
@@ -125,7 +125,11 @@ bool Controller::getCommand()
                     {
                         blkType = T_BLK;
                     }
-                    model_->changeCurrentBlock(blkType);
+
+                    if (blkType != BAD_BLK)
+                    {
+                        model_->changeCurrentBlock(blkType);
+                    }
                 }
                 else if (cmd == BAD_COMMAND)
                 {

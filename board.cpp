@@ -147,7 +147,6 @@ void Board::setCell(int i, int j, char c)
 
 bool Board::moveCurrentBlock(Command c)
 {
-    // cout << "Moving block" << endl;
 
     std::queue<Block> newBlocks = this->currBlock_->moveBlock(c);
 
@@ -532,7 +531,7 @@ void genPermutations(char baseCommands[], int totalCommands, vector<string> &new
 
 Command decodePerm(char cmdCode)
 {
-    Command cmd;
+    Command cmd = BAD_COMMAND;
     if (cmdCode == 'l')
     {
         cmd = LEFT;

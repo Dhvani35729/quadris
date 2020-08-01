@@ -113,18 +113,7 @@ std::istream &operator>>(std::istream &in, Interpreter &intp)
         // std::cout << "Got multiplier: " << multiplier << std::endl;
 
         Command parsedCommand = completer(cmd);
-        if (parsedCommand == BAD_COMMAND)
-        {
-            intp.addCommand(BAD_COMMAND, multiplier);
-        }
-        else
-        {
-            // TODO: Check if multiplier is valid
-            for (int i = 0; i < multiplier; i++)
-            {
-                intp.addCommand(parsedCommand, multiplier);
-            }
-        }
+        intp.addCommand(parsedCommand, multiplier);
     }
 
     return in;

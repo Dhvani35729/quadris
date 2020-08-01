@@ -38,17 +38,17 @@ public:
 
     void playAI();
 
-    void moveBlock(Command);
-    void rotateBlock(Command);
-    void dropBlock();
+    void moveBlock(Command, int);
+    void rotateBlock(Command, int);
+    void dropBlock(int);
     void toggleRandom(Command);
 
     void resetGame();
     void showHint();
     void hideHint();
 
-    void levelUp();
-    void levelDown();
+    void levelUp(int);
+    void levelDown(int);
     void changeCurrentBlock(BlockType);
 
     int getBoardHeight() const;
@@ -62,6 +62,7 @@ public:
 
 private:
     std::unique_ptr<Level> makeLevel(int levelNum);
+    void dropBlockHelper();
 
     std::unique_ptr<Level> level_;
     std::unique_ptr<Board> board_;
