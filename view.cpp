@@ -11,9 +11,16 @@ using namespace std;
 
 View::View(std::shared_ptr<Controller> c, std::shared_ptr<Model> m)
 {
+    // Sets some properties of the window.
+    set_title("Quadris");
+    set_border_width(10);
+
     std::cout << "View born" << std::endl;
     this->model_ = m;
     this->controller_ = c;
+
+    // The final step is to display the buttons (they display themselves)
+    show_all();
 
     // Register view as observer of model
     model_->subscribe(this);

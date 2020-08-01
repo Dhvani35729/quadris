@@ -2,13 +2,15 @@
 #define MVC_VIEW_H
 
 #include "observer.h"
+
+#include <gtkmm.h>
 #include <memory>
 
 class Controller;
 class Model;
 
 // View
-class View : public Observer
+class View : public Gtk::Window, public Observer
 {
 public:
     View(std::shared_ptr<Controller>, std::shared_ptr<Model>);
