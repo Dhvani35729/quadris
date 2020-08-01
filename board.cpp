@@ -62,7 +62,7 @@ bool Board::changeCurrentBlock(BlockType newType)
 
 bool Board::addBlock(std::shared_ptr<Block> block)
 {
-    std::cout << "Adding block to board" << std::endl;
+    // std::cout << "Adding block to board" << std::endl;
 
     // Check if there's space
     bool canPlaceBlk = this->canPlace(*block);
@@ -254,13 +254,13 @@ void Board::playHint()
     this->clearCells(this->currBlock_);
     this->currBlock_->setMatrix(this->hintBlock_->getCells(), this->hintBlock_->getBoxHeight(), this->hintBlock_->getBoxWidth());
     this->currBlock_->setPos(this->hintBlock_->getPos());
-    cout << "Hinted block pos: " << this->currBlock_->getPos().first << ":" << this->currBlock_->getPos().second << endl;
+    // cout << "Hinted block pos: " << this->currBlock_->getPos().first << ":" << this->currBlock_->getPos().second << endl;
 
     this->updateCells(this->currBlock_);
 };
 std::pair<int, std::vector<Block>> Board::dropCurrentBlock()
 {
-    cout << "Dropping block: " << endl;
+    // cout << "Dropping block: " << endl;
     std::pair<int, std::vector<Block>> metaData;
 
     bool moved = false;
@@ -558,7 +558,7 @@ Command decodePerm(char cmdCode)
 
 void Board::showHint()
 {
-    cout << "Showing hint" << endl;
+    // cout << "Showing hint" << endl;
 
     // Setup
     char commands[] = {'l', 'r', 'd', 'c', 'j'};
@@ -704,8 +704,8 @@ void Board::showHint()
     {
         if (totalLegalBlocks[i].second <= lowestPenalty)
         {
-            cout << "Block found" << endl;
-            cout << "Pos: " << totalLegalBlocks[i].first.getPos().first << ":" << totalLegalBlocks[i].first.getPos().second << endl;
+            // cout << "Block found" << endl;
+            // cout << "Pos: " << totalLegalBlocks[i].first.getPos().first << ":" << totalLegalBlocks[i].first.getPos().second << endl;
             HintBlock hintBlock(totalLegalBlocks[i].first);
 
             this->hintBlock_->setType(hintBlock.getBlockType());

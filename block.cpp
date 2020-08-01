@@ -683,8 +683,8 @@ std::queue<Block> HeavyBlock::rotateBlock(Command c)
 
 HintBlock::HintBlock(const Block &b) : Block(b)
 {
-    cout << "Creating hint block" << endl;
-    cout << "Block pos: " << b.getPos().first << ":" << b.getPos().second << endl;
+    // cout << "Creating hint block" << endl;
+    // cout << "Block pos: " << b.getPos().first << ":" << b.getPos().second << endl;
     // Update cells to question marks
     for (int i = 0; i < this->mHeight_; i++)
     {

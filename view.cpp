@@ -27,11 +27,11 @@ View::~View()
 
 void View::update()
 {
-    std::cout << "Updating view" << std::endl;
+    // std::cout << "Updating view" << std::endl;
     // Drawing
 
-    std::cout << "Drawing board \n"
-              << std::endl;
+    // std::cout << "Drawing board \n"
+    //   << std::endl;
     this->draw();
     std::cout << std::endl;
 }
