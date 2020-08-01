@@ -170,6 +170,7 @@ void Model::resetGame()
     this->score_->resetScore();
 
     this->nextBlock_ = nullptr;
+    this->gameOver_ = false;
 
     this->startGame();
 };

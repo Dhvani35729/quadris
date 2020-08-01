@@ -40,10 +40,14 @@ void Controller::getCommand()
             {
                 if (commands[i] == BOT_MODE)
                 {
+                    // while (true)
+                    // {
                     while (!model_->checkGameOver())
                     {
                         model_->playAI();
                     }
+                    // model_->resetGame();
+                    // }
                 }
                 else
                 {

@@ -39,6 +39,8 @@ LevelZero::LevelZero(std::string f)
 
 LevelOne::LevelOne()
 {
+    // Use current time as seed for random generator
+    srand(time(0));
     std::cout << "LevelOne born" << std::endl;
     this->levelNum_ = 1;
 }
@@ -53,6 +55,8 @@ LevelTwo::LevelTwo()
 
 LevelThree::LevelThree()
 {
+    // Use current time as seed for random generator
+    srand(time(0));
     std::cout << "LevelThree born" << std::endl;
     this->levelNum_ = 3;
     this->isRandom_ = true;
@@ -60,6 +64,8 @@ LevelThree::LevelThree()
 
 LevelFour::LevelFour()
 {
+    // Use current time as seed for random generator
+    srand(time(0));
     std::cout << "LevelFour born" << std::endl;
     this->levelNum_ = 4;
     this->isRandom_ = true;
