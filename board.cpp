@@ -11,6 +11,7 @@
 #include <queue>
 #include <sstream>
 #include <string>
+#include <cstring>
 
 using namespace std;
 
@@ -520,7 +521,7 @@ void genPermutations(char baseCommands[], int totalCommands, vector<string> &new
             string newSuffix = newCmd.substr(newCmd.size() - 1) + baseCommands[j];
             const char *cmpString = newSuffix.c_str();
             // cout << "new: " << newCmd + baseCommands[j] << endl;
-            if (strcmp(cmpString, "lr") != 0 && strcmp(cmpString, "rl") != 0 && strcmp(cmpString, "cj") != 0 && strcmp(cmpString, "jc") != 0)
+            if (std::strcmp(cmpString, "lr") != 0 && std::strcmp(cmpString, "rl") != 0 && std::strcmp(cmpString, "cj") != 0 && std::strcmp(cmpString, "jc") != 0)
             {
                 newCmd += baseCommands[j];
                 newCommands.push_back(newCmd);

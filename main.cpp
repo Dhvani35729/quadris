@@ -6,6 +6,7 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <cstring>
 
 int main(int argc, char *argv[])
 {
@@ -20,7 +21,7 @@ int main(int argc, char *argv[])
 
     for (int i = 1; i < argc; i++)
     {
-        if (strcmp(argv[i], "-startlevel") == 0 || strcmp(argv[i], "--startlevel") == 0)
+        if (std::strcmp(argv[i], "-startlevel") == 0 || std::strcmp(argv[i], "--startlevel") == 0)
         {
             if (i + 1 < argc)
             {
@@ -28,7 +29,7 @@ int main(int argc, char *argv[])
                 i++;
             }
         }
-        else if (strcmp(argv[i], "-scriptfile") == 0 || strcmp(argv[i], "--scriptfile") == 0)
+        else if (std::strcmp(argv[i], "-scriptfile") == 0 || std::strcmp(argv[i], "--scriptfile") == 0)
         {
             if (i + 1 < argc)
             {
@@ -36,7 +37,7 @@ int main(int argc, char *argv[])
                 i++;
             }
         }
-        else if (strcmp(argv[i], "-seed") == 0 || strcmp(argv[i], "--seed") == 0)
+        else if (std::strcmp(argv[i], "-seed") == 0 || std::strcmp(argv[i], "--seed") == 0)
         {
             if (i + 1 < argc)
             {
@@ -44,7 +45,7 @@ int main(int argc, char *argv[])
                 i++;
             }
         }
-        else if (strcmp(argv[i], "-text") == 0 || strcmp(argv[i], "--text") == 0)
+        else if (std::strcmp(argv[i], "-text") == 0 || std::strcmp(argv[i], "--text") == 0)
         {
             graphicsOn = false;
         }

@@ -7,6 +7,10 @@
 #include <memory>
 #include <time.h>
 
+// TODO: Do this.
+// #define START_ROW 3
+// #define START_COL 0
+
 using namespace std;
 
 std::shared_ptr<Block> Level::addSpecialBlock(int blockCount)
