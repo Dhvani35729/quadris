@@ -2,6 +2,8 @@
 #include "interpreter.h"
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <string>
 #include <cstring>
 #include <vector>
@@ -92,6 +94,62 @@ bool Interpreter::renameCommad(std::string from, std::string to)
     return false;
 };
 
+void Interpreter::parseRaw(std::istream &in, std::string cmd)
+{
+    int multiplier = 1;
+
+    // Check if there is a multiplier prefix
+    int cmdStartIndex = 0;
+    for (int i = 0; i < cmd.length(); i++)
+    {
+        if (!std::isdigit(cmd[i]))
+        {
+            cmdStartIndex = i;
+            break;
+        }
+    }
+
+    // There is a multiplier prefix
+    if (cmdStartIndex > 0)
+    {
+        multiplier = std::stoi(cmd.substr(0, cmdStartIndex));
+        // crop out prefix before checking auto completer
+        cmd = cmd.substr(cmdStartIndex);
+    }
+
+    Command parsedCommand = this->completer(cmd);
+    if (parsedCommand == RENAME)
+    {
+        std::string renameFrom;
+        in >> renameFrom;
+        std::string renameTo;
+        in >> renameTo;
+        this->renameCommad(renameFrom, renameTo);
+    }
+    else if (parsedCommand == SEQUENCE_FILE)
+    {
+        std::string sequenceFile;
+        in >> sequenceFile;
+
+        std::string newRawCommand;
+        std::ifstream infile(sequenceFile);
+        while (std::getline(infile, newRawCommand))
+        {
+            std::istringstream iss(newRawCommand);
+            // std::cout << "Got command: " << newRawCommand << std::endl;
+            if (newRawCommand.find(" ") != -1)
+            {
+                newRawCommand = newRawCommand.substr(0, newRawCommand.find(" "));
+            }
+            parseRaw(iss, newRawCommand);
+        }
+    }
+    else
+    {
+        this->addCommand(parsedCommand, multiplier);
+    }
+}
+
 std::istream &operator>>(std::istream &in, Interpreter &intp)
 {
 
@@ -107,37 +165,7 @@ std::istream &operator>>(std::istream &in, Interpreter &intp)
     }
     else
     {
-        // Check if there is a multiplier prefix
-        int cmdStartIndex = 0;
-        for (int i = 0; i < cmd.length(); i++)
-        {
-            if (!std::isdigit(cmd[i]))
-            {
-                cmdStartIndex = i;
-                break;
-            }
-        }
-
-        // There is a multiplier prefix
-        if (cmdStartIndex > 0)
-        {
-            multiplier = std::stoi(cmd.substr(0, cmdStartIndex));
-            // crop out prefix before checking auto completer
-            cmd = cmd.substr(cmdStartIndex);
-        }
-
-        // std::cout << "Got multiplier: " << multiplier << std::endl;
-
-        Command parsedCommand = intp.completer(cmd);
-        if (parsedCommand == RENAME)
-        {
-            std::string renameFrom;
-            in >> renameFrom;
-            std::string renameTo;
-            in >> renameTo;
-            intp.renameCommad(renameFrom, renameTo);
-        }
-        intp.addCommand(parsedCommand, multiplier);
+        intp.parseRaw(in, cmd);
     }
 
     return in;

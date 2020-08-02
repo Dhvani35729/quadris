@@ -43,6 +43,7 @@ public:
     void resetCommand();
     Command completer(std::string);
     bool renameCommad(std::string, std::string);
+    void parseRaw(std::istream &in, std::string);
 
 private:
     std::vector<std::pair<Command, int>> commands_;
