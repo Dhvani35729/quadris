@@ -7,7 +7,8 @@
 #include <vector>
 #include <string>
 #include <cstring>
-#include <gtkmm/main.h>
+
+#include <gtkmm.h>
 
 int main(int argc, char *argv[])
 {
@@ -58,8 +59,7 @@ int main(int argc, char *argv[])
     }
 
     // Create model
-    // Initialize gtkmm with the command line arguments, as appropriate.
-    Gtk::Main kit(argc, argv);
+
     std::shared_ptr<Model> model;
     try
     {
@@ -74,9 +74,21 @@ int main(int argc, char *argv[])
 
     // Create controller
     std::shared_ptr<Controller> controller = std::make_shared<Controller>(model);
-    View view(controller, model); // Create the view -- is passed handle to controller and model
-    Gtk::Main::run(view);         // Show the window and return when it is closed.
-    view.run();                   // Show the window and return when it is closed.
+
+    std::shared_ptr<View> view = std::make_shared<View>(controller, model);
+    if (graphicsOn)
+    {
+        // Initialize gtkmm with the command line arguments, as appropriate.
+        Gtk::Main kit(argc, argv);
+
+        GUIView gui(view, model); // Create the view -- is passed handle to controller and model
+                                  // view.run();           // Show the window and return when it is closed.
+        Gtk::Main::run(gui);      // Show the window and return when it is closed.
+    }
+    else
+    {
+        view->run();
+    }
 
     std::cout << std::endl;
     std::cout << "Exiting program..." << std::endl;
