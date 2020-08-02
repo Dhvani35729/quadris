@@ -9,6 +9,7 @@
 #include <vector>
 #include <string>
 #include <cstring>
+#include <thread>
 
 #include <gtkmm.h>
 
@@ -83,9 +84,15 @@ int main(int argc, char *argv[])
         // Initialize gtkmm with the command line arguments, as appropriate.
         Gtk::Main kit(argc, argv);
 
-        GUIView gui(view, model); // Create the view -- is passed handle to controller and model
-                                  // view.run();           // Show the window and return when it is closed.
-        Gtk::Main::run(gui);      // Show the window and return when it is closed.
+        std::thread workerThread_([view] {
+            view->run();
+        });
+
+        //Wait for thread to detach
+        workerThread_.detach();
+
+        GUIView gui(model);  // Create the view -- is passed handle to controller and model
+        Gtk::Main::run(gui); // Show the window and return when it is closed.
     }
     else
     {

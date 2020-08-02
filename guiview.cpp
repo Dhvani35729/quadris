@@ -9,28 +9,24 @@
 
 using namespace std;
 
-GUIView::GUIView(std::shared_ptr<View> view, std::shared_ptr<Model> model) : workerThread_(nullptr), container_(Gtk::ORIENTATION_VERTICAL)
+GUIView::GUIView(std::shared_ptr<Model> model) : container_(Gtk::ORIENTATION_VERTICAL)
 {
-    std::cout << "GUIView born" << std::endl;
+    // std::cout << "GUIView born" << std::endl;
+    this->model_ = model;
 
     set_title("Quadris");
     // set_border_width(10);
     set_default_size(260, 460);
 
-    this->worker_ = view;
-    this->model_ = model;
-
-    levelLabel_.set_label("Level: ");
+    // levelLabel_.set_label("Level: ");
     // Align the label to the left side.
     levelLabel_.set_halign(Gtk::ALIGN_START);
     levelLabel_.set_valign(Gtk::ALIGN_START);
 
-    scoreLabel_.set_label("Score: ");
     // Align the label to the left side.
     scoreLabel_.set_halign(Gtk::ALIGN_START);
     scoreLabel_.set_valign(Gtk::ALIGN_START);
 
-    hiScoreLabel_.set_label("Hi Score: ");
     // Align the label to the left side.
     hiScoreLabel_.set_halign(Gtk::ALIGN_START);
     hiScoreLabel_.set_valign(Gtk::ALIGN_START);
@@ -56,14 +52,8 @@ GUIView::GUIView(std::shared_ptr<View> view, std::shared_ptr<Model> model) : wor
     // }
 
     show_all();
-    // show_all_children();
-
+    this->update();
     model_->subscribe(this);
-
-    workerThread_ = make_unique<std::thread>(
-        [this] {
-            worker_->run();
-        });
 }
 
 GUIView::~GUIView()
@@ -74,22 +64,16 @@ GUIView::~GUIView()
 
 void GUIView::update()
 {
-    std::cout << "Updating GUIView" << std::endl;
+    // std::cout << "Updating GUIView" << std::endl;
 
-    if (workerThread_ && this->model_->checkGameOver())
+    if (this->model_->checkGameOver())
     {
         cout << "Stopping thread" << endl;
-
-        //Wait for thread to detach
-        if (workerThread_->joinable())
-        {
-            workerThread_->detach();
-        }
         this->hide();
     }
     else
     {
-        cout << "Drawing GUI" << endl;
+        // cout << "Drawing GUI" << endl;
         int levelNum = this->model_->getLevelNum();
         levelLabel_.set_label("Level: " + std::to_string(levelNum));
 
