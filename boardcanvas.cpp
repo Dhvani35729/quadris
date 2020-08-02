@@ -48,7 +48,7 @@ bool BoardCanvas::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
     cr->set_line_width(lesser * 0.02); // outline thickness changes
                                        // with window size
 
-    std::cout << "Drawing canvas" << std::endl;
+    // std::cout << "Drawing canvas" << std::endl;
     // std::cout << "width" << width << std::endl;
     // std::cout << "height" << height << std::endl;
 
@@ -87,6 +87,27 @@ bool BoardCanvas::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
             }
         }
     }
+
+    Pango::FontDescription font;
+
+    font.set_family("Monospace");
+    // font.set_weight(Pango::Weight::BOLD);
+
+    // http://developer.gnome.org/pangomm/unstable/classPango_1_1Layout.html
+    auto layout = create_pango_layout("Next block");
+
+    layout->set_font_description(font);
+
+    int text_width;
+    int text_height;
+
+    //get the text dimensions (it updates the variables -- by reference)
+    layout->get_pixel_size(text_width, text_height);
+
+    // Position the text in the middle
+    cr->move_to(0, 360);
+
+    layout->show_in_cairo_context(cr);
 
     for (int i = 0; i < this->nextBlock_.size(); i++)
     {
