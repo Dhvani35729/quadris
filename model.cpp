@@ -36,6 +36,12 @@ bool Model::checkGameOver()
     return this->gameOver_;
 };
 
+void Model::exitGame()
+{
+    this->gameOver_ = true;
+    notify();
+}
+
 void Model::startGame()
 {
     std::cout << "Starting game" << std::endl;

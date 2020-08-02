@@ -34,6 +34,7 @@ public:
     ~Model();
 
     void startGame();
+    void exitGame();
     bool checkGameOver();
 
     void playAI();

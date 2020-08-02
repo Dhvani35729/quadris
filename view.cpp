@@ -10,6 +10,12 @@
 
 using namespace std;
 
+bool GUIView::onExitClicked(GdkEventAny *event)
+{
+    this->model_->exitGame();
+    return true;
+}
+
 GUIView::GUIView(std::shared_ptr<View> view, std::shared_ptr<Model> model) : m_WorkerThread(nullptr), m_box1(Gtk::ORIENTATION_VERTICAL)
 {
     std::cout << "GUIView born" << std::endl;
@@ -26,6 +32,8 @@ GUIView::GUIView(std::shared_ptr<View> view, std::shared_ptr<Model> model) : m_W
     // Align the label to the left side.
     m_label.set_halign(Gtk::ALIGN_START);
     m_label.set_valign(Gtk::ALIGN_START);
+
+    signal_delete_event().connect(sigc::mem_fun(this, &GUIView::onExitClicked));
 
     // Pack the label into the vertical box (vbox box1).  Remember that
     // widgets added to a vbox will be packed one on top of the other in
@@ -48,7 +56,7 @@ GUIView::GUIView(std::shared_ptr<View> view, std::shared_ptr<Model> model) : m_W
 
     model_->subscribe(this);
 
-    m_WorkerThread = new std::thread(
+    m_WorkerThread = make_unique<std::thread>(
         [this] {
             m_Worker->run();
         });
@@ -82,15 +90,24 @@ void GUIView::update()
 
     if (m_WorkerThread && this->model_->checkGameOver())
     {
-        this->hide();
-        m_WorkerThread = nullptr;
-    }
+        cout << "Stopping thread" << endl;
 
-    Board board = this->model_->getBoard();
-    Block nextBlock = this->model_->getNextBlock();
-    m_Area.updateBoard(board.getBoard());
-    m_Area.updateNextBlock(nextBlock.getCells());
-    m_Area.queue_draw();
+        //Wait for thread to detach
+        if (m_WorkerThread->joinable())
+        {
+            m_WorkerThread->detach();
+        }
+        this->hide();
+    }
+    else
+    {
+        cout << "Drawing GUI" << endl;
+        Board board = this->model_->getBoard();
+        Block nextBlock = this->model_->getNextBlock();
+        m_Area.updateBoard(board.getBoard());
+        m_Area.updateNextBlock(nextBlock.getCells());
+        m_Area.queue_draw();
+    }
 }
 
 void View::update()
@@ -98,21 +115,29 @@ void View::update()
     std::cout << "Updating view" << std::endl;
     // Drawing
 
-    // std::cout << "Drawing board \n"
-    //   << std::endl;
-    this->draw();
+    if (!this->model_->checkGameOver())
+    {
+        std::cout << "Drawing board\n"
+                  << std::endl;
+        this->draw();
+    }
+    else
+    {
+        std::cout << "Game over!" << std::endl;
+    }
     std::cout << std::endl;
 }
 
 void View::run()
 {
     std::cout << "Running application" << std::endl;
-    this->model_->startGame();
-
-    bool exitGame = false;
-    while (!exitGame && !this->model_->checkGameOver())
     {
-        exitGame = controller_->getCommand();
+        this->model_->startGame();
+
+        while (!this->model_->checkGameOver())
+        {
+            controller_->getCommand();
+        }
     }
 }
 

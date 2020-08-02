@@ -20,7 +20,7 @@ Controller::~Controller()
     std::cout << "Controller died" << std::endl;
 }
 
-bool Controller::getCommand()
+void Controller::getCommand()
 {
     // std::cout << "Controller: Getting command from user" << std::endl;
     // std::cout << std::endl;
@@ -42,7 +42,7 @@ bool Controller::getCommand()
                 int multiplier = commands[i].second;
                 if (cmd == EXIT)
                 {
-                    return true;
+                    model_->exitGame();
                 }
 
                 if (cmd == BOT_MODE)
@@ -143,6 +143,4 @@ bool Controller::getCommand()
             keepAsking = true;
         }
     } while (keepAsking);
-
-    return false;
 }

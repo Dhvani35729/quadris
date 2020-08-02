@@ -14,7 +14,7 @@ class Controller
 public:
     Controller(std::shared_ptr<Model>);
     ~Controller();
-    bool getCommand();
+    void getCommand();
 
 private:
     std::shared_ptr<Model> model_;
