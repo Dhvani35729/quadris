@@ -12,9 +12,9 @@ enum BlockType
     I_BLK,
     J_BLK,
     L_BLK,
-    O_BLK,
     S_BLK,
     Z_BLK,
+    O_BLK,
     T_BLK,
     NUM_BLKS,
     BAD_BLK,
@@ -28,8 +28,8 @@ public:
     Block(BlockType, std::pair<int, int>, int, bool);
     virtual ~Block();
 
-    virtual std::queue<Block> moveBlock(Command);
-    virtual std::queue<Block> rotateBlock(Command);
+    virtual std::queue<Block> moveBlock(Direction);
+    virtual std::queue<Block> rotateBlock(Direction);
 
     std::vector<std::vector<char>> getCells() const;
     std::pair<int, int> getPos() const;
@@ -83,8 +83,8 @@ class HeavyBlock : public Block
 public:
     HeavyBlock(BlockType, std::pair<int, int>, int, bool);
     ~HeavyBlock();
-    std::queue<Block> moveBlock(Command) override;
-    std::queue<Block> rotateBlock(Command) override;
+    std::queue<Block> moveBlock(Direction) override;
+    std::queue<Block> rotateBlock(Direction) override;
 };
 
 class StarBlock : public Block

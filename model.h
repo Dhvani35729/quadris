@@ -39,8 +39,8 @@ public:
 
     void playAI();
 
-    void moveBlock(Command, int);
-    void rotateBlock(Command, int);
+    void moveBlock(Direction, int);
+    void rotateBlock(Direction, int);
     void dropBlock(int);
     void randomOn();
     void randomOff(std::string);

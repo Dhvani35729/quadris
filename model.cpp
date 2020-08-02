@@ -55,7 +55,7 @@ void Model::startGame()
     notify();
 };
 
-void Model::moveBlock(Command c, int multiplier)
+void Model::moveBlock(Direction c, int multiplier)
 {
     for (int i = 0; i < multiplier; i++)
     {
@@ -64,7 +64,7 @@ void Model::moveBlock(Command c, int multiplier)
     notify();
 };
 
-void Model::rotateBlock(Command c, int multiplier)
+void Model::rotateBlock(Direction c, int multiplier)
 {
     for (int i = 0; i < multiplier; i++)
     {

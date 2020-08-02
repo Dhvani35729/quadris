@@ -4,14 +4,28 @@
 #include <vector>
 #include <string>
 
+#define NUM_COMMANDS 23
+#define NUM_DIRECTION 5
+
 enum Command
 {
-    LEFT,
+    TYPE_DIRECTION = 0,
+    TYPE_OTHER = NUM_DIRECTION,
+    BAD_COMMAND = NUM_COMMANDS,
+};
+
+enum Direction
+{
+    LEFT = TYPE_DIRECTION,
     RIGHT,
     DOWN,
     CLOCKWISE,
     COUNTERCLOCKWISE,
-    DROP,
+};
+
+enum Other
+{
+    DROP = TYPE_OTHER,
     LEVEL_UP,
     LEVEL_DOWN,
     NO_RANDOM_FILE,
@@ -29,7 +43,6 @@ enum Command
     EXIT,
     RENAME,
     BOT_MODE,
-    BAD_COMMAND
 };
 
 // Controller

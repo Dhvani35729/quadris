@@ -66,7 +66,7 @@ Command Interpreter::completer(std::string rawCommand)
         if (this->commandNames_[i].rfind(rawCommand, 0) == 0)
         {
             // commandNames[i] starts with rawCommand
-            options.push_back((Command)i);
+            options.push_back((Command)(i));
         }
     }
 
@@ -157,7 +157,7 @@ std::istream &operator>>(std::istream &in, Interpreter &intp)
 
     if (in.eof())
     {
-        intp.addCommand(EXIT, multiplier);
+        intp.addCommand(Command(EXIT), multiplier);
     }
     else
     {

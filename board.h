@@ -20,8 +20,8 @@ public:
 
     bool addBlock(std::shared_ptr<Block>);
 
-    bool moveCurrentBlock(Command);
-    bool rotateCurrentBlock(Command);
+    bool moveCurrentBlock(Direction);
+    bool rotateCurrentBlock(Direction);
 
     // Returns the number of rows dropped
     // and a list of blocks cleared

@@ -146,7 +146,7 @@ void Board::setCell(int i, int j, char c)
     this->board_[i][j]->setSymbol(c);
 };
 
-bool Board::moveCurrentBlock(Command c)
+bool Board::moveCurrentBlock(Direction c)
 {
 
     std::queue<Block> newBlocks = this->currBlock_->moveBlock(c);
@@ -175,7 +175,7 @@ bool Board::moveCurrentBlock(Command c)
     return canMove;
 };
 
-bool Board::rotateCurrentBlock(Command c)
+bool Board::rotateCurrentBlock(Direction c)
 {
     // cout << "Rotating block" << endl;
 
@@ -529,9 +529,9 @@ void genPermutations(char baseCommands[], int totalCommands, vector<string> &new
     }
 }
 
-Command decodePerm(char cmdCode)
+Direction decodePerm(char cmdCode)
 {
-    Command cmd = BAD_COMMAND;
+    Direction cmd;
     if (cmdCode == 'l')
     {
         cmd = LEFT;
@@ -616,7 +616,7 @@ void Board::showHint()
 
                 // Decode
                 char cmdCode = newCommands[i][j];
-                Command cmd = decodePerm(cmdCode);
+                Direction cmd = decodePerm(cmdCode);
 
                 if (cmd == LEFT || cmd == RIGHT || cmd == DOWN)
                 {

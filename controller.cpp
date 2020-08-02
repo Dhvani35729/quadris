@@ -67,11 +67,12 @@ void Controller::getCommand()
                 }
                 else if (cmd == CLOCKWISE || cmd == COUNTERCLOCKWISE)
                 {
-                    model_->rotateBlock(cmd, multiplier);
+                    model_->rotateBlock((Direction)cmd, multiplier);
                 }
                 else if (cmd == LEFT || cmd == RIGHT || cmd == DOWN)
                 {
-                    model_->moveBlock(cmd, multiplier);
+                    std::cout << cmd << std::endl;
+                    model_->moveBlock((Direction)cmd, multiplier);
                 }
                 else if (cmd == RANDOM)
                 {
@@ -101,41 +102,10 @@ void Controller::getCommand()
                 }
                 else if (cmd == I || cmd == J || cmd == L || cmd == S || cmd == Z || cmd == O || cmd == T)
                 {
-                    BlockType blkType = BAD_BLK;
-                    // TODO: Should be a map or something better
-                    if (cmd == I)
-                    {
-                        blkType = I_BLK;
-                    }
-                    else if (cmd == J)
-                    {
-                        blkType = J_BLK;
-                    }
-                    else if (cmd == L)
-                    {
-                        blkType = L_BLK;
-                    }
-                    else if (cmd == S)
-                    {
-                        blkType = S_BLK;
-                    }
-                    else if (cmd == Z)
-                    {
-                        blkType = Z_BLK;
-                    }
-                    else if (cmd == O)
-                    {
-                        blkType = O_BLK;
-                    }
-                    else if (cmd == T)
-                    {
-                        blkType = T_BLK;
-                    }
-
-                    if (blkType != BAD_BLK)
-                    {
-                        model_->changeCurrentBlock(blkType);
-                    }
+                    std::string blkTypes = "IJLSZOT";
+                    // Block type starts at index 0
+                    BlockType blkType = (BlockType)(cmd - I);
+                    model_->changeCurrentBlock(blkType);
                 }
                 else if (cmd == BAD_COMMAND)
                 {

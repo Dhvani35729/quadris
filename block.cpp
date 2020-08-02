@@ -121,7 +121,7 @@ StarBlock::~StarBlock(){
     // std::cout << "Block died" << std::endl;
 };
 
-std::queue<Block> Block::moveBlock(Command c)
+std::queue<Block> Block::moveBlock(Direction c)
 {
     // cout << "Move regular block" << endl;
     std::queue<Block> blocks;
@@ -375,7 +375,7 @@ void Block::rotateCounterclockwise()
 };
 
 // Only supports rotations on square matrix
-std::queue<Block> Block::rotateBlock(Command c)
+std::queue<Block> Block::rotateBlock(Direction c)
 {
     // cout << "Rotate regular block" << endl;
 
@@ -649,7 +649,7 @@ bool operator==(const Block &lhs, const Block &rhs)
     return true;
 };
 
-std::queue<Block> HeavyBlock::moveBlock(Command c)
+std::queue<Block> HeavyBlock::moveBlock(Direction c)
 {
     // std::cout << "Heavy block move " << std::endl;
 
@@ -665,7 +665,7 @@ std::queue<Block> HeavyBlock::moveBlock(Command c)
     return blocks;
 };
 
-std::queue<Block> HeavyBlock::rotateBlock(Command c)
+std::queue<Block> HeavyBlock::rotateBlock(Direction c)
 {
     // std::cout << "Heavy block rotate " << std::endl;
 
