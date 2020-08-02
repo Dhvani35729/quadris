@@ -25,13 +25,14 @@ private:
 
     std::shared_ptr<Model> model_;
 
-    std::shared_ptr<View> m_Worker;
-    std::unique_ptr<std::thread> m_WorkerThread;
+    std::shared_ptr<View> worker_;
+    std::unique_ptr<std::thread> workerThread_;
 
-    Gtk::Box m_box1;
-    Gtk::Grid m_container;
-    BoardCanvas m_Area;
-    Gtk::Label m_label;
+    Gtk::Box container_;
+    BoardCanvas canvas_;
+    Gtk::Label levelLabel_;
+    Gtk::Label scoreLabel_;
+    Gtk::Label hiScoreLabel_;
 };
 
 #endif
