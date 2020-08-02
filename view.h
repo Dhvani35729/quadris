@@ -3,18 +3,10 @@
 
 #include "observer.h"
 
-#include <gtkmm.h>
 #include <memory>
-#include <thread>
-#include <mutex>
-
-#include "boardcanvas.h"
-#include "block.h"
-#include "board.h"
 
 class Controller;
 class Model;
-class GUIView;
 
 // View
 class View : public Observer
@@ -35,28 +27,6 @@ private:
 
     // Strategy Pattern member (plus signal handlers)
     std::shared_ptr<Controller> controller_;
-};
-
-class GUIView : public Gtk::Window, public Observer
-{
-public:
-    GUIView(std::shared_ptr<View>, std::shared_ptr<Model>);
-    ~GUIView();
-
-    virtual void update(); // Observer Pattern: concrete update() method
-
-private:
-    bool onExitClicked(GdkEventAny *event);
-
-    std::shared_ptr<Model> model_;
-
-    std::shared_ptr<View> m_Worker;
-    std::unique_ptr<std::thread> m_WorkerThread;
-
-    Gtk::Box m_box1;
-    Gtk::Grid m_container;
-    BoardCanvas m_Area;
-    Gtk::Label m_label;
 };
 
 #endif
