@@ -92,13 +92,13 @@ bool BoardCanvas::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
     {
         for (int j = 0; j < this->nextBlock_[i].size(); j++)
         {
-            if (this->board_[i][j] != ' ')
+            if (this->nextBlock_[i][j] != ' ')
             {
-                colour blkColor = this->blockColours[this->board_[i][j]];
+                colour blkColor = this->blockColours[this->nextBlock_[i][j]];
                 cr->save();
                 cr->set_source_rgb(blkColor.r, blkColor.g, blkColor.b);
                 int x = j * 20;
-                int y = i * 20;
+                int y = 380 + i * 20;
                 cr->rectangle(x, y, 20, 20);
                 cr->fill();
                 cr->restore();
