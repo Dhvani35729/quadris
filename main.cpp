@@ -2,6 +2,7 @@
 #include "controller.h"
 #include "view.h"
 #include "guiview.h"
+#include "level.h"
 
 #include <iostream>
 #include <memory>
@@ -19,7 +20,7 @@ int main(int argc, char *argv[])
 
     int levelNum = 0;
     std::string scriptFile = "sequence.txt";
-    int seed = 1;
+    // int seed = 1;
     bool graphicsOn = true;
 
     for (int i = 1; i < argc; i++)

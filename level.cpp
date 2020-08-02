@@ -13,6 +13,22 @@
 
 using namespace std;
 
+int seed = NULL;
+
+Level::Level()
+{
+    if (seed == NULL)
+    {
+        // cout << "No seed" << endl;
+        srand(time(0));
+    }
+    else
+    {
+        // cout << "Got seed: " << seed << endl;
+        srand(seed);
+    }
+}
+
 std::shared_ptr<Block> Level::addSpecialBlock(int blockCount)
 {
     return nullptr;
@@ -71,7 +87,7 @@ LevelZero::LevelZero(std::string f)
 LevelOne::LevelOne()
 {
     // Use current time as seed for random generator
-    srand(time(0));
+    // srand(seed);
     std::cout << "LevelOne born" << std::endl;
     this->levelNum_ = 1;
     this->isRandom_ = true;
@@ -80,7 +96,7 @@ LevelOne::LevelOne()
 LevelTwo::LevelTwo()
 {
     // Use current time as seed for random generator
-    srand(time(0));
+    // srand(time(0));
     std::cout << "LevelTwo born" << std::endl;
     this->levelNum_ = 2;
     this->isRandom_ = true;
@@ -89,7 +105,7 @@ LevelTwo::LevelTwo()
 LevelThree::LevelThree()
 {
     // Use current time as seed for random generator
-    srand(time(0));
+    // srand(time(0));
     std::cout << "LevelThree born" << std::endl;
     this->levelNum_ = 3;
     this->isRandom_ = true;
@@ -98,7 +114,7 @@ LevelThree::LevelThree()
 LevelFour::LevelFour()
 {
     // Use current time as seed for random generator
-    srand(time(0));
+    // srand(time(0));
     std::cout << "LevelFour born" << std::endl;
     this->levelNum_ = 4;
     this->isRandom_ = true;

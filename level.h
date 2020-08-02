@@ -6,10 +6,13 @@
 #include <string>
 #include <memory>
 
+extern int seed;
+
 // Level
 class Level
 {
 public:
+    Level();
     virtual ~Level();
     virtual std::shared_ptr<Block> nextBlock() = 0;
     virtual std::shared_ptr<Block> addSpecialBlock(int);
@@ -26,7 +29,6 @@ protected:
     std::vector<BlockType> blockSequence_;
     int curIndex_;
     bool isRandom_;
-    int seed_;
 };
 
 class LevelZero : public Level
