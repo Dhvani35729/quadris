@@ -136,11 +136,7 @@ void Interpreter::parseRaw(std::istream &in, std::string cmd)
         while (std::getline(infile, newRawCommand))
         {
             std::istringstream iss(newRawCommand);
-            // std::cout << "Got command: " << newRawCommand << std::endl;
-            if (newRawCommand.find(" ") != -1)
-            {
-                newRawCommand = newRawCommand.substr(0, newRawCommand.find(" "));
-            }
+            iss >> newRawCommand;
             parseRaw(iss, newRawCommand);
         }
     }
