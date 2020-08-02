@@ -87,7 +87,7 @@ void Model::hideHint()
 void Model::playAI()
 {
     this->showHint();
-    // TODO: Remove - for testing AI mode
+    // To test AI mode, play by play, the following can be used
     // char c;
     // cin >> c;
     this->board_->playHint();
