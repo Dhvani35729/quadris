@@ -10,9 +10,10 @@
 
 using namespace std;
 
-GUIView::GUIView(std::shared_ptr<View> view, std::shared_ptr<Model> model) : m_Dispatcher(),
-                                                                             m_WorkerThread(nullptr), m_box1(Gtk::ORIENTATION_VERTICAL)
+GUIView::GUIView(std::shared_ptr<View> view, std::shared_ptr<Model> model) : m_WorkerThread(nullptr), m_box1(Gtk::ORIENTATION_VERTICAL)
 {
+    std::cout << "GUIView born" << std::endl;
+
     set_title("Quadris");
     // set_border_width(10);
     set_default_size(260, 460);
@@ -22,12 +23,6 @@ GUIView::GUIView(std::shared_ptr<View> view, std::shared_ptr<Model> model) : m_D
 
     m_label.set_label("Level: ");
 
-    // m_container.add(m_label);
-    // m_container.add(m_Area);
-
-    // m_container.add(m_Area);
-    // add(m_container);
-
     // Align the label to the left side.
     m_label.set_halign(Gtk::ALIGN_START);
     m_label.set_valign(Gtk::ALIGN_START);
@@ -36,7 +31,6 @@ GUIView::GUIView(std::shared_ptr<View> view, std::shared_ptr<Model> model) : m_D
     // widgets added to a vbox will be packed one on top of the other in
     // order.
     m_box1.pack_start(m_label, Gtk::PACK_SHRINK);
-
     m_box1.pack_start(m_Area, Gtk::PACK_EXPAND_WIDGET);
 
     add(m_box1);
@@ -49,49 +43,15 @@ GUIView::GUIView(std::shared_ptr<View> view, std::shared_ptr<Model> model) : m_D
     //     child->set_valign(Gtk::ALIGN_FILL);
     // }
 
-    // m_container.add(m_label);
-
     show_all();
     // show_all_children();
 
-    // Connect the handler to the dispatcher.
-    m_Dispatcher.connect(sigc::mem_fun(*this, &GUIView::on_notification_from_worker_thread));
+    model_->subscribe(this);
 
     m_WorkerThread = new std::thread(
         [this] {
-            m_Worker->setCaller(this);
             m_Worker->run();
         });
-}
-
-// notify() is called from ExampleWorker::do_work(). It is executed in the worker
-// thread. It triggers a call to on_notification_from_worker_thread(), which is
-// executed in the GUI thread.
-void GUIView::notify()
-{
-    m_Dispatcher.emit();
-}
-
-void GUIView::update_widgets()
-{
-    Board board = this->model_->getBoard();
-    Block nextBlock = this->model_->getNextBlock();
-    m_Area.updateBoard(board.getBoard());
-    m_Area.updateNextBlock(nextBlock.getCells());
-    m_Area.queue_draw();
-}
-
-void GUIView::on_notification_from_worker_thread()
-{
-    // if (m_WorkerThread && m_Worker.has_stopped())
-    // {
-    //     // Work is done.
-    //     if (m_WorkerThread->joinable())
-    //         m_WorkerThread->join();
-    //     delete m_WorkerThread;
-    //     m_WorkerThread = nullptr;
-    // }
-    update_widgets();
 }
 
 View::View(std::shared_ptr<Controller> c, std::shared_ptr<Model> m)
@@ -104,10 +64,11 @@ View::View(std::shared_ptr<Controller> c, std::shared_ptr<Model> m)
     model_->subscribe(this);
 }
 
-void View::setCaller(GUIView *caller)
+GUIView::~GUIView()
 {
-    this->caller_ = caller;
-};
+    std::cout << "GUIView died" << std::endl;
+    model_->unsubscribe(this);
+}
 
 View::~View()
 {
@@ -115,15 +76,28 @@ View::~View()
     model_->unsubscribe(this);
 }
 
+void GUIView::update()
+{
+    std::cout << "Updating GUIView" << std::endl;
+
+    if (m_WorkerThread && this->model_->checkGameOver())
+    {
+        this->hide();
+        m_WorkerThread = nullptr;
+    }
+
+    Board board = this->model_->getBoard();
+    Block nextBlock = this->model_->getNextBlock();
+    m_Area.updateBoard(board.getBoard());
+    m_Area.updateNextBlock(nextBlock.getCells());
+    m_Area.queue_draw();
+}
+
 void View::update()
 {
-    // std::cout << "Updating view" << std::endl;
+    std::cout << "Updating view" << std::endl;
     // Drawing
 
-    if (nullptr != this->caller_)
-    {
-        this->caller_->notify();
-    }
     // std::cout << "Drawing board \n"
     //   << std::endl;
     this->draw();
@@ -141,10 +115,6 @@ void View::run()
         exitGame = controller_->getCommand();
     }
 }
-
-void GUIView::drawNextBlock(Block){
-
-};
 
 void View::draw()
 {

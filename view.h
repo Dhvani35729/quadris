@@ -25,10 +25,7 @@ public:
 
     void run();
 
-    void setCaller(GUIView *caller);
-
 private:
-    GUIView *caller_;
     void draw();
 
     // Observer Pattern: to access Model accessors without having to downcast subject
@@ -38,17 +35,13 @@ private:
     std::shared_ptr<Controller> controller_;
 };
 
-class GUIView : public Gtk::Window
+class GUIView : public Gtk::Window, public Observer
 {
 public:
     GUIView(std::shared_ptr<View>, std::shared_ptr<Model>);
+    ~GUIView();
 
-    // Called from the worker thread.
-    void notify();
-    void drawNextBlock(Block);
-
-    // Dispatcher handler.
-    void on_notification_from_worker_thread();
+    virtual void update(); // Observer Pattern: concrete update() method
 
 private:
     void update_widgets();
@@ -59,7 +52,6 @@ private:
     std::thread *m_WorkerThread;
 
     Gtk::Box m_box1;
-    Glib::Dispatcher m_Dispatcher;
     Gtk::Grid m_container;
     BoardCanvas m_Area;
     Gtk::Label m_label;
