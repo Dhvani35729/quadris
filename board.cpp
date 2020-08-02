@@ -373,7 +373,6 @@ vector<Block> Board::removeLine(int h)
             this->clearCells(placedBlock);
             bool clearedBlock = placedBlock->removeLine(h - rowStart);
 
-            // TODO: Check if this is safe
             this->updateCells(placedBlock);
             if (clearedBlock)
             {

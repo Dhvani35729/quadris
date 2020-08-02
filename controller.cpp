@@ -58,7 +58,6 @@ void Controller::getCommand()
                 }
                 else
                 {
-                    // TODO: Should go away for bad command
                     model_->hideHint();
                 }
 

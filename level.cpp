@@ -7,9 +7,8 @@
 #include <memory>
 #include <time.h>
 
-// TODO: Do this.
-// #define START_ROW 3
-// #define START_COL 0
+#define START_ROW 3
+#define START_COL 0
 
 using namespace std;
 
@@ -163,7 +162,7 @@ void LevelZero::setSequenceFile(std::string f)
 std::shared_ptr<Block> LevelZero::nextBlock()
 {
     BlockType type = getFromSequence();
-    std::shared_ptr<Block> newBlock = std::make_shared<Block>(type, std::make_pair(3, 0), this->levelNum_, true);
+    std::shared_ptr<Block> newBlock = std::make_shared<Block>(type, std::make_pair(START_ROW, START_COL), this->levelNum_, true);
 
     return newBlock;
 }
@@ -187,7 +186,7 @@ std::shared_ptr<Block> LevelOne::nextBlock()
         type = (BlockType)blkInd;
     }
 
-    std::shared_ptr<Block> newBlock = std::make_shared<Block>(type, std::make_pair(3, 0), this->levelNum_, true);
+    std::shared_ptr<Block> newBlock = std::make_shared<Block>(type, std::make_pair(START_ROW, START_COL), this->levelNum_, true);
 
     return newBlock;
 }
@@ -198,7 +197,7 @@ std::shared_ptr<Block> LevelTwo::nextBlock()
 
     BlockType type = (BlockType)blkInd;
 
-    std::shared_ptr<Block> newBlock = std::make_shared<Block>(type, std::make_pair(3, 0), this->levelNum_, true);
+    std::shared_ptr<Block> newBlock = std::make_shared<Block>(type, std::make_pair(START_ROW, START_COL), this->levelNum_, true);
 
     return newBlock;
 }
@@ -232,7 +231,7 @@ std::shared_ptr<Block> LevelThree::nextBlock()
         type = getFromSequence();
     }
 
-    std::shared_ptr<Block> newBlock = std::make_shared<HeavyBlock>(type, std::make_pair(3, 0), this->levelNum_, true);
+    std::shared_ptr<Block> newBlock = std::make_shared<HeavyBlock>(type, std::make_pair(START_ROW, START_COL), this->levelNum_, true);
 
     return newBlock;
 }
@@ -266,7 +265,7 @@ std::shared_ptr<Block> LevelFour::nextBlock()
         type = getFromSequence();
     }
 
-    std::shared_ptr<Block> newBlock = std::make_shared<HeavyBlock>(type, std::make_pair(3, 0), this->levelNum_, true);
+    std::shared_ptr<Block> newBlock = std::make_shared<HeavyBlock>(type, std::make_pair(START_ROW, START_COL), this->levelNum_, true);
 
     return newBlock;
 }
@@ -275,7 +274,7 @@ std::shared_ptr<Block> LevelFour::addSpecialBlock(int blockCount)
 {
     if (blockCount != 0 && blockCount % 5 == 0)
     {
-        std::shared_ptr<Block> newBlock = std::make_shared<StarBlock>(std::make_pair(3, 5), this->levelNum_, false);
+        std::shared_ptr<Block> newBlock = std::make_shared<StarBlock>(std::make_pair(START_ROW, 5), this->levelNum_, false);
         return newBlock;
     }
     else

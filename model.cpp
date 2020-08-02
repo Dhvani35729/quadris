@@ -161,8 +161,6 @@ void Model::dropBlockHelper()
             // Game over - could not add block
             this->gameOver_ = true;
         }
-
-        // TODO: Check if this should be inside if
     }
 }
 
