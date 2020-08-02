@@ -13,10 +13,20 @@ public:
     virtual ~Level();
     virtual std::shared_ptr<Block> nextBlock() = 0;
     virtual std::shared_ptr<Block> addSpecialBlock(int);
+
+    virtual void setSequenceFile(std::string);
+    virtual void setIsRandom(bool);
     int getLevelNum() const;
 
 protected:
+    BlockType getFromSequence();
+
     int levelNum_;
+    std::string fileName_;
+    std::vector<BlockType> blockSequence_;
+    int curIndex_;
+    bool isRandom_;
+    int seed_;
 };
 
 class LevelZero : public Level
@@ -25,11 +35,9 @@ public:
     LevelZero(std::string);
     ~LevelZero();
     std::shared_ptr<Block> nextBlock() override;
+    void setSequenceFile(std::string) override;
 
 private:
-    std::string fileName_;
-    std::vector<char> blockSequence_;
-    int curIndex;
 };
 
 class LevelOne : public Level
@@ -60,7 +68,6 @@ public:
     std::shared_ptr<Block> nextBlock() override;
 
 private:
-    bool isRandom_;
 };
 
 class LevelFour : public Level
@@ -72,7 +79,6 @@ public:
     std::shared_ptr<Block> addSpecialBlock(int) override;
 
 private:
-    bool isRandom_;
 };
 
 #endif

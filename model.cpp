@@ -175,12 +175,17 @@ void Model::dropBlock(int multiplier)
     notify();
 };
 
-void Model::toggleRandom(Command c)
+void Model::randomOn()
 {
-    if (this->getLevelNum() == 3 || this->getLevelNum() == 4)
-    {
-        //TODO: toggle randomness attribute (create this) exclusive to levels 3 and 4?
-    }
+    this->level_->setIsRandom(true);
+    notify();
+};
+
+void Model::randomOff(std::string seqFile)
+{
+    this->level_->setSequenceFile(seqFile);
+    this->level_->setIsRandom(false);
+    notify();
 };
 
 void Model::resetGame()

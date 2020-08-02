@@ -42,7 +42,8 @@ public:
     void moveBlock(Command, int);
     void rotateBlock(Command, int);
     void dropBlock(int);
-    void toggleRandom(Command);
+    void randomOn();
+    void randomOff(std::string);
 
     void resetGame();
     void showHint();

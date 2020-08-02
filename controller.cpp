@@ -74,9 +74,15 @@ void Controller::getCommand()
                 {
                     model_->moveBlock(cmd, multiplier);
                 }
-                else if (cmd == RANDOM || cmd == NO_RANDOM_FILE)
+                else if (cmd == RANDOM)
                 {
-                    model_->toggleRandom(cmd);
+                    model_->randomOn();
+                }
+                else if (cmd == NO_RANDOM_FILE)
+                {
+                    std::string seqFile;
+                    std::cin >> seqFile;
+                    model_->randomOff(seqFile);
                 }
                 else if (cmd == RESTART)
                 {
