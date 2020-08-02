@@ -3,11 +3,37 @@
 
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <vector>
 
 Interpreter::Interpreter()
 {
     std::cout << "Interpreter born" << std::endl;
+    this->commandNames_ = {
+        "left",
+        "right",
+        "down",
+        "clockwise",
+        "counterclockwise",
+        "drop",
+        "levelup",
+        "leveldown",
+        "norandom",
+        "random",
+        "sequence",
+        "restart",
+        "hint",
+        "I",
+        "J",
+        "L",
+        "S",
+        "Z",
+        "O",
+        "T",
+        "exit",
+        "rename",
+        "ai",
+    };
 }
 
 Interpreter::~Interpreter()
@@ -30,36 +56,12 @@ void Interpreter::resetCommand()
     this->commands_.clear();
 }
 
-Command completer(std::string rawCommand)
+Command Interpreter::completer(std::string rawCommand)
 {
-    std::vector<std::string> commandNames = {
-        "left",
-        "right",
-        "down",
-        "clockwise",
-        "counterclockwise",
-        "drop",
-        "levelup",
-        "leveldown",
-        "norandom",
-        "random",
-        "sequence",
-        "restart",
-        "hint",
-        "I",
-        "J",
-        "L",
-        "S",
-        "Z",
-        "O",
-        "T",
-        "exit",
-        "ai",
-    };
     std::vector<Command> options;
-    for (int i = 0; i < commandNames.size(); i++)
+    for (int i = 0; i < this->commandNames_.size(); i++)
     {
-        if (commandNames[i].rfind(rawCommand, 0) == 0)
+        if (this->commandNames_[i].rfind(rawCommand, 0) == 0)
         {
             // commandNames[i] starts with rawCommand
             options.push_back((Command)i);
@@ -75,6 +77,20 @@ Command completer(std::string rawCommand)
         return BAD_COMMAND;
     }
 }
+
+bool Interpreter::renameCommad(std::string from, std::string to)
+{
+    for (int i = 0; i < this->commandNames_.size(); i++)
+    {
+        if (std::strcmp(this->commandNames_[i].c_str(), from.c_str()) == 0)
+        {
+            this->commandNames_[i] = to;
+            std::cout << "Succesfully renamed command!" << std::endl;
+            return true;
+        }
+    }
+    return false;
+};
 
 std::istream &operator>>(std::istream &in, Interpreter &intp)
 {
@@ -112,7 +128,15 @@ std::istream &operator>>(std::istream &in, Interpreter &intp)
 
         // std::cout << "Got multiplier: " << multiplier << std::endl;
 
-        Command parsedCommand = completer(cmd);
+        Command parsedCommand = intp.completer(cmd);
+        if (parsedCommand == RENAME)
+        {
+            std::string renameFrom;
+            in >> renameFrom;
+            std::string renameTo;
+            in >> renameTo;
+            intp.renameCommad(renameFrom, renameTo);
+        }
         intp.addCommand(parsedCommand, multiplier);
     }
 

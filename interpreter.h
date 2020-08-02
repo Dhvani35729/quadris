@@ -27,6 +27,7 @@ enum Command
     O,
     T,
     EXIT,
+    RENAME,
     BOT_MODE,
     BAD_COMMAND
 };
@@ -40,9 +41,12 @@ public:
     std::vector<std::pair<Command, int>> getCommands();
     void addCommand(Command, int);
     void resetCommand();
+    Command completer(std::string);
+    bool renameCommad(std::string, std::string);
 
 private:
     std::vector<std::pair<Command, int>> commands_;
+    std::vector<std::string> commandNames_;
 };
 
 std::istream &operator>>(std::istream &, Interpreter &);
