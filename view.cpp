@@ -15,7 +15,7 @@ GUIView::GUIView(std::shared_ptr<View> view, std::shared_ptr<Model> model) : m_D
 {
     set_title("Quadris");
     // set_border_width(10);
-    set_default_size(260, 480);
+    set_default_size(260, 460);
 
     this->m_Worker = view;
     this->model_ = model;
