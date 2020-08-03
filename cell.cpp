@@ -1,11 +1,27 @@
 #include "cell.h"
-#include <iostream>
 
-Cell::Cell(int row, int col, char symbol)
+// constructor
+Cell::Cell(int x, int y, char symbol)
 {
-    // std::cout << "Cell born" << std::endl;
-    this->row_ = row;
-    this->col_ = col;
+    this->x_ = x;
+    this->y_ = y;
+    this->symbol_ = symbol;
+
+    if (symbol != ' ')
+    {
+        this->occupied_ = true;
+    }
+    else
+    {
+        this->occupied_ = false;
+    }
+};
+
+// destructor
+Cell::~Cell(){};
+
+void Cell::setSymbol(char symbol)
+{
     this->symbol_ = symbol;
     if (symbol != ' ')
     {
@@ -17,25 +33,10 @@ Cell::Cell(int row, int col, char symbol)
     }
 };
 
-Cell::~Cell(){
-    // std::cout << "Cell died" << std::endl;
-};
-
-void Cell::setSymbol(char c)
+// Getters
+bool Cell::isOccupied() const
 {
-    symbol_ = c;
-    if (c != ' ')
-    {
-        this->occupied_ = true;
-    }
-    else
-    {
-        this->occupied_ = false;
-    }
-};
-bool Cell::isOccupied()
-{
-    return occupied_;
+    return this->occupied_;
 };
 
 char Cell::getSymbol() const
