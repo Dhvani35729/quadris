@@ -1,10 +1,10 @@
 #ifndef MVC_CONTROLLER_H
 #define MVC_CONTROLLER_H
 
+#include <memory>
+
 #include "model.h"
 #include "interpreter.h"
-
-#include <memory>
 
 class Model;
 
@@ -12,8 +12,13 @@ class Model;
 class Controller
 {
 public:
-    Controller(std::shared_ptr<Model>);
+    // constructor
+    Controller(std::shared_ptr<Model> model);
+
+    // destructor
     ~Controller();
+
+    // Get the next command
     void getCommand();
 
 private:

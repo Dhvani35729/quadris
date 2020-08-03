@@ -1,48 +1,50 @@
+#include <iostream>
+#include <string>
+#include <utility>
+#include <vector>
+#include <memory>
+
 #include "controller.h"
 #include "model.h"
 #include "interpreter.h"
 
-#include <iostream>
-#include <string>
-#include <vector>
-#include <istream>
-#include <memory>
+using namespace std;
 
-#include <chrono>
-#include <thread>
-
-Controller::Controller(std::shared_ptr<Model> m)
+// constructor
+Controller::Controller(shared_ptr<Model> model)
 {
-    std::cout << "Controller born" << std::endl;
-    this->model_ = m;
-    this->inter_ = std::make_unique<Interpreter>();
+    this->model_ = model;
+    this->inter_ = make_unique<Interpreter>();
 }
 
-Controller::~Controller()
-{
-    std::cout << "Controller died" << std::endl;
-}
+// destructor
+Controller::~Controller() {}
 
+// Get the next command
 void Controller::getCommand()
 {
-    // std::cout << "Controller: Getting command from user" << std::endl;
-    // std::cout << std::endl;
+    // Keep asking for a command if the user enters a bad command
+    // Otherwise, run the corresponding model method
     bool keepAsking = true;
     do
     {
-        std::cout << ">";
-        std::cin >> *inter_;
-        std::vector<std::pair<Command, int>> commands = inter_->getCommands();
+        cout << ">";
+
+        // Input into the interpreter
+        cin >> *inter_;
+
+        // Get the commands interpreted by the interpreter
+        vector<pair<Command, int>> commands = inter_->getCommands();
 
         if (!commands.empty())
         {
             keepAsking = false;
 
-            // std::cout << "Controller: Received commands from Interpreter, length: " << commands.size() << std::endl;
             for (int i = 0; i < commands.size(); i++)
             {
                 Command cmd = commands[i].first;
                 int multiplier = commands[i].second;
+
                 if (cmd == EXIT)
                 {
                     model_->exitGame();
@@ -50,15 +52,10 @@ void Controller::getCommand()
 
                 if (cmd == BOT_MODE)
                 {
-                    // while (true)
-                    // {
                     while (!model_->isGameOver())
                     {
-                        std::this_thread::sleep_for(std::chrono::milliseconds(100));
                         model_->playAI();
                     }
-                    // model_->resetGame();
-                    // }
                 }
                 else
                 {
@@ -75,7 +72,6 @@ void Controller::getCommand()
                 }
                 else if (cmd == LEFT || cmd == RIGHT || cmd == DOWN)
                 {
-                    std::cout << cmd << std::endl;
                     model_->moveBlock((Direction)cmd, multiplier);
                 }
                 else if (cmd == RANDOM)
@@ -84,9 +80,9 @@ void Controller::getCommand()
                 }
                 else if (cmd == NO_RANDOM_FILE)
                 {
-                    std::string seqFile;
-                    std::cin >> seqFile;
-                    model_->randomOff(seqFile);
+                    string seqFileName;
+                    cin >> seqFileName;
+                    model_->randomOff(seqFileName);
                 }
                 else if (cmd == RESTART)
                 {
@@ -106,14 +102,15 @@ void Controller::getCommand()
                 }
                 else if (cmd == I || cmd == J || cmd == L || cmd == S || cmd == Z || cmd == O || cmd == T)
                 {
-                    std::string blkTypes = "IJLSZOT";
+                    string blkTypes = "IJLSZOT";
                     // Block type starts at index 0
                     BlockType blkType = (BlockType)(cmd - I);
                     model_->changeCurrentBlock(blkType);
                 }
                 else if (cmd == BAD_COMMAND)
                 {
-                    std::cout << "Invalid command!" << std::endl;
+                    cout << "Invalid command!" << endl;
+                    keepAsking = true;
                 }
             }
         }
@@ -121,5 +118,6 @@ void Controller::getCommand()
         {
             keepAsking = true;
         }
+
     } while (keepAsking);
 }
