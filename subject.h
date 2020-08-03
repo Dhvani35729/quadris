@@ -9,10 +9,14 @@ class Observer;
 class Subject
 {
 public:
+    // subscribe to the observer
     void subscribe(Observer *);
+
+    // unsubscribe to the observer
     void unsubscribe(Observer *);
 
 protected:
+    // notify all observers
     void notify();
 
 private:
