@@ -25,6 +25,7 @@ private:
     std::shared_ptr<Model> model_;
 
     Gtk::Box container_;
+    Gtk::Box labelContainer_;
     BoardCanvas canvas_;
     Gtk::Label levelLabel_;
     Gtk::Label scoreLabel_;

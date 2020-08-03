@@ -16,9 +16,16 @@ BoardCanvas::BoardCanvas()
     blockColours['T'] = colour{0.337, 0.01, 0.678};
 
     blockColours['?'] = colour{0.0, 0.0, 0.0};
+    blockColours['X'] = colour{0.0, 0.0, 0.0};
 
     this->board_.clear();
 }
+
+void BoardCanvas::setSize(int height, int width)
+{
+    this->bWidth_ = width;
+    this->bHeight_ = height;
+};
 
 BoardCanvas::~BoardCanvas()
 {
@@ -40,11 +47,6 @@ bool BoardCanvas::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
     const int height = allocation.get_height();
     const int lesser = MIN(width, height);
 
-    // coordinates for the center of the window
-    int xc, yc;
-    xc = width / 2;
-    yc = height / 2;
-
     cr->set_line_width(lesser * 0.02); // outline thickness changes
                                        // with window size
 
@@ -56,49 +58,152 @@ bool BoardCanvas::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
     // int eight = this->board_.getHeight();
 
     // Draw borders
+    // Top border
 
+    // Top
+    // std::cout << "Width: " << this->bWidth_ << std::endl;
+    int x = 0;
+    int y = 0;
+    for (int j = 0; j < this->bWidth_ + 2; j++)
+    {
+        cr->save();
+        cr->set_source_rgb(0.176, 0.18, 0.18);
+        if (j == 1)
+        {
+            x += 15;
+        }
+        else if (j > 1 && j != this->bWidth_ + 1)
+        {
+            x += 20;
+        }
+        else if (j == this->bWidth_ + 1)
+        {
+            x += 15;
+        }
+
+        cr->rectangle(x, y, 20, 15);
+        cr->fill();
+        cr->restore();
+        cr->stroke();
+    }
+
+    // Down
+    x = 0;
+    y = 15 + (20 * (this->bHeight_));
+    for (int j = 0; j < this->bWidth_ + 2; j++)
+    {
+        cr->save();
+        cr->set_source_rgb(0.176, 0.18, 0.18);
+        if (j == 1)
+        {
+            x += 15;
+        }
+        else if (j > 1 && j != this->bWidth_ + 1)
+        {
+            x += 20;
+        }
+        else if (j == this->bWidth_ + 1)
+        {
+            x += 15;
+        }
+
+        cr->rectangle(x, y, 20, 15);
+        cr->fill();
+        cr->restore();
+        cr->stroke();
+    }
+
+    // Left
+    x = 0;
+    y = 0;
+    for (int i = 0; i < this->bHeight_ + 2; i++)
+    {
+        cr->save();
+        cr->set_source_rgb(0.176, 0.18, 0.18);
+        if (i == 1)
+        {
+            y += 15;
+        }
+        else if (i > 1 && i != this->bHeight_ + 1)
+        {
+            y += 20;
+        }
+        else if (i == this->bHeight_ + 1)
+        {
+            y += 15;
+        }
+
+        cr->rectangle(x, y, 15, 20);
+        cr->fill();
+        cr->restore();
+        cr->stroke();
+    }
+
+    // Right
+    x = 15 + (20 * (this->bWidth_));
+    y = 0;
+    for (int i = 0; i < this->bHeight_ + 2; i++)
+    {
+        cr->save();
+        cr->set_source_rgb(0.176, 0.18, 0.18);
+        if (i == 1)
+        {
+            y += 15;
+        }
+        else if (i > 1 && i != this->bHeight_ + 1)
+        {
+            y += 20;
+        }
+        else if (i == this->bHeight_ + 1)
+        {
+            y += 15;
+        }
+
+        cr->rectangle(x, y, 15, 20);
+        cr->fill();
+        cr->restore();
+        cr->stroke();
+    }
+
+    // std::cout << "---" << std::endl;
     for (int i = 0; i < this->board_.size(); i++)
     {
         for (int j = 0; j < this->board_[i].size(); j++)
         {
             // std::cout << "Drawing cell: " << i << ":"
             //           << j << std::endl;
+            cr->save();
             if (this->board_[i][j] == ' ')
             {
-                cr->save();
                 cr->set_source_rgba(1.0, 1.0, 1.0, 0.8);
-                int x = j * 20;
-                int y = i * 20;
-                cr->rectangle(x, y, 20, 20);
-                cr->fill();
-                cr->restore();
-                cr->stroke();
             }
             else
             {
                 colour blkColor = this->blockColours[this->board_[i][j]];
-                cr->save();
                 cr->set_source_rgb(blkColor.r, blkColor.g, blkColor.b);
-                int x = j * 20;
-                int y = i * 20;
-                cr->rectangle(x, y, 20, 20);
-                cr->fill();
-                cr->restore();
             }
+            int x = 15 + (j * 20);
+            int y = 15 + (i * 20);
+            // std::cout << "BX: " << x << std::endl;
+            cr->rectangle(x, y, 20, 20);
+            cr->fill();
+            cr->restore();
         }
     }
 
-    Pango::FontDescription font;
+    Pango::FontDescription font("sans 16");
 
-    font.set_family("Courier");
+    // font.set_family("Sans");
 
     auto layout = create_pango_layout("Next block");
 
     layout->set_font_description(font);
 
-    cr->set_font_size(15);
+    // std::cout << "Font: " << font.get_size() << std::endl;
+
     // Position the text in the middle
-    cr->move_to(0, 360);
+    int startH = 20 * (this->bHeight_ + 2);
+    cr->move_to(0, startH);
 
     layout->show_in_cairo_context(cr);
 
@@ -112,7 +217,7 @@ bool BoardCanvas::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
                 cr->save();
                 cr->set_source_rgb(blkColor.r, blkColor.g, blkColor.b);
                 int x = j * 20;
-                int y = 380 + i * 20;
+                int y = (startH + 20) + (i * 20);
                 cr->rectangle(x, y, 20, 20);
                 cr->fill();
                 cr->restore();

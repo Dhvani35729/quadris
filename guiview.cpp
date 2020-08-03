@@ -9,47 +9,60 @@
 
 using namespace std;
 
-GUIView::GUIView(std::shared_ptr<Model> model) : container_(Gtk::ORIENTATION_VERTICAL)
+GUIView::GUIView(std::shared_ptr<Model> model) : container_(Gtk::ORIENTATION_HORIZONTAL), labelContainer_(Gtk::ORIENTATION_VERTICAL)
 {
     // std::cout << "GUIView born" << std::endl;
     this->model_ = model;
+    int bHeight = this->model_->getBoardHeight();
+    int bWidth = this->model_->getBoardWidth();
+    canvas_.setSize(bHeight, bWidth);
 
     set_title("Quadris");
     // set_border_width(10);
-    set_default_size(260, 460);
+    set_default_size(500, 500);
+
+    levelLabel_.set_margin_top(100);
 
     // levelLabel_.set_label("Level: ");
     // Align the label to the left side.
-    levelLabel_.set_halign(Gtk::ALIGN_START);
-    levelLabel_.set_valign(Gtk::ALIGN_START);
+    // levelLabel_.set_halign(Gtk::ALIGN_START);
+    // levelLabel_.set_valign(Gtk::ALIGN_START);
+
+    // set_line_wrap()
+
+    scoreLabel_.set_margin_top(50);
 
     // Align the label to the left side.
-    scoreLabel_.set_halign(Gtk::ALIGN_START);
-    scoreLabel_.set_valign(Gtk::ALIGN_START);
+    // scoreLabel_.set_halign(Gtk::ALIGN_START);
+    // scoreLabel_.set_valign(Gtk::ALIGN_START);
 
+    hiScoreLabel_.set_margin_top(30);
+    canvas_.set_margin_top(15);
     // Align the label to the left side.
-    hiScoreLabel_.set_halign(Gtk::ALIGN_START);
-    hiScoreLabel_.set_valign(Gtk::ALIGN_START);
+    // hiScoreLabel_.set_halign(Gtk::ALIGN_START);
+    // hiScoreLabel_.set_valign(Gtk::ALIGN_START);
 
     signal_delete_event().connect(sigc::mem_fun(this, &GUIView::onExitClicked));
 
     // Pack the label into the vertical box (vbox box1).  Remember that
     // widgets added to a vbox will be packed one on top of the other in
     // order.
-    container_.pack_start(levelLabel_, Gtk::PACK_SHRINK);
-    container_.pack_start(scoreLabel_, Gtk::PACK_SHRINK);
-    container_.pack_start(hiScoreLabel_, Gtk::PACK_SHRINK);
-    container_.pack_start(canvas_, Gtk::PACK_EXPAND_WIDGET);
+    labelContainer_.pack_start(levelLabel_, Gtk::PACK_SHRINK);
+    labelContainer_.pack_start(hiScoreLabel_, Gtk::PACK_SHRINK);
+    labelContainer_.pack_start(scoreLabel_, Gtk::PACK_SHRINK);
+
+    container_.pack_start(canvas_, Gtk::PACK_EXPAND_WIDGET, 15);
+    container_.pack_start(labelContainer_, Gtk::PACK_SHRINK);
 
     add(container_);
 
-    // for (const auto &child : m_container.get_children())
-    // {
-    //     child->set_hexpand(true);
-    //     child->set_halign(Gtk::ALIGN_FILL);
-    //     child->set_vexpand(true);
-    //     child->set_valign(Gtk::ALIGN_FILL);
-    // }
+    for (const auto &child : labelContainer_.get_children())
+    {
+        // child->set_hexpand(true);
+        // child->set_halign(Gtk::ALIGN_FILL);
+        // child->set_vexpand(true);
+        // child->set_valign(Gtk::ALIGN_FILL);
+    }
 
     show_all();
     this->update();
@@ -75,12 +88,16 @@ void GUIView::update()
     {
         // cout << "Drawing GUI" << endl;
         int levelNum = this->model_->getLevelNum();
-        levelLabel_.set_label("Level: " + std::to_string(levelNum));
+        string levelLabel = "Level: " + std::to_string(levelNum);
+        levelLabel_.set_markup("<span font_desc=\"18.0\">" + levelLabel + "</span>");
+        // levelLabel_.set_label();
 
         int score = this->model_->getScore();
         int hiScore = this->model_->getHiScore();
-        scoreLabel_.set_label("Score: " + std::to_string(score));
-        hiScoreLabel_.set_label("HI Score: " + std::to_string(hiScore));
+        string scoreLabel = "Score: " + std::to_string(score);
+        string hiScoreLabel = "Hi Score: " + std::to_string(hiScore);
+        scoreLabel_.set_markup("<span font_desc=\"16.0\">" + scoreLabel + "</span>");
+        hiScoreLabel_.set_markup("<span font_desc=\"16.0\">" + hiScoreLabel + "</span>");
 
         Board board = this->model_->getBoard();
         Block nextBlock = this->model_->getNextBlock();

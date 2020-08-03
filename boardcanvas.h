@@ -18,6 +18,7 @@ class BoardCanvas : public Gtk::DrawingArea
 public:
     BoardCanvas();
     virtual ~BoardCanvas();
+    void setSize(int, int);
     void updateBoard(std::vector<std::vector<char>>);
     void updateNextBlock(std::vector<std::vector<char>>);
 
@@ -26,6 +27,8 @@ protected:
     bool on_draw(const Cairo::RefPtr<Cairo::Context> &cr) override;
 
 private:
+    int bWidth_;
+    int bHeight_;
     std::vector<std::vector<char>> board_;
     std::vector<std::vector<char>> nextBlock_;
     std::map<char, colour> blockColours;
