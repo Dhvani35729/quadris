@@ -9,6 +9,8 @@ Members:
 - Minglei Li
 
 Bonus features:
-1. "ai" command
-2. 
-3. Initial hint feature 
+1. "ai" Command: auto-plays the current level using the hint feature that finds the current block's optimal placement
+
+2. GUI programatically created with gtkmm and DrawingArea
+
+3. Support for the renaming of commands
