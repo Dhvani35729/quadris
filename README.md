@@ -6,6 +6,8 @@ Members:
 - Peggy Li
 - Minglei Li
 
+![quadris](quadris.gif)
+
 ## Bonus Features/Enhancements:
 
 **1. No Leaks**
