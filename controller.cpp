@@ -8,6 +8,9 @@
 #include <istream>
 #include <memory>
 
+#include <chrono>
+#include <thread>
+
 Controller::Controller(std::shared_ptr<Model> m)
 {
     std::cout << "Controller born" << std::endl;
@@ -51,6 +54,7 @@ void Controller::getCommand()
                     // {
                     while (!model_->checkGameOver())
                     {
+                        std::this_thread::sleep_for(std::chrono::milliseconds(100));
                         model_->playAI();
                     }
                     // model_->resetGame();

@@ -17,20 +17,28 @@ GUIView::GUIView(std::shared_ptr<Model> model) : container_(Gtk::ORIENTATION_HOR
     int bWidth = this->model_->getBoardWidth();
     canvas_.setSize(bHeight, bWidth);
 
-    set_title("Quadris");
+    set_title("Quadris - Dhvani, Peggy, Minglei");
     // set_border_width(10);
-    set_default_size(500, 500);
+    set_default_size(450, 500);
 
     levelLabel_.set_margin_top(100);
 
     // levelLabel_.set_label("Level: ");
     // Align the label to the left side.
-    // levelLabel_.set_halign(Gtk::ALIGN_START);
-    // levelLabel_.set_valign(Gtk::ALIGN_START);
+    levelLabel_.set_halign(Gtk::ALIGN_START);
+    levelLabel_.set_justify(Gtk::JUSTIFY_LEFT);
+
+    scoreLabel_.set_halign(Gtk::ALIGN_START);
+    scoreLabel_.set_justify(Gtk::JUSTIFY_LEFT);
+
+    hiScoreLabel_.set_halign(Gtk::ALIGN_START);
+    hiScoreLabel_.set_justify(Gtk::JUSTIFY_LEFT);
 
     // set_line_wrap()
 
     scoreLabel_.set_margin_top(50);
+
+    labelContainer_.set_margin_right(20);
 
     // Align the label to the left side.
     // scoreLabel_.set_halign(Gtk::ALIGN_START);
@@ -51,8 +59,8 @@ GUIView::GUIView(std::shared_ptr<Model> model) : container_(Gtk::ORIENTATION_HOR
     labelContainer_.pack_start(hiScoreLabel_, Gtk::PACK_SHRINK);
     labelContainer_.pack_start(scoreLabel_, Gtk::PACK_SHRINK);
 
+    container_.pack_start(labelContainer_, Gtk::PACK_SHRINK, 15);
     container_.pack_start(canvas_, Gtk::PACK_EXPAND_WIDGET, 15);
-    container_.pack_start(labelContainer_, Gtk::PACK_SHRINK);
 
     add(container_);
 
