@@ -16,14 +16,14 @@ View::View(shared_ptr<Controller> cont, shared_ptr<Model> model)
     this->model_ = model;
     this->controller_ = cont;
 
-    // Register view as an observer of model
+    // Register View as an observer of model
     model_->subscribe(this);
 }
 
 // destructor
 View::~View()
 {
-    // Unregister view as an observer of model
+    // Unregister View as an observer of model
     model_->unsubscribe(this);
 }
 

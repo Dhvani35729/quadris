@@ -1,29 +1,32 @@
+#include <iostream>
+#include <memory>
+#include <string>
+#include <cstring>
+#include <thread>
+
 #include "model.h"
 #include "controller.h"
 #include "view.h"
 #include "guiview.h"
 #include "level.h"
 
-#include <iostream>
-#include <memory>
-#include <vector>
-#include <string>
-#include <cstring>
-#include <thread>
-
 #include <gtkmm.h>
+
+using namespace std;
 
 int main(int argc, char *argv[])
 {
 
-    std::cout << "Starting program..." << std::endl;
-    std::cout << std::endl;
-
+    // Default level number
     int levelNum = 0;
-    std::string scriptFile = "sequence.txt";
-    // int seed = 1;
+
+    // Default LevelZero script file
+    string scriptFile = "sequence.txt";
+
+    // Default, GUIView enabled
     bool graphicsOn = true;
 
+    // Parse command line arguments
     for (int i = 1; i < argc; i++)
     {
         if (std::strcmp(argv[i], "-startlevel") == 0 || std::strcmp(argv[i], "--startlevel") == 0)
@@ -46,6 +49,7 @@ int main(int argc, char *argv[])
         {
             if (i + 1 < argc)
             {
+                // Set the global seed
                 seed = std::stoi(argv[i + 1]);
                 i++;
             }
@@ -62,7 +66,6 @@ int main(int argc, char *argv[])
     }
 
     // Create model
-
     std::shared_ptr<Model> model;
     try
     {
@@ -78,28 +81,33 @@ int main(int argc, char *argv[])
     // Create controller
     std::shared_ptr<Controller> controller = std::make_shared<Controller>(model);
 
+    // Create view
     std::shared_ptr<View> view = std::make_shared<View>(controller, model);
+
     if (graphicsOn)
     {
         // Initialize gtkmm with the command line arguments, as appropriate.
         Gtk::Main kit(argc, argv);
 
+        // Run the command line view on a separate thread
         std::thread workerThread_([view] {
             view->run();
         });
 
-        //Wait for thread to detach
+        // Detach thread so we can run the GUIView
         workerThread_.detach();
 
-        GUIView gui(model);  // Create the view -- is passed handle to controller and model
-        Gtk::Main::run(gui); // Show the window and return when it is closed.
+        // Create the GUIView
+        GUIView gui(model);
+
+        // Show the window and return when it is closed.
+        Gtk::Main::run(gui);
     }
     else
     {
+        // Run
         view->run();
     }
 
-    std::cout << std::endl;
-    std::cout << "Exiting program..." << std::endl;
     return 0;
 }

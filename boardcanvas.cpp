@@ -1,9 +1,12 @@
-#include "boardcanvas.h"
-#include <cairomm/context.h>
-
-#include <iostream>
+#include <vector>
+#include <map>
 #include <cmath>
 
+#include "boardcanvas.h"
+
+#include <cairomm/context.h>
+
+// constructor
 BoardCanvas::BoardCanvas()
 {
     // Set block colours
@@ -18,28 +21,35 @@ BoardCanvas::BoardCanvas()
     blockColours['?'] = colour{0.0, 0.0, 0.0};
     blockColours['*'] = colour{0.345, 0.153, 0.0274};
 
+    // Clear the board and next block matrix
     this->board_.clear();
+    this->nextBlock_.clear();
 }
 
+// destructor
+BoardCanvas::~BoardCanvas() {}
+
+// Set the size of the canvas
 void BoardCanvas::setSize(int height, int width)
 {
     this->bWidth_ = width;
     this->bHeight_ = height;
 };
 
-BoardCanvas::~BoardCanvas()
-{
-}
-
+// Update the grid of cells (i.e. the board)
 void BoardCanvas::updateBoard(std::vector<std::vector<char>> b)
 {
     this->board_ = b;
 }
+
+// Update the matrix of the next block
 void BoardCanvas::updateNextBlock(std::vector<std::vector<char>> b)
 {
     this->nextBlock_ = b;
 };
 
+// Override default signal handler
+// Draw the cells and next block
 bool BoardCanvas::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
 {
     Gtk::Allocation allocation = get_allocation();
@@ -50,18 +60,9 @@ bool BoardCanvas::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
     cr->set_line_width(lesser * 0.02); // outline thickness changes
                                        // with window size
 
-    // std::cout << "Drawing canvas" << std::endl;
-    // std::cout << "width" << width << std::endl;
-    // std::cout << "height" << height << std::endl;
+    // Draw borders around the main board
 
-    // int bWidth = this->board_.getWidth();
-    // int eight = this->board_.getHeight();
-
-    // Draw borders
     // Top border
-
-    // Top
-    // std::cout << "Width: " << this->bWidth_ << std::endl;
     int x = 0;
     int y = 0;
     for (int j = 0; j < this->bWidth_ + 2; j++)
@@ -87,7 +88,7 @@ bool BoardCanvas::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
         cr->stroke();
     }
 
-    // Down
+    // Bottom border
     x = 0;
     y = 15 + (20 * (this->bHeight_));
     for (int j = 0; j < this->bWidth_ + 2; j++)
@@ -113,7 +114,7 @@ bool BoardCanvas::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
         cr->stroke();
     }
 
-    // Left
+    // Left border
     x = 0;
     y = 0;
     for (int i = 0; i < this->bHeight_ + 2; i++)
@@ -139,7 +140,7 @@ bool BoardCanvas::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
         cr->stroke();
     }
 
-    // Right
+    // Right border
     x = 15 + (20 * (this->bWidth_));
     y = 0;
     for (int i = 0; i < this->bHeight_ + 2; i++)
@@ -165,13 +166,11 @@ bool BoardCanvas::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
         cr->stroke();
     }
 
-    // std::cout << "---" << std::endl;
+    // Draw the main board
     for (int i = 0; i < this->board_.size(); i++)
     {
         for (int j = 0; j < this->board_[i].size(); j++)
         {
-            // std::cout << "Drawing cell: " << i << ":"
-            //           << j << std::endl;
             cr->save();
             if (this->board_[i][j] == ' ')
             {
@@ -184,29 +183,21 @@ bool BoardCanvas::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
             }
             int x = 15 + (j * 20);
             int y = 15 + (i * 20);
-            // std::cout << "BX: " << x << std::endl;
             cr->rectangle(x, y, 20, 20);
             cr->fill();
             cr->restore();
         }
     }
 
+    // Draw Next Block text
     Pango::FontDescription font("sans 16");
-
-    // font.set_family("Sans");
-
     auto layout = create_pango_layout("Next block");
-
     layout->set_font_description(font);
-
-    // std::cout << "Font: " << font.get_size() << std::endl;
-
-    // Position the text in the middle
     int startH = 20 * (this->bHeight_ + 2);
     cr->move_to(0, startH);
-
     layout->show_in_cairo_context(cr);
 
+    // Draw the next block
     for (int i = 0; i < this->nextBlock_.size(); i++)
     {
         for (int j = 0; j < this->nextBlock_[i].size(); j++)
