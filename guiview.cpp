@@ -11,7 +11,8 @@ using namespace std;
 
 // constructor
 GUIView::GUIView(shared_ptr<Model> model)
-    : container_(Gtk::ORIENTATION_HORIZONTAL), labelContainer_(Gtk::ORIENTATION_VERTICAL)
+    : container_(Gtk::ORIENTATION_HORIZONTAL),
+      labelContainer_(Gtk::ORIENTATION_VERTICAL)
 {
 
     this->model_ = model;
@@ -42,7 +43,8 @@ GUIView::GUIView(shared_ptr<Model> model)
     canvas_.set_margin_top(15);
 
     // Setup signal for window exit (red) button clicked
-    signal_delete_event().connect(sigc::mem_fun(this, &GUIView::onExitClicked));
+    signal_delete_event().connect(
+        sigc::mem_fun(this, &GUIView::onExitClicked));
 
     // Pack the label into the vertical box
     labelContainer_.pack_start(levelLabel_, Gtk::PACK_SHRINK);

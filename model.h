@@ -125,7 +125,8 @@ private:
 
     // The script file for LevelZero
     // Note: This is a special case for LevelZero only
-    // Only added for test purposes, can remove once LevelZero is removed
+    // Only added for test purposes,
+    // can remove once LevelZero is removed
     std::string scriptFile_;
 };
 

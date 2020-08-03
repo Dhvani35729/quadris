@@ -40,7 +40,7 @@ void Controller::getCommand()
         }
         catch (FileNotFoundException e)
         {
-            cout << "Could not open file: " << e.getFileName() << endl;
+            throw move(e);
         }
 
         // Get the commands interpreted by the interpreter
@@ -98,7 +98,7 @@ void Controller::getCommand()
                     }
                     catch (FileNotFoundException e)
                     {
-                        cout << "Could not open file: " << e.getFileName() << endl;
+                        throw move(e);
                     }
                 }
                 else if (cmd == RESTART)
@@ -117,7 +117,13 @@ void Controller::getCommand()
                 {
                     model_->showHint();
                 }
-                else if (cmd == I || cmd == J || cmd == L || cmd == S || cmd == Z || cmd == O || cmd == T)
+                else if (cmd == I ||
+                         cmd == J ||
+                         cmd == L ||
+                         cmd == S ||
+                         cmd == Z ||
+                         cmd == O ||
+                         cmd == T)
                 {
                     string blkTypes = "IJLSZOT";
                     // Block type starts at index 0

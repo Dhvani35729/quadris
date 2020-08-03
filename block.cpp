@@ -23,7 +23,8 @@ Block::Block(BlockType type, pair<int, int> pos, int level, bool playable)
     // All the blocks can fit in a 3x3 matrix except for the I block
     this->mWidth_ = 3;
     this->mHeight_ = 3;
-    this->matrix_.resize(this->mHeight_, vector<char>(this->mWidth_, ' '));
+    this->matrix_.resize(
+        this->mHeight_, vector<char>(this->mWidth_, ' '));
 
     if (type == I_BLK)
     {
@@ -31,7 +32,8 @@ Block::Block(BlockType type, pair<int, int> pos, int level, bool playable)
         this->mHeight_ = 4;
 
         this->matrix_.clear();
-        this->matrix_.resize(this->mHeight_, vector<char>(this->mWidth_, ' '));
+        this->matrix_.resize(
+            this->mHeight_, vector<char>(this->mWidth_, ' '));
 
         this->matrix_[0][0] = 'I';
         this->matrix_[0][1] = 'I';
@@ -176,7 +178,8 @@ queue<Block> Block::rotateBlock(Direction dir)
         prevTCorner.first + rotatedBlock.getBlockHeight() - 1,
         prevTCorner.second);
     int adjust = newBCorner.first - prevBCorner.first;
-    pair<int, int> newTCorner = make_pair(prevTCorner.first - adjust, prevTCorner.second);
+    pair<int, int> newTCorner = make_pair(
+        prevTCorner.first - adjust, prevTCorner.second);
 
     rotatedBlock.setPos(newTCorner);
 
@@ -512,11 +515,13 @@ bool operator==(const Block &lhs, const Block &rhs)
     }
 
     // If the block box size or block size do not match, return false
-    if (lhs.getBoxHeight() != rhs.getBoxHeight() || lhs.getBoxWidth() != rhs.getBoxWidth())
+    if (lhs.getBoxHeight() != rhs.getBoxHeight() ||
+        lhs.getBoxWidth() != rhs.getBoxWidth())
     {
         return false;
     }
-    if (lhs.getBlockHeight() != rhs.getBlockHeight() || lhs.getBlockWidth() != rhs.getBlockWidth())
+    if (lhs.getBlockHeight() != rhs.getBlockHeight() ||
+        lhs.getBlockWidth() != rhs.getBlockWidth())
     {
         return false;
     }

@@ -175,7 +175,8 @@ void Model::dropBlockHelper()
     }
 
     // We check if for any special blocks
-    shared_ptr<Block> specialBlock = this->level_->addSpecialBlock(this->blocksSinceClear_);
+    shared_ptr<Block> specialBlock = this->level_->addSpecialBlock(
+        this->blocksSinceClear_);
 
     // If there are special blocks, we add the special block to the board
     if (nullptr != specialBlock)

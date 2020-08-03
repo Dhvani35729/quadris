@@ -88,7 +88,9 @@ bool Board::moveCurrentBlock(Direction dir)
         {
             // Update the current block's matrix and position
             this->currBlock_->setMatrix(
-                newBlock.getCells(), newBlock.getBoxHeight(), newBlock.getBoxWidth());
+                newBlock.getCells(),
+                newBlock.getBoxHeight(),
+                newBlock.getBoxWidth());
             this->currBlock_->setPos(newBlock.getPos());
         }
 
@@ -127,7 +129,9 @@ bool Board::rotateCurrentBlock(Direction dir)
         {
             // Update the current block's matrix and position
             this->currBlock_->setMatrix(
-                newBlock.getCells(), newBlock.getBoxHeight(), newBlock.getBoxWidth());
+                newBlock.getCells(),
+                newBlock.getBoxHeight(),
+                newBlock.getBoxWidth());
             this->currBlock_->setPos(newBlock.getPos());
         }
 
@@ -268,8 +272,12 @@ bool Board::canPlace(Block &newBlock)
     vector<vector<char>> newMatrix = newBlock.getCells();
 
     // First we check if the block is in bounds of the board
-    bool rowOutBounds = newPos.first < 0 || newPos.first >= this->height_ || newPos.first + newBlock.getBlockHeight() > this->height_;
-    bool colOutBounds = newPos.second < 0 || newPos.second >= this->width_ || newPos.second + newBlock.getBlockWidth() > this->width_;
+    bool rowOutBounds = newPos.first < 0 ||
+                        newPos.first >= this->height_ ||
+                        newPos.first + newBlock.getBlockHeight() > this->height_;
+    bool colOutBounds = newPos.second < 0 ||
+                        newPos.second >= this->width_ ||
+                        newPos.second + newBlock.getBlockWidth() > this->width_;
 
     if (rowOutBounds || colOutBounds)
     {
@@ -286,7 +294,8 @@ bool Board::canPlace(Block &newBlock)
     {
         for (int j = bCol; j < bCol + newMatrix[i - bRow].size(); j++)
         {
-            if (newMatrix[i - bRow][j - bCol] != ' ' && this->board_[i][j]->isOccupied())
+            if (newMatrix[i - bRow][j - bCol] != ' ' &&
+                this->board_[i][j]->isOccupied())
             {
                 canPlace = false;
                 break;
@@ -493,7 +502,10 @@ void genPermutations(
 
             // We do not allow consecutive complementary commands such as "left right"
             // as these bring the block to the same spot
-            if (strcmp(cmpString, "lr") != 0 && strcmp(cmpString, "rl") != 0 && strcmp(cmpString, "cj") != 0 && strcmp(cmpString, "jc") != 0)
+            if (strcmp(cmpString, "lr") != 0 &&
+                strcmp(cmpString, "rl") != 0 &&
+                strcmp(cmpString, "cj") != 0 &&
+                strcmp(cmpString, "jc") != 0)
             {
                 newCmd += baseCommands[j];
                 newCommands.push_back(newCmd);
@@ -582,7 +594,8 @@ void Board::showHint()
 
                 // We check if, a different command
                 // in the past has already produced the same block
-                if (find(addedBlocks.begin(), addedBlocks.end(), *this->currBlock_) != addedBlocks.end())
+                if (find(addedBlocks.begin(), addedBlocks.end(), *this->currBlock_) !=
+                    addedBlocks.end())
                 {
                     // If it does, remove this permutation
                     newCommands.erase(newCommands.begin() + i);
@@ -623,7 +636,9 @@ void Board::showHint()
 
             // Restore the current block for the next trial
             this->currBlock_->setMatrix(
-                savedBlock.getCells(), savedBlock.getBoxHeight(), savedBlock.getBoxWidth());
+                savedBlock.getCells(),
+                savedBlock.getBoxHeight(),
+                savedBlock.getBoxWidth());
             this->currBlock_->setPos(savedBlock.getPos());
 
             this->updateCells(this->currBlock_);
@@ -648,7 +663,10 @@ void Board::showHint()
 
             // Update the hint block
             this->hintBlock_->setType(hintBlock.getBlockType());
-            this->hintBlock_->setMatrix(hintBlock.getCells(), hintBlock.getBoxHeight(), hintBlock.getBoxWidth());
+            this->hintBlock_->setMatrix(
+                hintBlock.getCells(),
+                hintBlock.getBoxHeight(),
+                hintBlock.getBoxWidth());
             this->hintBlock_->setPos(hintBlock.getPos());
 
             // Show the hint block on the board
@@ -745,7 +763,10 @@ void Board::playHint()
     // so that we don't recheck it (there may be overlaps)
     this->clearCells(this->currBlock_);
 
-    this->currBlock_->setMatrix(this->hintBlock_->getCells(), this->hintBlock_->getBoxHeight(), this->hintBlock_->getBoxWidth());
+    this->currBlock_->setMatrix(
+        this->hintBlock_->getCells(),
+        this->hintBlock_->getBoxHeight(),
+        this->hintBlock_->getBoxWidth());
     this->currBlock_->setPos(this->hintBlock_->getPos());
 
     // Readd the current block to the grid of cell (i.e. the board)

@@ -7,6 +7,7 @@
 #include "controller.h"
 #include "model.h"
 #include "subject.h"
+#include "fileexception.h"
 
 using namespace std;
 
@@ -54,7 +55,14 @@ void View::run()
     // keep taking in commands
     while (!this->model_->isGameOver())
     {
-        controller_->getCommand();
+        try
+        {
+            controller_->getCommand();
+        }
+        catch (FileNotFoundException e)
+        {
+            cout << "Could not open file: " << e.getFileName() << endl;
+        }
     }
 }
 

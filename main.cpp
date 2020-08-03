@@ -29,15 +29,17 @@ int main(int argc, char *argv[])
     // Parse command line arguments
     for (int i = 1; i < argc; i++)
     {
-        if (std::strcmp(argv[i], "-startlevel") == 0 || std::strcmp(argv[i], "--startlevel") == 0)
+        if (strcmp(argv[i], "-startlevel") == 0 ||
+            strcmp(argv[i], "--startlevel") == 0)
         {
             if (i + 1 < argc)
             {
-                levelNum = std::stoi(argv[i + 1]);
+                levelNum = stoi(argv[i + 1]);
                 i++;
             }
         }
-        else if (std::strcmp(argv[i], "-scriptfile") == 0 || std::strcmp(argv[i], "--scriptfile") == 0)
+        else if (strcmp(argv[i], "-scriptfile") == 0 ||
+                 strcmp(argv[i], "--scriptfile") == 0)
         {
             if (i + 1 < argc)
             {
@@ -45,44 +47,61 @@ int main(int argc, char *argv[])
                 i++;
             }
         }
-        else if (std::strcmp(argv[i], "-seed") == 0 || std::strcmp(argv[i], "--seed") == 0)
+        else if (strcmp(argv[i], "-seed") == 0 ||
+                 strcmp(argv[i], "--seed") == 0)
         {
             if (i + 1 < argc)
             {
                 // Set the global seed
-                seed = std::stoi(argv[i + 1]);
+                seed = stoi(argv[i + 1]);
                 i++;
             }
         }
-        else if (std::strcmp(argv[i], "-text") == 0 || std::strcmp(argv[i], "--text") == 0)
+        else if (strcmp(argv[i], "-text") == 0 ||
+                 strcmp(argv[i], "--text") == 0)
         {
             graphicsOn = false;
         }
+        else if (strcmp(argv[i], "-help") == 0 ||
+                 strcmp(argv[i], "--help") == 0)
+        {
+            cout << "usage: ./quadris [-text] [-startlevel n] [-scriptfile xxx] [-seed xxx] [-help]"
+                 << endl;
+            cout << endl;
+            cout << "-text runs in text-only mode. Shows both GUI and text by default."
+                 << endl;
+            cout << "-seed sets the RNG's seed to xxx." << endl;
+            cout << "-scriptfile uses xxx instead of sequence.txt as source of blocks for level 0."
+                 << endl;
+            cout << "-startlevel starts the game at level n." << endl;
+            cout << "-help shows this help message." << endl;
+            return 0;
+        }
         else
         {
-            std::cout << "Invalid command line arguments." << std::endl;
+            cout << "Invalid command line arguments. See './quadris --help'." << endl;
             return 0;
         }
     }
 
     // Create model
-    std::shared_ptr<Model> model;
+    shared_ptr<Model> model;
     try
     {
-        model = std::make_shared<Model>(18, 11, levelNum, scriptFile);
+        model = make_shared<Model>(18, 11, levelNum, scriptFile);
     }
     catch (Model::LevelNotFoundException &e)
     {
-        std::cout << e.getLevelNum() << ": Level number doesn't exist!" << std::endl;
-        std::cout << "Exiting program..." << std::endl;
+        cout << e.getLevelNum() << ": Level number doesn't exist!" << endl;
+        cout << "Exiting program..." << endl;
         return -1;
     }
 
     // Create controller
-    std::shared_ptr<Controller> controller = std::make_shared<Controller>(model);
+    shared_ptr<Controller> controller = make_shared<Controller>(model);
 
     // Create view
-    std::shared_ptr<View> view = std::make_shared<View>(controller, model);
+    shared_ptr<View> view = make_shared<View>(controller, model);
 
     if (graphicsOn)
     {
@@ -90,7 +109,7 @@ int main(int argc, char *argv[])
         Gtk::Main kit(argc, argv);
 
         // Run the command line view on a separate thread
-        std::thread workerThread_([view] {
+        thread workerThread_([view] {
             view->run();
         });
 

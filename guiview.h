@@ -30,7 +30,8 @@ private:
     // Helper method to draw
     void draw();
 
-    // Observer Pattern: to access Model accessors without having to downcast subject
+    // Observer Pattern: to access Model accessors
+    // without having to downcast subject
     std::shared_ptr<Model> model_;
 
     // GUI Elements

@@ -6,6 +6,8 @@
 
 #include <cairomm/context.h>
 
+using namespace std;
+
 // constructor
 BoardCanvas::BoardCanvas()
 {
@@ -37,15 +39,15 @@ void BoardCanvas::setSize(int height, int width)
 };
 
 // Update the grid of cells (i.e. the board)
-void BoardCanvas::updateBoard(std::vector<std::vector<char>> b)
+void BoardCanvas::updateBoard(vector<vector<char>> board)
 {
-    this->board_ = b;
+    this->board_ = board;
 }
 
 // Update the matrix of the next block
-void BoardCanvas::updateNextBlock(std::vector<std::vector<char>> b)
+void BoardCanvas::updateNextBlock(vector<vector<char>> cells)
 {
-    this->nextBlock_ = b;
+    this->nextBlock_ = cells;
 };
 
 // Override default signal handler
