@@ -31,7 +31,7 @@ void View::update()
     std::cout << "Updating view" << std::endl;
     // Drawing
 
-    if (!this->model_->checkGameOver())
+    if (!this->model_->isGameOver())
     {
         std::cout << "Drawing board\n"
                   << std::endl;
@@ -49,7 +49,7 @@ void View::run()
     std::cout << "Running application" << std::endl;
     this->model_->startGame();
 
-    while (!this->model_->checkGameOver())
+    while (!this->model_->isGameOver())
     {
         controller_->getCommand();
     }

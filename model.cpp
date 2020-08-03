@@ -1,18 +1,21 @@
-#include "model.h"
-#include "board.h"
-#include "block.h"
-
-#include <iostream>
+#include <vector>
 #include <memory>
 #include <string>
+#include <utility>
+
+#include "model.h"
+#include "level.h"
+#include "score.h"
+#include "block.h"
+#include "board.h"
 
 using namespace std;
 
-Model::Model(int h, int w, int levelNum, string fileName)
+// constructor
+Model::Model(int height, int width, int levelNum, string fileName)
 {
-    std::cout << "Model born" << std::endl;
-    this->board_ = std::make_unique<Board>(h, w);
-    this->score_ = std::make_unique<Score>();
+    this->board_ = make_unique<Board>(height, width);
+    this->score_ = make_unique<Score>();
     this->scriptFile_ = fileName;
 
     this->level_ = this->makeLevel(levelNum);
@@ -26,14 +29,52 @@ Model::Model(int h, int w, int levelNum, string fileName)
     this->gameOver_ = false;
 }
 
-Model::~Model()
+// Helper method
+// Maps level numbers to Level classes
+unique_ptr<Level> Model::makeLevel(int levelNum)
 {
-    std::cout << "Model died" << std::endl;
+    unique_ptr<Level> newLevel = nullptr;
+
+    if (levelNum == 0)
+    {
+        newLevel = make_unique<LevelZero>(this->scriptFile_);
+    }
+    else if (levelNum == 1)
+    {
+        newLevel = make_unique<LevelOne>();
+    }
+    else if (levelNum == 2)
+    {
+        newLevel = make_unique<LevelTwo>();
+    }
+    else if (levelNum == 3)
+    {
+        newLevel = make_unique<LevelThree>();
+    }
+    else if (levelNum == 4)
+    {
+        newLevel = make_unique<LevelFour>();
+    }
+
+    return newLevel;
 }
 
-bool Model::checkGameOver()
+// destructor
+Model::~Model() {}
+
+void Model::startGame()
 {
-    return this->gameOver_;
+    // Get a new block from the level and add it to the board
+    shared_ptr<Block> newBlock = this->level_->nextBlock();
+    this->board_->addBlock(newBlock);
+
+    // Increment block added
+    this->blocksSinceClear_ += 1;
+
+    // Get the next block again, to display the next block
+    this->nextBlock_ = this->level_->nextBlock();
+
+    notify();
 };
 
 void Model::exitGame()
@@ -42,19 +83,27 @@ void Model::exitGame()
     notify();
 }
 
-void Model::startGame()
+void Model::resetGame()
 {
-    std::cout << "Starting game" << std::endl;
+    // Reset the board and score
+    this->board_->resetBoard();
+    this->score_->resetScore();
 
-    std::shared_ptr<Block> newBlock = this->level_->nextBlock();
-    this->board_->addBlock(newBlock);
-    this->blocksSinceClear_ += 1;
+    this->nextBlock_ = nullptr;
+    this->gameOver_ = false;
 
-    this->nextBlock_ = this->level_->nextBlock();
-
-    notify();
+    // Start thr game again
+    this->startGame();
 };
 
+// Returns true if the game is over
+bool Model::isGameOver() const
+{
+    return this->gameOver_;
+};
+
+// Move the current block in the
+// specified direction x multiplier times
 void Model::moveBlock(Direction c, int multiplier)
 {
     for (int i = 0; i < multiplier; i++)
@@ -64,6 +113,8 @@ void Model::moveBlock(Direction c, int multiplier)
     notify();
 };
 
+// Rotate the current block in the
+// specified direction x multiplier times
 void Model::rotateBlock(Direction c, int multiplier)
 {
     for (int i = 0; i < multiplier; i++)
@@ -73,97 +124,8 @@ void Model::rotateBlock(Direction c, int multiplier)
     notify();
 };
 
-void Model::showHint()
-{
-    this->board_->showHint();
-    notify();
-};
-
-void Model::hideHint()
-{
-    this->board_->hideHint();
-};
-
-void Model::playAI()
-{
-    this->showHint();
-    // To test AI mode, play by play, the following can be used
-    // char c;
-    // cin >> c;
-    this->board_->playHint();
-    this->dropBlock(1);
-}
-
-void Model::dropBlockHelper()
-{
-    std::pair<int, std::vector<Block>> metaData = this->board_->dropCurrentBlock();
-    int linesCleared = metaData.first;
-    vector<Block> clearedBlocks = metaData.second;
-
-    if (linesCleared > 0)
-    {
-        // Update score
-        int addScore = (this->level_->getLevelNum() + linesCleared);
-        addScore *= addScore;
-        // cout << "Add score: " << addScore << endl;
-
-        int bonusPoints = 0;
-        for (int i = 0; i < clearedBlocks.size(); i++)
-        {
-            int blkLevel = clearedBlocks[i].getLevelGen();
-            bonusPoints += (blkLevel + 1) * (blkLevel + 1);
-        }
-        // cout << "Add bonus: " << bonusPoints << endl;
-
-        addScore += bonusPoints;
-
-        this->score_->addScore(addScore);
-
-        this->blocksSinceClear_ = 0;
-    }
-
-    // cout << "Check special block: " << this->blocksSinceClear_ << endl;
-    std::shared_ptr<Block> specialBlock = this->level_->addSpecialBlock(this->blocksSinceClear_);
-    if (nullptr != specialBlock)
-    {
-        bool addedSpecialBlock = this->board_->addBlock(specialBlock);
-        if (addedSpecialBlock)
-        {
-            this->blocksSinceClear_ += 1;
-            if (!specialBlock->isPlayable())
-            {
-                this->dropBlockHelper();
-            }
-        }
-        else
-        {
-            // Game over - could not add block
-            this->gameOver_ = true;
-        }
-    }
-    else
-    {
-
-        // Add new block
-        std::shared_ptr<Block> nextBlock = this->nextBlock_;
-        bool addedBlock = this->board_->addBlock(nextBlock);
-        if (addedBlock)
-        {
-            this->blocksSinceClear_ += 1;
-            if (!nextBlock->isPlayable())
-            {
-                this->dropBlockHelper();
-            }
-            this->nextBlock_ = this->level_->nextBlock();
-        }
-        else
-        {
-            // Game over - could not add block
-            this->gameOver_ = true;
-        }
-    }
-}
-
+// Drop the current block
+// Do this x multiplier times
 void Model::dropBlock(int multiplier)
 {
     for (int i = 0; i < multiplier; i++)
@@ -173,109 +135,182 @@ void Model::dropBlock(int multiplier)
     notify();
 };
 
-void Model::randomOn()
+// Helper recursive method
+// Drops the current block, and then calculates the score
+// Base case: no special blocks
+// Recursive call:
+// If there are special blocks (eg. Star Block)
+// then we call dropBlockHelper() helper again
+void Model::dropBlockHelper()
 {
-    this->level_->setIsRandom(true);
-    notify();
-};
+    // Drop the current block
+    pair<int, vector<Block>> metaData = this->board_->dropCurrentBlock();
+    int linesCleared = metaData.first;
+    vector<Block> clearedBlocks = metaData.second;
 
-void Model::randomOff(std::string seqFile)
-{
-    this->level_->setSequenceFile(seqFile);
-    this->level_->setIsRandom(false);
-    notify();
-};
-
-void Model::resetGame()
-{
-    this->board_->resetBoard();
-    this->score_->resetScore();
-
-    this->nextBlock_ = nullptr;
-    this->gameOver_ = false;
-
-    this->startGame();
-};
-
-std::unique_ptr<Level> Model::makeLevel(int levelNum)
-{
-    std::unique_ptr<Level> newLevel = nullptr;
-
-    if (levelNum == 0)
+    if (linesCleared > 0)
     {
-        newLevel = std::make_unique<LevelZero>(this->scriptFile_);
-    }
-    else if (levelNum == 1)
-    {
-        newLevel = std::make_unique<LevelOne>();
-    }
-    else if (levelNum == 2)
-    {
-        newLevel = std::make_unique<LevelTwo>();
-    }
-    else if (levelNum == 3)
-    {
-        newLevel = std::make_unique<LevelThree>();
-    }
-    else if (levelNum == 4)
-    {
-        newLevel = std::make_unique<LevelFour>();
+        // Update score
+        // addScore = (current level + number of lines cleared)^2
+        int addScore = (this->level_->getLevelNum() + linesCleared);
+        addScore *= addScore;
+
+        // For each block that was cleared
+        // bounsPoints = (the level at which the block was generated + 1)^2
+        int bonusPoints = 0;
+        for (int i = 0; i < clearedBlocks.size(); i++)
+        {
+            int blkLevel = clearedBlocks[i].getLevelGen();
+            bonusPoints += (blkLevel + 1) * (blkLevel + 1);
+        }
+
+        addScore += bonusPoints;
+
+        this->score_->addScore(addScore);
+
+        // Reset the blocks since last clear counter
+        this->blocksSinceClear_ = 0;
     }
 
-    return newLevel;
+    // We check if for any special blocks
+    shared_ptr<Block> specialBlock = this->level_->addSpecialBlock(this->blocksSinceClear_);
+
+    // If there are special blocks, we add the special block to the board
+    if (nullptr != specialBlock)
+    {
+        bool addedSpecialBlock = this->board_->addBlock(specialBlock);
+        if (addedSpecialBlock)
+        {
+            // If we could add the special block, we increase our counter
+            this->blocksSinceClear_ += 1;
+
+            // If the block is not playable, we drop it
+            if (!specialBlock->isPlayable())
+            {
+                // Recursive call
+                this->dropBlockHelper();
+            }
+        }
+        else
+        {
+            // If we cannot add the special block, the game is over
+            this->gameOver_ = true;
+        }
+    }
+    else
+    {
+        // If there are no special blocks, then we add the new block
+        shared_ptr<Block> nextBlock = this->nextBlock_;
+        bool addedBlock = this->board_->addBlock(nextBlock);
+        if (addedBlock)
+        {
+            // If we could add the new block, we increase our counter
+            this->blocksSinceClear_ += 1;
+
+            // If the block is not playable, we drop it
+            if (!nextBlock->isPlayable())
+            {
+                // Recursive call
+                this->dropBlockHelper();
+            }
+            // Otherwise, we get the next block to be displayed
+            this->nextBlock_ = this->level_->nextBlock();
+        }
+        else
+        {
+            // If we cannot add a new block, the game is over
+            this->gameOver_ = true;
+        }
+    }
 }
 
-void Model::levelUp(int multiplier)
-{
-    for (int i = 0; i < multiplier; i++)
-    {
-        int newLevelNum = this->level_->getLevelNum() + 1;
-        std::unique_ptr<Level> newLevel = this->makeLevel(newLevelNum);
-
-        if (nullptr != newLevel)
-        {
-            this->level_ = move(newLevel);
-        }
-    }
-
-    notify();
-};
-
-void Model::levelDown(int multiplier)
-{
-    for (int i = 0; i < multiplier; i++)
-    {
-
-        int newLevelNum = this->level_->getLevelNum() - 1;
-        std::unique_ptr<Level> newLevel = this->makeLevel(newLevelNum);
-        if (nullptr != newLevel)
-        {
-            this->level_ = move(newLevel);
-        }
-    }
-    notify();
-};
-
+// Change the current block to the new type
 void Model::changeCurrentBlock(BlockType newType)
 {
     this->board_->changeCurrentBlock(newType);
     notify();
 };
 
-int Model::getScore() const
+// Show the hint block
+void Model::showHint()
 {
-    return this->score_->getScore();
-};
-int Model::getHiScore() const
-{
-    return this->score_->getHiScore();
+    this->board_->showHint();
+    notify();
 };
 
-int Model::getLevelNum() const
+// Hide the hint block
+void Model::hideHint()
 {
-    return this->level_->getLevelNum();
+    this->board_->hideHint();
 };
 
+// Level up by 1
+// Do this x multiplier times
+void Model::levelUp(int multiplier)
+{
+    for (int i = 0; i < multiplier; i++)
+    {
+        int newLevelNum = this->level_->getLevelNum() + 1;
+        unique_ptr<Level> newLevel = this->makeLevel(newLevelNum);
+
+        if (nullptr != newLevel)
+        {
+            // Move constructor
+            this->level_ = move(newLevel);
+        }
+    }
+
+    notify();
+};
+
+// Level down by 1
+// Do this x multiplier times
+void Model::levelDown(int multiplier)
+{
+    for (int i = 0; i < multiplier; i++)
+    {
+
+        int newLevelNum = this->level_->getLevelNum() - 1;
+        unique_ptr<Level> newLevel = this->makeLevel(newLevelNum);
+        if (nullptr != newLevel)
+        {
+            // Move constructor
+            this->level_ = move(newLevel);
+        }
+    }
+    notify();
+};
+
+// Turn on randomness in the level
+void Model::randomOn()
+{
+    this->level_->setIsRandom(true);
+    notify();
+};
+
+// Turn off randomness in the level
+// and take input from the file
+void Model::randomOff(string seqFileName)
+{
+    this->level_->setSequenceFile(seqFileName);
+    this->level_->setIsRandom(false);
+    notify();
+};
+
+// Special method (not part of spec)
+// Plays the hint block
+void Model::playAI()
+{
+    // Show the hint
+    this->showHint();
+    // Play the hint
+    // Note: a delay can be added here for testing
+    this->board_->playHint();
+    // Drop the hint block
+    this->dropBlock(1);
+}
+
+// Getters
 Board Model::getBoard() const
 {
     return *this->board_;
@@ -293,4 +328,18 @@ int Model::getBoardWidth() const
 Block Model::getNextBlock() const
 {
     return *this->nextBlock_;
+};
+
+int Model::getLevelNum() const
+{
+    return this->level_->getLevelNum();
+};
+
+int Model::getScore() const
+{
+    return this->score_->getScore();
+};
+int Model::getHiScore() const
+{
+    return this->score_->getHiScore();
 };

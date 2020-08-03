@@ -87,7 +87,7 @@ void GUIView::update()
 {
     // std::cout << "Updating GUIView" << std::endl;
 
-    if (this->model_->checkGameOver())
+    if (this->model_->isGameOver())
     {
         cout << "Stopping thread" << endl;
         this->hide();

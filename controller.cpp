@@ -52,7 +52,7 @@ void Controller::getCommand()
                 {
                     // while (true)
                     // {
-                    while (!model_->checkGameOver())
+                    while (!model_->isGameOver())
                     {
                         std::this_thread::sleep_for(std::chrono::milliseconds(100));
                         model_->playAI();
