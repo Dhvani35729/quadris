@@ -28,16 +28,16 @@ Level::Level()
 Level::~Level() {}
 
 // By default, returns no blocks, but can be overriden as needed
-std::shared_ptr<Block> Level::addSpecialBlock(int blockCount)
+shared_ptr<Block> Level::addSpecialBlock(int blockCount)
 {
     return nullptr;
 };
 
 // Set the file name to take the sequence from
 // Updates the block sequence vector
-void Level::setSequenceFile(std::string fileName)
+void Level::setSequenceFile(string fileName)
 {
-    std::string blockChars = "IJLSZOT";
+    string blockChars = "IJLSZOT";
 
     this->fileName_ = fileName;
 
@@ -45,8 +45,8 @@ void Level::setSequenceFile(std::string fileName)
     ifstream in(fileName_);
 
     string sequence(
-        (std::istreambuf_iterator<char>(in)),
-        std::istreambuf_iterator<char>());
+        (istreambuf_iterator<char>(in)),
+        istreambuf_iterator<char>());
 
     // We map each char to a BlockType
     // and add it to the sequence vector
@@ -94,7 +94,7 @@ int Level::getLevelNum() const
 }
 
 // LevelZero constructor
-LevelZero::LevelZero(std::string fileName)
+LevelZero::LevelZero(string fileName)
 {
     this->levelNum_ = 0;
     Level::setSequenceFile(fileName);
@@ -147,15 +147,15 @@ LevelFour::~LevelFour() {}
 // Override the default implementation of sequence file
 // As LevelZero is a special level, and uses a provided scriptfile
 // Used only for testing
-void LevelZero::setSequenceFile(std::string fileName) {}
+void LevelZero::setSequenceFile(string fileName) {}
 
 // LevelZero - Concrete Strategy method
 // Returns a block from the script file
-std::shared_ptr<Block> LevelZero::nextBlock()
+shared_ptr<Block> LevelZero::nextBlock()
 {
     BlockType type = getFromSequence();
-    std::shared_ptr<Block> newBlock = std::make_shared<Block>(
-        type, std::make_pair(START_ROW, START_COL), this->levelNum_, true);
+    shared_ptr<Block> newBlock = make_shared<Block>(
+        type, make_pair(START_ROW, START_COL), this->levelNum_, true);
 
     return newBlock;
 }
@@ -165,7 +165,7 @@ std::shared_ptr<Block> LevelZero::nextBlock()
 // skewed such that S and Z blocks are selected with a
 // probability of 1/12 each, and the other blocks
 // are selected with a probability of 1/6 each
-std::shared_ptr<Block> LevelOne::nextBlock()
+shared_ptr<Block> LevelOne::nextBlock()
 {
     BlockType type;
     int blkInd = rand() % 6;
@@ -184,22 +184,22 @@ std::shared_ptr<Block> LevelOne::nextBlock()
         type = (BlockType)blkInd;
     }
 
-    std::shared_ptr<Block> newBlock = std::make_shared<Block>(
-        type, std::make_pair(START_ROW, START_COL), this->levelNum_, true);
+    shared_ptr<Block> newBlock = make_shared<Block>(
+        type, make_pair(START_ROW, START_COL), this->levelNum_, true);
 
     return newBlock;
 }
 
 // LevelTwo - Concrete Strategy method
 // All blocks are selected with equal probability
-std::shared_ptr<Block> LevelTwo::nextBlock()
+shared_ptr<Block> LevelTwo::nextBlock()
 {
     int blkInd = rand() % NUM_BLKS;
 
     BlockType type = (BlockType)blkInd;
 
-    std::shared_ptr<Block> newBlock = std::make_shared<Block>(
-        type, std::make_pair(START_ROW, START_COL), this->levelNum_, true);
+    shared_ptr<Block> newBlock = make_shared<Block>(
+        type, make_pair(START_ROW, START_COL), this->levelNum_, true);
 
     return newBlock;
 }
@@ -213,7 +213,7 @@ std::shared_ptr<Block> LevelTwo::nextBlock()
 // If the level is not random:
 // returns blocks in a sequence from a file
 // Note: this level also generates heavy blocks
-std::shared_ptr<Block> LevelThree::nextBlock()
+shared_ptr<Block> LevelThree::nextBlock()
 {
     BlockType type;
 
@@ -242,8 +242,8 @@ std::shared_ptr<Block> LevelThree::nextBlock()
         type = getFromSequence();
     }
 
-    std::shared_ptr<Block> newBlock = std::make_shared<HeavyBlock>(
-        type, std::make_pair(START_ROW, START_COL), this->levelNum_, true);
+    shared_ptr<Block> newBlock = make_shared<HeavyBlock>(
+        type, make_pair(START_ROW, START_COL), this->levelNum_, true);
 
     return newBlock;
 }
@@ -254,7 +254,7 @@ std::shared_ptr<Block> LevelThree::nextBlock()
 // If the level is not random:
 // returns blocks in a sequence from a file
 // Note: this level also generates heavy blocks
-std::shared_ptr<Block> LevelFour::nextBlock()
+shared_ptr<Block> LevelFour::nextBlock()
 {
     BlockType type;
 
@@ -283,23 +283,23 @@ std::shared_ptr<Block> LevelFour::nextBlock()
         type = getFromSequence();
     }
 
-    std::shared_ptr<Block> newBlock = std::make_shared<HeavyBlock>(
-        type, std::make_pair(START_ROW, START_COL), this->levelNum_, true);
+    shared_ptr<Block> newBlock = make_shared<HeavyBlock>(
+        type, make_pair(START_ROW, START_COL), this->levelNum_, true);
 
     return newBlock;
 }
 
 // Returns a star block (1x1) every time a multiple of
 // 5 blocks are placed without clearing at least one row
-std::shared_ptr<Block> LevelFour::addSpecialBlock(int blockCount)
+shared_ptr<Block> LevelFour::addSpecialBlock(int blockCount)
 {
     if (blockCount != 0 && blockCount % 5 == 0)
     {
         // The Star Block will be placed in the centre column
         // and will also not be playable (i.e. dropped immediately)
 
-        std::shared_ptr<Block> newBlock = std::make_shared<StarBlock>(
-            std::make_pair(START_ROW, CENTER_COL), this->levelNum_, false);
+        shared_ptr<Block> newBlock = make_shared<StarBlock>(
+            make_pair(START_ROW, CENTER_COL), this->levelNum_, false);
         return newBlock;
     }
     else
