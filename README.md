@@ -1,4 +1,4 @@
-# Project 3 - Quadris
+# Quadris Game - Project 3
 
 Members:
 
@@ -6,21 +6,25 @@ Members:
 - Peggy Li
 - Minglei Li
 
+![quadris](quadris.gif)
+
 ## Bonus Features/Enhancements:
 
 **1. No Leaks**
-All memory management is handled via STL vectors and smart pointers.
 
-When we run valgrind, we do get some blocks lost, but they are from gtkmm.
-As per, https://piazza.com/class/k9k9s3zh9jzbi?cid=701, this is fine.
+All memory management is handled via STL vectors and smart pointers.
+- When we run valgrind, we do get some blocks lost, but they are from gtkmm. As per, https://piazza.com/class/k9k9s3zh9jzbi?cid=701, this is fine.
 
 **2. Renaming commands**
+
 Support added for the renaming of existing commands.
 
 **3. GUI**
+
 Programatically created with gtkmm Widgets and DrawingArea.
 
 **4. AI Command (EXTRA)**
+
 `ai` command auto-plays the current level, playing blocks with a calculated optimal placement.
 
 ## Command Line Arguments
