@@ -1,40 +1,42 @@
 #include "score.h"
 
-#include <iostream>
-
+// default constructor
 Score::Score()
 {
+    // Start with a score of 0
     this->currScore_ = 0;
     this->hiScore_ = 0;
-    std::cout << "Score born" << std::endl;
 };
 
-Score::~Score()
-{
-    std::cout << "Score died" << std::endl;
-};
+// destructor
+Score::~Score(){};
 
-int Score::getScore()
+// Adds amount to current score
+// and updates the high score
+void Score::addScore(int amount)
 {
-    return currScore_;
-};
-
-int Score::getHiScore()
-{
-    return hiScore_;
-};
-
-void Score::addScore(int addScore)
-{
-    int newScore = currScore_ + addScore;
-    if (newScore > hiScore_)
+    int newScore = this->currScore_ + amount;
+    if (newScore > this->hiScore_)
     {
-        hiScore_ = newScore;
+        this->hiScore_ = newScore;
     }
-    currScore_ = newScore;
+    this->currScore_ = newScore;
 };
 
+// Reset current score to zero
 void Score::resetScore()
 {
     this->currScore_ = 0;
 }
+
+// Getters
+
+int Score::getScore() const
+{
+    return this->currScore_;
+};
+
+int Score::getHiScore() const
+{
+    return this->hiScore_;
+};

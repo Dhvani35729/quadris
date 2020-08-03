@@ -6,7 +6,7 @@
 #include "cell.h"
 #include "block.h"
 
-#include "interpreter.h"
+#include "constants.h"
 
 #include <vector>
 #include <memory>

@@ -1,7 +1,7 @@
 #ifndef BLOCK_H
 #define BLOCK_H
 
-#include "interpreter.h"
+#include "constants.h"
 
 #include <vector>
 #include <utility>

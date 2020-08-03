@@ -1,8 +1,6 @@
-
 #include "board.h"
 #include "cell.h"
 #include "block.h"
-#include "controller.h"
 
 #include <vector>
 #include <iostream>

@@ -2,7 +2,6 @@
 #define MVC_MODEL_H
 
 #include "subject.h"
-#include "controller.h"
 #include "level.h"
 #include "score.h"
 #include "block.h"

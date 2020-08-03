@@ -5,16 +5,28 @@
 class Score
 {
 public:
+    // default constructor
     Score();
+
+    // destructor
     ~Score();
 
-    int getScore();
-    int getHiScore();
-    void addScore(int);
+    // Adds amount to current score
+    // and updates the high score
+    void addScore(int amount);
+
+    // Reset current score to zero
     void resetScore();
 
+    // Getters
+    int getScore() const;
+    int getHiScore() const;
+
 private:
+    // Current Score
     int currScore_;
+
+    // High Score
     int hiScore_;
 };
 
