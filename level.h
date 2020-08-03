@@ -2,6 +2,8 @@
 #define LEVEL_H
 
 #include "block.h"
+#include "heavyblock.h"
+#include "starblock.h"
 
 #include <string>
 #include <memory>

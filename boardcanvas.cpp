@@ -16,7 +16,7 @@ BoardCanvas::BoardCanvas()
     blockColours['T'] = colour{0.337, 0.01, 0.678};
 
     blockColours['?'] = colour{0.0, 0.0, 0.0};
-    blockColours['X'] = colour{0.345, 0.153, 0.0274};
+    blockColours['*'] = colour{0.345, 0.153, 0.0274};
 
     this->board_.clear();
 }

@@ -1,6 +1,7 @@
 #include "board.h"
 #include "cell.h"
 #include "block.h"
+#include "hintblock.h"
 
 #include <vector>
 #include <iostream>
