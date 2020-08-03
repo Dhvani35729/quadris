@@ -8,6 +8,7 @@
 #include "score.h"
 #include "block.h"
 #include "board.h"
+#include "fileexception.h"
 
 using namespace std;
 
@@ -91,6 +92,7 @@ void Model::resetGame()
 
     this->nextBlock_ = nullptr;
     this->gameOver_ = false;
+    this->blocksSinceClear_ = 0;
 
     // Start thr game again
     this->startGame();
@@ -292,7 +294,15 @@ void Model::randomOn()
 // and take input from the file
 void Model::randomOff(string seqFileName)
 {
-    this->level_->setSequenceFile(seqFileName);
+    try
+    {
+        this->level_->setSequenceFile(seqFileName);
+    }
+    catch (FileNotFoundException e)
+    {
+        throw move(e);
+    }
+
     this->level_->setIsRandom(false);
     notify();
 };

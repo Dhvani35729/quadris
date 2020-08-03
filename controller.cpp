@@ -7,6 +7,9 @@
 #include "controller.h"
 #include "model.h"
 #include "interpreter.h"
+#include "level.h"
+
+#include "fileexception.h"
 
 using namespace std;
 
@@ -31,7 +34,14 @@ void Controller::getCommand()
         cout << ">";
 
         // Input into the interpreter
-        cin >> *inter_;
+        try
+        {
+            cin >> *inter_;
+        }
+        catch (FileNotFoundException e)
+        {
+            cout << "Could not open file: " << e.getFileName() << endl;
+        }
 
         // Get the commands interpreted by the interpreter
         vector<pair<Command, int>> commands = inter_->getCommands();
@@ -82,7 +92,14 @@ void Controller::getCommand()
                 {
                     string seqFileName;
                     cin >> seqFileName;
-                    model_->randomOff(seqFileName);
+                    try
+                    {
+                        model_->randomOff(seqFileName);
+                    }
+                    catch (FileNotFoundException e)
+                    {
+                        cout << "Could not open file: " << e.getFileName() << endl;
+                    }
                 }
                 else if (cmd == RESTART)
                 {

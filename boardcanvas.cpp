@@ -57,11 +57,68 @@ bool BoardCanvas::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
     const int height = allocation.get_height();
     const int lesser = MIN(width, height);
 
-    cr->set_line_width(lesser * 0.02); // outline thickness changes
-                                       // with window size
+    // outline thickness changes with window size
+    cr->set_line_width(lesser * 0.02);
 
     // Draw borders around the main board
+    this->drawBorders(cr);
 
+    // Draw the main board
+    for (int i = 0; i < this->board_.size(); i++)
+    {
+        for (int j = 0; j < this->board_[i].size(); j++)
+        {
+            cr->save();
+            if (this->board_[i][j] == ' ')
+            {
+                cr->set_source_rgba(1.0, 1.0, 1.0, 0.8);
+            }
+            else
+            {
+                colour blkColor = this->blockColours[this->board_[i][j]];
+                cr->set_source_rgb(blkColor.r, blkColor.g, blkColor.b);
+            }
+            int x = 15 + (j * 20);
+            int y = 15 + (i * 20);
+            cr->rectangle(x, y, 20, 20);
+            cr->fill();
+            cr->restore();
+        }
+    }
+
+    // Draw Next Block text
+    Pango::FontDescription font("sans 16");
+    auto layout = create_pango_layout("Next block");
+    layout->set_font_description(font);
+    int startH = 20 * (this->bHeight_ + 2);
+    cr->move_to(0, startH);
+    layout->show_in_cairo_context(cr);
+
+    // Draw the next block
+    for (int i = 0; i < this->nextBlock_.size(); i++)
+    {
+        for (int j = 0; j < this->nextBlock_[i].size(); j++)
+        {
+            if (this->nextBlock_[i][j] != ' ')
+            {
+                colour blkColor = this->blockColours[this->nextBlock_[i][j]];
+                cr->save();
+                cr->set_source_rgb(blkColor.r, blkColor.g, blkColor.b);
+                int x = j * 20;
+                int y = (startH + 25) + (i * 20);
+                cr->rectangle(x, y, 20, 20);
+                cr->fill();
+                cr->restore();
+            }
+        }
+    }
+
+    return true;
+}
+
+// Helper method to draw a border around the board
+void BoardCanvas::drawBorders(const Cairo::RefPtr<Cairo::Context> &cr)
+{
     // Top border
     int x = 0;
     int y = 0;
@@ -165,56 +222,4 @@ bool BoardCanvas::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
         cr->restore();
         cr->stroke();
     }
-
-    // Draw the main board
-    for (int i = 0; i < this->board_.size(); i++)
-    {
-        for (int j = 0; j < this->board_[i].size(); j++)
-        {
-            cr->save();
-            if (this->board_[i][j] == ' ')
-            {
-                cr->set_source_rgba(1.0, 1.0, 1.0, 0.8);
-            }
-            else
-            {
-                colour blkColor = this->blockColours[this->board_[i][j]];
-                cr->set_source_rgb(blkColor.r, blkColor.g, blkColor.b);
-            }
-            int x = 15 + (j * 20);
-            int y = 15 + (i * 20);
-            cr->rectangle(x, y, 20, 20);
-            cr->fill();
-            cr->restore();
-        }
-    }
-
-    // Draw Next Block text
-    Pango::FontDescription font("sans 16");
-    auto layout = create_pango_layout("Next block");
-    layout->set_font_description(font);
-    int startH = 20 * (this->bHeight_ + 2);
-    cr->move_to(0, startH);
-    layout->show_in_cairo_context(cr);
-
-    // Draw the next block
-    for (int i = 0; i < this->nextBlock_.size(); i++)
-    {
-        for (int j = 0; j < this->nextBlock_[i].size(); j++)
-        {
-            if (this->nextBlock_[i][j] != ' ')
-            {
-                colour blkColor = this->blockColours[this->nextBlock_[i][j]];
-                cr->save();
-                cr->set_source_rgb(blkColor.r, blkColor.g, blkColor.b);
-                int x = j * 20;
-                int y = (startH + 25) + (i * 20);
-                cr->rectangle(x, y, 20, 20);
-                cr->fill();
-                cr->restore();
-            }
-        }
-    }
-
-    return true;
 }

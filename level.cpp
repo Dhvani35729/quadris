@@ -7,6 +7,7 @@
 #include "level.h"
 #include "heavyblock.h"
 #include "starblock.h"
+#include "fileexception.h"
 
 #define START_ROW 3
 #define START_COL 0
@@ -43,6 +44,10 @@ void Level::setSequenceFile(string fileName)
 
     // We turn a file separated by spaces into a string
     ifstream in(fileName_);
+    if (!in.is_open())
+    {
+        throw FileNotFoundException(fileName_);
+    }
 
     string sequence(
         (istreambuf_iterator<char>(in)),

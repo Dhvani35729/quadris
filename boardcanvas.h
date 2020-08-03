@@ -37,6 +37,9 @@ protected:
     // Override default signal handler
     bool on_draw(const Cairo::RefPtr<Cairo::Context> &cr) override;
 
+    // Helper method to draw a border around the board
+    void drawBorders(const Cairo::RefPtr<Cairo::Context> &cr);
+
 private:
     // Board height and width
     int bHeight_;

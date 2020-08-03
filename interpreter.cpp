@@ -8,6 +8,7 @@
 
 #include "interpreter.h"
 #include "constants.h"
+#include "fileexception.h"
 
 using namespace std;
 
@@ -177,6 +178,11 @@ void Interpreter::parseRaw(istream &in, string rawCommand)
         // make the recursive call to parse the command
         string newRawCommand;
         ifstream infile(sequenceFile);
+        if (!infile.is_open())
+        {
+            throw FileNotFoundException(sequenceFile);
+        }
+
         while (getline(infile, newRawCommand))
         {
             istringstream iss(newRawCommand);
