@@ -1,9 +1,9 @@
 #ifndef MVC_VIEW_H
 #define MVC_VIEW_H
 
-#include "observer.h"
-
 #include <memory>
+
+#include "observer.h"
 
 class Controller;
 class Model;
@@ -12,14 +12,21 @@ class Model;
 class View : public Observer
 {
 public:
-    View(std::shared_ptr<Controller>, std::shared_ptr<Model>);
+    // constructor
+    View(std::shared_ptr<Controller> cont, std::shared_ptr<Model> model);
+
+    // destructor
     virtual ~View();
 
-    virtual void update(); // Observer Pattern: concrete update() method
+    // Observer Pattern: concrete update() method
+    virtual void update();
 
+    // Run the View (game loop)
+    // (i.e. start taking in commands from command line)
     void run();
 
 private:
+    // Helper method to draw
     void draw();
 
     // Observer Pattern: to access Model accessors without having to downcast subject

@@ -1,73 +1,79 @@
-#include "observer.h"
-#include "view.h"
-#include "controller.h"
-#include "model.h"
-#include "subject.h"
-
 #include <iostream>
 #include <memory>
 #include <string>
 
+#include "view.h"
+#include "observer.h"
+#include "controller.h"
+#include "model.h"
+#include "subject.h"
+
 using namespace std;
 
-View::View(std::shared_ptr<Controller> c, std::shared_ptr<Model> m)
+// constructor
+View::View(shared_ptr<Controller> cont, shared_ptr<Model> model)
 {
-    std::cout << "View born" << std::endl;
-    this->model_ = m;
-    this->controller_ = c;
+    this->model_ = model;
+    this->controller_ = cont;
 
-    // Register view as observer of model
+    // Register view as an observer of model
     model_->subscribe(this);
 }
 
+// destructor
 View::~View()
 {
-    std::cout << "View died" << std::endl;
+    // Unregister view as an observer of model
     model_->unsubscribe(this);
 }
 
+// Observer Pattern: concrete update() method
 void View::update()
 {
-    std::cout << "Updating view" << std::endl;
-    // Drawing
+    // Draw each time model updates
+    this->draw();
 
-    if (!this->model_->isGameOver())
+    // If the game is over,
+    // tell the user, game is over!
+    if (this->model_->isGameOver())
     {
-        std::cout << "Drawing board\n"
-                  << std::endl;
-        this->draw();
+        cout << "xxxxxxxxxxx" << endl;
+        cout << "Game over!" << endl;
+        cout << "xxxxxxxxxxx" << endl;
     }
-    else
-    {
-        std::cout << "Game over!" << std::endl;
-    }
-    std::cout << std::endl;
 }
 
+// Run the View (game loop)
+// (i.e. start taking in commands from command line)
 void View::run()
 {
-    std::cout << "Running application" << std::endl;
+    // Start the game
     this->model_->startGame();
 
+    // As long as the game isn't over,
+    // keep taking in commands
     while (!this->model_->isGameOver())
     {
         controller_->getCommand();
     }
 }
 
+// Helper method to draw
 void View::draw()
 {
     // Draw score
-    // TODO: Maybe use overloaded << operator
-    // TODO: Justify to right
-    std::cout << "Level:     " << model_->getLevelNum() << std::endl;
-    std::cout << "Score:     " << model_->getScore() << std::endl;
-    std::cout << "Hi Score:  " << model_->getHiScore() << std::endl;
-    std::cout << "-----------" << std::endl;
+    // Note: An output operator was not added to score or level
+    // as users may wish to format their output differently (per view)
+    cout << "Level:     " << model_->getLevelNum() << endl;
+    cout << "Score:     " << model_->getScore() << endl;
+    cout << "Hi Score:  " << model_->getHiScore() << endl;
+    cout << "-----------" << endl;
 
-    std::cout << model_->getBoard();
+    cout << model_->getBoard();
 
-    std::cout << "-----------" << std::endl;
-    std::cout << "Next:      " << std::endl;
-    std::cout << model_->getNextBlock();
+    cout << "-----------" << endl;
+    cout << "Next:      " << endl;
+    cout << model_->getNextBlock();
+
+    cout << endl;
 }
