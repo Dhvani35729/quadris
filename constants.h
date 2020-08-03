@@ -38,7 +38,6 @@ enum Other
     O,
     T,
     EXIT,
-    TEST,
     RENAME,
     BOT_MODE,
 };
