@@ -1,63 +1,55 @@
-#include "level.h"
-
 #include <iostream>
 #include <fstream>
-#include <iostream>
 #include <cstdlib>
+
 #include <memory>
-#include <time.h>
+
+#include "level.h"
+#include "heavyblock.h"
+#include "starblock.h"
 
 #define START_ROW 3
 #define START_COL 0
+#define CENTER_COL 5
 
 using namespace std;
 
-int seed = NULL;
+// Global seed
+int seed = 1;
 
+// default constructor
 Level::Level()
 {
-    if (seed == NULL)
-    {
-        // cout << "No seed" << endl;
-        srand(time(0));
-    }
-    else
-    {
-        // cout << "Got seed: " << seed << endl;
-        srand(seed);
-    }
+    // Set the seed
+    srand(seed);
 }
 
+// destructor
+Level::~Level() {}
+
+// By default, returns no blocks, but can be overriden as needed
 std::shared_ptr<Block> Level::addSpecialBlock(int blockCount)
 {
     return nullptr;
 };
 
-BlockType Level::getFromSequence()
+// Set the file name to take the sequence from
+// Updates the block sequence vector
+void Level::setSequenceFile(std::string fileName)
 {
-    BlockType type = this->blockSequence_[this->curIndex_];
-    this->curIndex_ += 1;
+    std::string blockChars = "IJLSZOT";
 
-    if (this->curIndex_ == this->blockSequence_.size())
-    {
-        this->curIndex_ = 0;
-    }
+    this->fileName_ = fileName;
 
-    return type;
-};
-
-void Level::setSequenceFile(std::string f)
-{
-    std::string blockChars = "IJLOSZT";
-
-    this->fileName_ = f;
-
+    // We turn a file separated by spaces into a string
     ifstream in(fileName_);
 
     string sequence(
         (std::istreambuf_iterator<char>(in)),
         std::istreambuf_iterator<char>());
 
+    // We map each char to a BlockType
+    // and add it to the sequence vector
     this->blockSequence_.clear();
 
     for (char &c : sequence)
@@ -67,6 +59,8 @@ void Level::setSequenceFile(std::string f)
             this->blockSequence_.push_back((BlockType)blockChars.find(c));
         }
     }
+
+    // Start from index 0
     this->curIndex_ = 0;
 };
 
@@ -75,98 +69,102 @@ void Level::setIsRandom(bool r)
     this->isRandom_ = r;
 };
 
-LevelZero::LevelZero(std::string f)
+BlockType Level::getFromSequence()
 {
-    std::cout << "LevelZero born" << std::endl;
-    this->levelNum_ = 0;
-    Level::setSequenceFile(f);
-    this->isRandom_ = false;
-}
+    // Return the block at the current index
+    BlockType type = this->blockSequence_[this->curIndex_];
 
-LevelOne::LevelOne()
-{
-    // Use current time as seed for random generator
-    // srand(seed);
-    std::cout << "LevelOne born" << std::endl;
-    this->levelNum_ = 1;
-    this->isRandom_ = true;
-}
+    // Increment the index
+    this->curIndex_ += 1;
 
-LevelTwo::LevelTwo()
-{
-    // Use current time as seed for random generator
-    // srand(time(0));
-    std::cout << "LevelTwo born" << std::endl;
-    this->levelNum_ = 2;
-    this->isRandom_ = true;
-}
+    // Loop back once we are done
+    if (this->curIndex_ == this->blockSequence_.size())
+    {
+        this->curIndex_ = 0;
+    }
 
-LevelThree::LevelThree()
-{
-    // Use current time as seed for random generator
-    // srand(time(0));
-    std::cout << "LevelThree born" << std::endl;
-    this->levelNum_ = 3;
-    this->isRandom_ = true;
-}
+    return type;
+};
 
-LevelFour::LevelFour()
-{
-    // Use current time as seed for random generator
-    // srand(time(0));
-    std::cout << "LevelFour born" << std::endl;
-    this->levelNum_ = 4;
-    this->isRandom_ = true;
-}
-
-Level::~Level()
-{
-    std::cout << "Level died" << std::endl;
-}
-
-LevelZero::~LevelZero()
-{
-    std::cout << "LevelOne died" << std::endl;
-}
-
-LevelOne::~LevelOne()
-{
-    std::cout << "LevelOne died" << std::endl;
-}
-
-LevelTwo::~LevelTwo()
-{
-    std::cout << "LevelTwo died" << std::endl;
-}
-
-LevelThree::~LevelThree()
-{
-    std::cout << "LevelThree died" << std::endl;
-}
-
-LevelFour::~LevelFour()
-{
-    std::cout << "LevelFour died" << std::endl;
-}
+// Getter
 
 int Level::getLevelNum() const
 {
     return this->levelNum_;
 }
 
-void LevelZero::setSequenceFile(std::string f)
+// LevelZero constructor
+LevelZero::LevelZero(std::string fileName)
 {
-    // Do nothing
+    this->levelNum_ = 0;
+    Level::setSequenceFile(fileName);
+    this->isRandom_ = false;
 }
 
+// LevelOne constructor
+LevelOne::LevelOne()
+{
+    this->levelNum_ = 1;
+    this->isRandom_ = true;
+}
+
+// LevelTwo constructor
+LevelTwo::LevelTwo()
+{
+    this->levelNum_ = 2;
+    this->isRandom_ = true;
+}
+
+// LevelThree constructor
+LevelThree::LevelThree()
+{
+    this->levelNum_ = 3;
+    this->isRandom_ = true;
+}
+
+// LevelFour constructor
+LevelFour::LevelFour()
+{
+    this->levelNum_ = 4;
+    this->isRandom_ = true;
+}
+
+// LevelZero destructor
+LevelZero::~LevelZero() {}
+
+// LevelOne destructor
+LevelOne::~LevelOne() {}
+
+// LevelTwo destructor
+LevelTwo::~LevelTwo() {}
+
+// LevelThree destructor
+LevelThree::~LevelThree() {}
+
+// LevelFour destructor
+LevelFour::~LevelFour() {}
+
+// Override the default implementation of sequence file
+// As LevelZero is a special level, and uses a provided scriptfile
+// Used only for testing
+void LevelZero::setSequenceFile(std::string fileName) {}
+
+// LevelZero - Concrete Strategy method
+// Returns a block from the script file
 std::shared_ptr<Block> LevelZero::nextBlock()
 {
     BlockType type = getFromSequence();
-    std::shared_ptr<Block> newBlock = std::make_shared<Block>(type, std::make_pair(START_ROW, START_COL), this->levelNum_, true);
+    std::shared_ptr<Block> newBlock = std::make_shared<Block>(
+        type, std::make_pair(START_ROW, START_COL), this->levelNum_, true);
 
     return newBlock;
 }
 
+// LevelOne - Concrete Strategy method
+// Randomly choose a block with probabilities
+// skewed such that S and Z blocks are selected with a
+// probability of 1/12 each, and the other blocks
+// are selected with a probability of 1/6 each
 std::shared_ptr<Block> LevelOne::nextBlock()
 {
     BlockType type;
@@ -186,22 +184,35 @@ std::shared_ptr<Block> LevelOne::nextBlock()
         type = (BlockType)blkInd;
     }
 
-    std::shared_ptr<Block> newBlock = std::make_shared<Block>(type, std::make_pair(START_ROW, START_COL), this->levelNum_, true);
+    std::shared_ptr<Block> newBlock = std::make_shared<Block>(
+        type, std::make_pair(START_ROW, START_COL), this->levelNum_, true);
 
     return newBlock;
 }
 
+// LevelTwo - Concrete Strategy method
+// All blocks are selected with equal probability
 std::shared_ptr<Block> LevelTwo::nextBlock()
 {
     int blkInd = rand() % NUM_BLKS;
 
     BlockType type = (BlockType)blkInd;
 
-    std::shared_ptr<Block> newBlock = std::make_shared<Block>(type, std::make_pair(START_ROW, START_COL), this->levelNum_, true);
+    std::shared_ptr<Block> newBlock = std::make_shared<Block>(
+        type, std::make_pair(START_ROW, START_COL), this->levelNum_, true);
 
     return newBlock;
 }
 
+// LevelThree - Concrete Strategy method
+// If the level is random:
+// Randomly choose a block with probabilities
+// skewed such that S and Z blocks are selected with
+// a probability of 2/9 each, and the other blocks
+// are selected with a probability of 1/9 each
+// If the level is not random:
+// returns blocks in a sequence from a file
+// Note: this level also generates heavy blocks
 std::shared_ptr<Block> LevelThree::nextBlock()
 {
     BlockType type;
@@ -231,11 +242,18 @@ std::shared_ptr<Block> LevelThree::nextBlock()
         type = getFromSequence();
     }
 
-    std::shared_ptr<Block> newBlock = std::make_shared<HeavyBlock>(type, std::make_pair(START_ROW, START_COL), this->levelNum_, true);
+    std::shared_ptr<Block> newBlock = std::make_shared<HeavyBlock>(
+        type, std::make_pair(START_ROW, START_COL), this->levelNum_, true);
 
     return newBlock;
 }
 
+// LevelFour - Concrete Strategy method
+// If the level is random:
+// Same as level 3
+// If the level is not random:
+// returns blocks in a sequence from a file
+// Note: this level also generates heavy blocks
 std::shared_ptr<Block> LevelFour::nextBlock()
 {
     BlockType type;
@@ -265,16 +283,23 @@ std::shared_ptr<Block> LevelFour::nextBlock()
         type = getFromSequence();
     }
 
-    std::shared_ptr<Block> newBlock = std::make_shared<HeavyBlock>(type, std::make_pair(START_ROW, START_COL), this->levelNum_, true);
+    std::shared_ptr<Block> newBlock = std::make_shared<HeavyBlock>(
+        type, std::make_pair(START_ROW, START_COL), this->levelNum_, true);
 
     return newBlock;
 }
 
+// Returns a star block (1x1) every time a multiple of
+// 5 blocks are placed without clearing at least one row
 std::shared_ptr<Block> LevelFour::addSpecialBlock(int blockCount)
 {
     if (blockCount != 0 && blockCount % 5 == 0)
     {
-        std::shared_ptr<Block> newBlock = std::make_shared<StarBlock>(std::make_pair(START_ROW, 5), this->levelNum_, false);
+        // The Star Block will be placed in the centre column
+        // and will also not be playable (i.e. dropped immediately)
+
+        std::shared_ptr<Block> newBlock = std::make_shared<StarBlock>(
+            std::make_pair(START_ROW, CENTER_COL), this->levelNum_, false);
         return newBlock;
     }
     else
