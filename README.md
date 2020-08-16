@@ -1,4 +1,4 @@
-# Quadris Game - Project 3
+# Quadris Game
 
 Members:
 
