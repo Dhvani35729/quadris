@@ -1,3 +1,6 @@
+#ifndef FILE_EXCEPTION_H
+#define FILE_EXCEPTION_H
+
 #include <string>
 
 // FileNotFoundException exception
@@ -10,3 +13,5 @@ public:
 private:
     std::string fileName_;
 };
+
+#endif

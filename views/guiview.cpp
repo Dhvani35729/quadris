@@ -1,11 +1,11 @@
 #include <memory>
 #include <string>
 
-#include "observer.h"
-#include "guiview.h"
-#include "model.h"
+#include "../support/observer.h"
+#include "../support/subject.h"
+#include "../views/guiview.h"
+#include "../game/model.h"
 #include "boardcanvas.h"
-#include "subject.h"
 
 using namespace std;
 

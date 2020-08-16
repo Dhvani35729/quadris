@@ -4,10 +4,10 @@
 #include <vector>
 #include <memory>
 
-#include "blocks/block.h"
+#include "../blocks/block.h"
 #include "cell.h"
 
-#include "constants.h"
+#include "../support/constants.h"
 
 // Board
 class Board

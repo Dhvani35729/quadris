@@ -7,8 +7,8 @@
 #include <vector>
 
 #include "interpreter.h"
-#include "constants.h"
-#include "fileexception.h"
+#include "../support/constants.h"
+#include "../support/fileexception.h"
 
 using namespace std;
 

@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "model.h"
+#include "../game/model.h"
 #include "interpreter.h"
 
 class Model;

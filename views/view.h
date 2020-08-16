@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "observer.h"
+#include "../support/observer.h"
 
 class Controller;
 class Model;

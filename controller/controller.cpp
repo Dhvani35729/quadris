@@ -5,11 +5,11 @@
 #include <memory>
 
 #include "controller.h"
-#include "model.h"
+#include "../game/model.h"
 #include "interpreter.h"
-#include "level.h"
+#include "../game/level.h"
 
-#include "fileexception.h"
+#include "../support/fileexception.h"
 
 using namespace std;
 

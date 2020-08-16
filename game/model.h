@@ -5,11 +5,11 @@
 #include <memory>
 #include <string>
 
-#include "subject.h"
-#include "level.h"
-#include "score.h"
-#include "block.h"
-#include "board.h"
+#include "../support/subject.h"
+#include "../game/level.h"
+#include "../game/score.h"
+#include "../blocks/block.h"
+#include "../board/board.h"
 
 // Model (Quadris)
 // Represents the game object

@@ -7,10 +7,10 @@
 #include <cstring>
 
 #include "board.h"
-#include "blocks/block.h"
-#include "blocks/hintblock.h"
+#include "../blocks/block.h"
+#include "../blocks/hintblock.h"
 #include "cell.h"
-#include "constants.h"
+#include "../support/constants.h"
 
 using namespace std;
 

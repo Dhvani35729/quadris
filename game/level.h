@@ -4,7 +4,7 @@
 #include <string>
 #include <memory>
 
-#include "blocks/block.h"
+#include "../blocks/block.h"
 
 // Global seed for the randomness of block generation
 extern int seed;

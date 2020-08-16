@@ -2,12 +2,13 @@
 #include <memory>
 #include <string>
 
-#include "view.h"
-#include "observer.h"
-#include "controller.h"
-#include "model.h"
-#include "subject.h"
-#include "fileexception.h"
+#include "../views/view.h"
+
+#include "../support/observer.h"
+#include "../support/subject.h"
+#include "../support/fileexception.h"
+#include "../controller/controller.h"
+#include "../game/model.h"
 
 using namespace std;
 

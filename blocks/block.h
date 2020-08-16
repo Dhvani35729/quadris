@@ -6,7 +6,7 @@
 #include <utility>
 #include <queue>
 
-#include "../constants.h"
+#include "../support/constants.h"
 
 // Different regular block types + special
 enum BlockType

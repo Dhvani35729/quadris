@@ -4,11 +4,11 @@
 #include <cstring>
 #include <thread>
 
-#include "model.h"
-#include "controller.h"
-#include "view.h"
-#include "guiview.h"
-#include "level.h"
+#include "game/model.h"
+#include "controller/controller.h"
+#include "views/view.h"
+#include "views/guiview.h"
+#include "game/level.h"
 
 #include <gtkmm.h>
 
@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     int levelNum = 0;
 
     // Default LevelZero script file
-    string scriptFile = "sequence.txt";
+    string scriptFile = "input/sequence.txt";
 
     // Default, GUIView enabled
     bool graphicsOn = true;

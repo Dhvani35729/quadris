@@ -4,11 +4,11 @@
 #include <utility>
 
 #include "model.h"
-#include "level.h"
-#include "score.h"
-#include "blocks/block.h"
-#include "board.h"
-#include "fileexception.h"
+#include "../game/level.h"
+#include "../game/score.h"
+#include "../blocks/block.h"
+#include "../board/board.h"
+#include "../support/fileexception.h"
 
 using namespace std;
 
