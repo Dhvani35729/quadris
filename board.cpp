@@ -7,8 +7,8 @@
 #include <cstring>
 
 #include "board.h"
-#include "block.h"
-#include "hintblock.h"
+#include "blocks/block.h"
+#include "blocks/hintblock.h"
 #include "cell.h"
 #include "constants.h"
 

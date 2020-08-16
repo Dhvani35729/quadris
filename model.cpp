@@ -6,7 +6,7 @@
 #include "model.h"
 #include "level.h"
 #include "score.h"
-#include "block.h"
+#include "blocks/block.h"
 #include "board.h"
 #include "fileexception.h"
 

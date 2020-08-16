@@ -1,12 +1,10 @@
-
-
 #ifndef BOARD_H
 #define BOARD_H
 
 #include <vector>
 #include <memory>
 
-#include "block.h"
+#include "blocks/block.h"
 #include "cell.h"
 
 #include "constants.h"

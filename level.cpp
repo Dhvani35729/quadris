@@ -5,8 +5,8 @@
 #include <memory>
 
 #include "level.h"
-#include "heavyblock.h"
-#include "starblock.h"
+#include "blocks/heavyblock.h"
+#include "blocks/starblock.h"
 #include "fileexception.h"
 
 #define START_ROW 3
